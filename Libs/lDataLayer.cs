@@ -30,6 +30,17 @@ namespace sky.recovery.Libs
             retObject = bc.getDataToObject(provider, cstrname, spname);
             return retObject;
         }
+        
+        public List<dynamic> GetlistTugasSaya()
+        {
+            var provider = dbconn.sqlprovider();
+            var cstrname = dbconn.constringName("skycoll");
+            string spname = "public.get_list_pengajuan_monitoring_approval";
+
+            var retObject = new List<dynamic>();
+            retObject = bc.getDataToObject(provider, cstrname, spname);
+            return retObject;
+        }
 
         public JArray getDataUserdetail(string p_userid)
         {

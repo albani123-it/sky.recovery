@@ -48,6 +48,30 @@ namespace sky.recovery.Controllers
 
             return data;
         }
+        
+        [HttpGet("monitoring/tugas_saya")]
+        public JObject GetListTugasSaya()
+        {
+            var retObject = new List<dynamic>();
+            var data = new JObject();
+            try
+            {
+                data = new JObject();
+                retObject = ldl.GetlistTugasSaya();
+
+                data.Add("status", mc.GetMessage("api_output_ok"));
+                data.Add("message", mc.GetMessage("process_success"));
+                data.Add("data", lc.convertDynamicToJArray(retObject));
+            }
+            catch (Exception ex)
+            {
+                data = new JObject();
+                data.Add("status", mc.GetMessage("api_output_not_ok"));
+                data.Add("message", ex.Message);
+            }
+
+            return data;
+        }
 
         [HttpPost("monitoring/list/detail")]
         public JObject GetLisMonitoringDetail([FromBody] JObject json)
