@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
+using sky.recovery.Model;
+using sky.recovery.Services;
 
 namespace sky.recovery.Controllers
 {
@@ -24,6 +26,77 @@ namespace sky.recovery.Controllers
         private TokenController tc = new TokenController();
         private lConvert lc = new lConvert();
         private lDataLayer ldl = new lDataLayer();
+        private readonly RestrukturServices restructureService;
+
+        public RestrukturController(RestrukturServices restructureService)
+        {
+            this.restructureService = restructureService;
+        }
+
+        // [HttpPost]
+        // [Route("/dokumen/upload")]
+        // public async Task<IActionResult> UploadDocument([FromForm] UploadDocumentRestructure bean)
+        // {
+        //     var data = new JObject();
+        //     try
+        //     {
+        //         data = new JObject();
+        //         (bool result, string message) = await this.restructureService.UploadDokumenRestruktur(bean);
+        //
+        //         data.Add("status", mc.GetMessage("api_output_ok"));
+        //         data.Add("message", mc.GetMessage("process_success"));
+        //         data.Add("data", mc.GetMessage(""));
+        //
+        //         data.Add("status", mc.GetMessage("api_output_ok"));
+        //         data.Add("message", mc.GetMessage(message));
+        //         data.Add("data", mc.GetMessage(""));
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         data = new JObject();
+        //         data.Add("status", mc.GetMessage("api_output_not_ok"));
+        //         data.Add("message", ex.Message);
+        //     }
+        //
+        //     return data;
+        // }
+        
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> create([FromForm] CreateRestructure param)
+        {
+            var data = new JObject();
+            try
+            {
+                data = new JObject();
+                (bool result, string message) = await this.restructureService.Create(param);
+        
+                data.Add("status", mc.GetMessage("api_output_ok"));
+                data.Add("message", mc.GetMessage("process_success"));
+                data.Add("data", mc.GetMessage(""));
+
+                if (result == true)
+                {
+                    data.Add("status", mc.GetMessage("api_output_ok"));
+                    data.Add("message", mc.GetMessage(message));
+                    data.Add("data", mc.GetMessage(""));
+                }
+                else
+                {
+                    data.Add("status", mc.GetMessage("api_output_ok"));
+                    data.Add("message", mc.GetMessage(message));
+                    data.Add("data", mc.GetMessage(""));
+                }
+            }
+            catch (Exception ex)
+            {
+                data = new JObject();
+                data.Add("status", mc.GetMessage("api_output_not_ok"));
+                data.Add("message", ex.Message);
+            }
+        
+            return Ok(data);
+        }
 
         [HttpGet("monitoring/list")]
         public JObject GetLisMonitoring()
@@ -49,7 +122,7 @@ namespace sky.recovery.Controllers
             return data;
         }
         
-        [HttpGet("monitoring/tugas_saya")]
+        [HttpGet("monitoring/aprroval/list")]
         public JObject GetListTugasSaya()
         {
             var retObject = new List<dynamic>();
