@@ -50,12 +50,12 @@ namespace sky.recovery.Controllers
         }
 
 
-        [HttpGet("restruktur/monitoring/list/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> RestructureListMonitoring(string userid)
+        [HttpGet("restruktur/monitoring/list")]
+        public async Task<ActionResult<GeneralResponses>> RestructureListMonitoring()
         {
             try
             {
-                var GetData = await _recoveryService.ListRestructure(userid);
+                var GetData = await _recoveryService.ListRestructure();
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);
@@ -66,6 +66,90 @@ namespace sky.recovery.Controllers
                 }
 
             }
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        [HttpGet("restruktur/NasabahDetail/{accno}")]
+        public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail(string accno)
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetRestrukturDetail(accno);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        [HttpGet("restruktur/ApprovalList/Monitoring/{userid}")]
+        public async Task<ActionResult<GeneralResponses>> ApprovalListMonitoring()
+        {
+            try
+            {
+                var GetData = await _recoveryService.ListRestructure();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        [HttpGet("Restruktur/monitoring/list/detail/{userid}")]
+        public async Task<ActionResult<GeneralResponses>> MonitoringListDetail(string userid)
+        {
+            try
+            {
+                var GetData = await _recoveryService.MonitoringListDetail(userid);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
             catch (Exception ex)
             {
                 var Return = new GeneralResponses()

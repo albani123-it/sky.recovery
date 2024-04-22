@@ -9,4 +9,6 @@
         public int? Status { get; set; }
         public int? CallBy { get; set; }
     }
+
+    
 }

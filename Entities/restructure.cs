@@ -52,6 +52,8 @@ namespace sky.recovery.Entities
         public int? approveby_id { get; set; }
         public DateTime? approve_date { get; set; }
         public int? rst_status_id { get; set; }
+        [ForeignKey(nameof(rst_status_id))]
+        public status? status{ get; set; }
         public int? principal_pembayaran { get; set; }
     
     }
