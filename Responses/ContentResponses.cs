@@ -12,5 +12,7 @@ namespace sky.recovery.Responses
     public class ContentResponses
     {
         public List<ListNasabahDTO> Nasabah { get; set; }
+        public List<ListRestructureDTO> RestructureDTOs { get; set; }
+    
     }
 }

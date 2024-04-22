@@ -15,7 +15,8 @@ namespace sky.recovery.Insfrastructures
         public DbSet<collection_call> collection_call { get; set; }
         public DbSet<rfproduct> rfproduct { get; set; }
         public DbSet<collection_add_contact> collection_add_contact { get; set; }
-     
+        public DbSet<restructure> restructure { get; set; }
+
         private DbContextSettings _appsetting { get; set; }
         public SkyCoreConfig(IOptions<DbContextSettings> appsetting)
         {
@@ -37,9 +38,10 @@ namespace sky.recovery.Insfrastructures
         {
             modelBuilder.Entity<branch>()
 .HasKey(e => e.lbrc_id);
-           
+            modelBuilder.Entity<restructure>()
+.HasKey(e => e.rst_id);
             modelBuilder.Entity<master_loan>()
-              .HasKey(e => e.Id);
+              .HasKey(e => e.id);
             modelBuilder.Entity<master_customer>()
             .HasKey(e => e.Id);
           

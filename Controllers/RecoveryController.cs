@@ -49,6 +49,34 @@ namespace sky.recovery.Controllers
             }
         }
 
+
+        [HttpGet("restruktur/monitoring/list/{userid}")]
+        public async Task<ActionResult<GeneralResponses>> RestructureListMonitoring(string userid)
+        {
+            try
+            {
+                var GetData = await _recoveryService.ListRestructure(userid);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
         [HttpGet("DummyTest/{Error}")]
         public async Task<ActionResult<GeneralResponses>> DummyTest(string Error)
         {

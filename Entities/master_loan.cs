@@ -9,17 +9,17 @@ namespace sky.recovery.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        public int Id { get; set; }
+        public int id { get; set; }
 
 
         public int? customer_id { get; set; }
 
-        [ForeignKey(nameof(Id))]
+        [ForeignKey(nameof(id))]
         public collection_add_contact? collection_add_contact { get; set; }
 
         [ForeignKey(nameof(customer_id))]
         public master_customer? master_customer { get; set; }
-        [ForeignKey(nameof(Id))]
+        [ForeignKey(nameof(id))]
         public collection_call? collection_call { get; set; }
 
 
