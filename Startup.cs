@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using sky.recovery.Helper.Config;
+using sky.recovery.Interfaces;
+using sky.recovery.Services;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace sky.recovery
 {
@@ -34,6 +39,14 @@ namespace sky.recovery
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IConfiguration config = new ConfigurationBuilder()
+     .SetBasePath(Directory.GetCurrentDirectory())
+     .AddJsonFile("appsettings.json")
+     .Build();
+            services.Configure<DbContextSettings>(config.GetSection("DbContextSettings"));
+            services.AddScoped<IRecoveryServices, RecoveryServices>();
+            services.AddScoped<IUserService, UserServices>();
+
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(option => option.EnableEndpointRouting = false);
             services.AddLogging(loggingBuilder =>
@@ -43,13 +56,16 @@ namespace sky.recovery
                 loggingBuilder.AddDebug();
             });
 
+            //services.AddHttpContextAccessor();
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
+                .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+           
+         
 
             signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("TokenAuthentication:SecretKey").Value));
             var tokenValidationParameters = new TokenValidationParameters

@@ -23,8 +23,8 @@ namespace sky.recovery.Libs
         private lPgsql lp = new lPgsql();
         private lDataLayer dataLayer = new lDataLayer();
         
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IConfiguration conf;
+       // private readonly IHttpContextAccessor httpContextAccessor;
+      //  private readonly IConfiguration conf;
 
         public List<dynamic> lObjectChar = new List<dynamic>();
         public List<dynamic> lObject = new List<dynamic>();

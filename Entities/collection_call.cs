@@ -25,7 +25,7 @@ namespace sky.recovery.Entities
         public string call_result_mm { get; set; }
         public string call_result_hhmm { get; set; }
         public int? loan_id { get; set; }
-        [ForeignKey(nameof(loan_id))]
-        public master_loan master_loan { get; set; }
+        //[ForeignKey(nameof(loan_id))]
+        //public master_loan master_loan { get; set; }
     }
 }
