@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace sky.recovery.DTOs.ResponsesDTO
 {
@@ -8,6 +9,7 @@ namespace sky.recovery.DTOs.ResponsesDTO
         public string Nasabah { get; set; }
         public string cucif { get; set; }
         public string accno { get; set; }
+        public string loannumber { get; set; }
         public DateTime? TanggalLahir { get; set; }
         public string Alamat { get; set; }
         public string noTelp { get; set; }
@@ -33,9 +35,24 @@ namespace sky.recovery.DTOs.ResponsesDTO
         public double? TotalKewajiban { get; set; }
 
     }
+
+    public class SegmentNasabahDTO
+    {
+        public string Segment { get; set; }
+        public string Product { get; set; }
+        public string JumlahAngsuran { get; set; }
+        public string TanggalMulai { get; set; }
+        public string TanggalJatuhTempo { get; set; }
+        public string Tenor { get; set; }
+        public string OutStanding { get; set; }
+        public string TotalKewajiban { get; set; }
+
+    }
+    
     public class DetailNasabahDTO
     {
         public string NoKTP { get; set; }
+        public string LoanNumber { get; set; }
         public string Nasabah { get; set; }
         public string accno { get; set; }
         public string TanggalLahir { get; set; }

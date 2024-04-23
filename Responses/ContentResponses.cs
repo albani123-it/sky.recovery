@@ -16,5 +16,8 @@ namespace sky.recovery.Responses
         public List<MonitoringDetailRestructureDTO> monitoringDetailRestructures { get; set; }
     public DetailNasabahDTO DetailNasabah { get; set; }
         public List<DetailNasabahDTO> DetaillistNasabah { get; set; }
+        public List<SegmentNasabahDTO> SegmentListNasabah{ get; set; }
+        public DetailRestructure DetailRestructures { get; set; }
+        public ListCashFlowDTO CashFlowDTO { get; set; }
     }
 }

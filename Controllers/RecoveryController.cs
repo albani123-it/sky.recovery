@@ -5,6 +5,7 @@ using sky.recovery.Responses;
 using System.Threading.Tasks;
 using System;
 using sky.recovery.Interfaces;
+using sky.recovery.DTOs.RequestDTO;
 
 namespace sky.recovery.Controllers
 {
@@ -77,12 +78,12 @@ namespace sky.recovery.Controllers
             }
         }
 
-        [HttpGet("restruktur/NasabahDetail/{cucif}")]
-        public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail(string cucif)
+        [HttpPost("restruktur/NasabahDetail")]
+        public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail([FromBody] RequestRestrukturDetail Entity)
         {
             try
             {
-                var GetData = await _recoveryService.GetRestrukturDetail(cucif);
+                var GetData = await _recoveryService.GetRestrukturDetail(Entity);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);
@@ -104,7 +105,33 @@ namespace sky.recovery.Controllers
                 return BadRequest(Return);
             }
         }
+        [HttpGet("restruktur/MonitoringResktrukturDetail/{accno}")]
+        public async Task<ActionResult<GeneralResponses>> MonitoringResktrukturDetail(string accno)
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetRestrukturDetailByAccno(accno);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
 
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
         [HttpGet("restruktur/ApprovalList/Monitoring/{userid}")]
         public async Task<ActionResult<GeneralResponses>> ApprovalListMonitoring()
         {
