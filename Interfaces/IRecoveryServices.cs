@@ -19,6 +19,7 @@ namespace sky.recovery.Interfaces
 
         public Task<(bool Error, GeneralResponses Returns)> GetPolaRestrukturParam();
         public Task<(bool Error, GeneralResponses Returns)> GetListBranch();
+        public  Task<(bool Error, GeneralResponses Returns)> GetJenisPengurangan();
 
     }
 }

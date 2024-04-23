@@ -133,7 +133,34 @@ namespace sky.recovery.Controllers
                 return BadRequest(Return);
             }
         }
+        [HttpGet("jenispengurangan/list")]
+        public async Task<ActionResult<GeneralResponses>> ListJenisPengurangan()
 
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetJenisPengurangan();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
 
         [HttpGet("branch/list")]
         public async Task<ActionResult<GeneralResponses>> GetListBranch()

@@ -257,6 +257,42 @@ namespace sky.recovery.Services
                 return (Result.Error, Result);
             }
         }
+
+        public async Task<(bool Error, GeneralResponses Returns)> GetJenisPengurangan()
+        {
+            try
+            {
+                var DataJenisPengurangan= await generic_param.Select(es => new GenericParamDTO
+                {
+                    glp_code = es.glp_code,
+                    glp_id = es.glp_id,
+                    glp_name = es.glp_name,
+                    glp_type = es.glp_type
+                }).Where(es => es.glp_type == "JENP").OrderBy(es => es.glp_name).ToListAsync();
+
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "ok",
+                    DataGenericParam = new ContentResponsesGenericParam()
+                    {
+                        JenisPengurangan = DataJenisPengurangan
+
+                    }
+                };
+                return (Result.Error, Result);
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+            }
+        }
+
         public async Task<(bool Error, GeneralResponses Returns)> GetListBranch()
         {
             try

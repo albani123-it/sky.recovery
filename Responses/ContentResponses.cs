@@ -17,6 +17,8 @@ namespace sky.recovery.Responses
     {
         public List<GenericParamDTO> DokumenRestruktur { get; set; }
         public List<GenericParamDTO> PolaRestruktur { get; set; }
+        public List<GenericParamDTO> JenisPengurangan{ get; set; }
+
 
     }
     public class ContentResponses
