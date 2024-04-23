@@ -28,14 +28,19 @@ namespace sky.recovery.Entities
         public string? acc_no { get; set; }
         public string? ccy { get; set; }
         public int? product { get; set; }
-        [ForeignKey(nameof(product))]
+        [ForeignKey(nameof(prd_segment_id))]
         public rfproduct? rfproduct { get; set; }
+
+        [ForeignKey(nameof(prd_segment_id))]
+        public rfproduct_segment? rfproduct_segment { get; set; }
         public double? plafond { get; set; }
         public DateTime? maturity_date { get; set; }
         public DateTime? start_date { get; set; }
 
         public int? sisa_tenor { get; set; }
         public int? tenor { get; set; }
+        public double? installment { get; set; }
+
         public double? installment_pokok { get; set; }
         public double? interest_rate { get; set; }
         public double? tunggakan_pokok { get; set; }

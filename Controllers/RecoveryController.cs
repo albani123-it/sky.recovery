@@ -77,12 +77,12 @@ namespace sky.recovery.Controllers
             }
         }
 
-        [HttpGet("restruktur/NasabahDetail/{accno}")]
-        public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail(string accno)
+        [HttpGet("restruktur/NasabahDetail/{cucif}")]
+        public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail(string cucif)
         {
             try
             {
-                var GetData = await _recoveryService.GetRestrukturDetail(accno);
+                var GetData = await _recoveryService.GetRestrukturDetail(cucif);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);

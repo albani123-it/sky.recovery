@@ -105,16 +105,16 @@ namespace sky.recovery.Services
         }
 
 
-        public async Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetail(string accno)
+        public async Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetail(string cucif)
         {
             try
             {
 
 
-                var Data = await (Task.Run(()=> master_loan.Include(i => i.rfproduct).Include(i => i.master_customer).Select(es => new DetailNasabah
+                var Data = await (Task.Run(() => master_loan.Include(i=>i.rfproduct_segment).Include(i => i.rfproduct).Include(i => i.master_customer).Select(es => new DetailNasabah
                 {
-                    accno=es.acc_no,
-                    cucif=es.cu_cif,
+                    accno = es.acc_no,
+                    cucif = es.cu_cif,
                     Nasabah = es.master_customer.cu_name,
                     NoKTP = es.master_customer.cu_idnumber,
                     TanggalLahir = es.master_customer.cu_borndate,
@@ -123,7 +123,7 @@ namespace sky.recovery.Services
                     NoHp = es.master_customer.cu_mobilephone,
                     Pekerjaan = es.master_customer.pekerjaan,
                     TanggalCore = es.master_customer.stg_date,
-                    Segment = null,
+                    Segment = es.rfproduct_segment.prd_sgm_desc,
                     Product = es.rfproduct.prd_desc,
                     TanggalMulai = es.start_date,
                     TanggalJatuhTempo = es.maturity_date,
@@ -139,14 +139,14 @@ namespace sky.recovery.Services
                     TunggakanDenda = es.tunggakan_denda,
                     TotalTunggakan = es.tunggakan_total,
                     TotalKewajiban = es.kewajiban_total,
-                    JumlahAngsuran = es.pay_total
+                    JumlahAngsuran = es.installment
 
 
 
-                }).AsEnumerable().Where(es => es.accno == accno)
+                }).AsEnumerable().Where(es => es.cucif == cucif)
                 .Select(x => new DetailNasabahDTO
                 {
-                 accno=x.accno,   
+                    accno = x.accno,
                     Nasabah = x.Nasabah,
                     NoKTP = x.NoKTP,
                     TanggalLahir = x.TanggalLahir.ToString(),
@@ -155,9 +155,9 @@ namespace sky.recovery.Services
                     NoHp = x.NoHp,
                     Pekerjaan = x.Pekerjaan,
                     TanggalCore = x.TanggalCore.ToString(),
-                    Segment = null,
+                    Segment = x.Segment,
                     Product = x.Product,
-                    TanggalMulai =x.TanggalMulai.ToString(),
+                    TanggalMulai = x.TanggalMulai.ToString(),
                     TanggalJatuhTempo = x.TanggalJatuhTempo.ToString(),
                     Tenor = x.Tenor.ToString(),
                     Plafond = x.Plafond.ToString(),
@@ -165,22 +165,22 @@ namespace sky.recovery.Services
                     //OutStandingActual=es.outstanding,
                     Kolektabilitas = x.Kolektabilitas.ToString(),
                     DPD = x.DPD.ToString(),
-                    TanggalBayarTerakhir =x.TanggalBayarTerakhir.ToString(),
+                    TanggalBayarTerakhir = x.TanggalBayarTerakhir.ToString(),
                     TunggakanPokok = x.TunggakanPokok.ToString(),
-                    TunggakanBunga =x.TunggakanBunga.ToString(),
+                    TunggakanBunga = x.TunggakanBunga.ToString(),
                     TunggakanDenda = x.TunggakanDenda.ToString(),
                     TotalTunggakan = x.TotalTunggakan.ToString(),
                     TotalKewajiban = x.TotalKewajiban.ToString(),
-                    JumlahAngsuran =x.JumlahAngsuran.ToString()
+                    JumlahAngsuran = x.JumlahAngsuran.ToString()
                 })
-               .FirstOrDefault()));
+               .ToList()));
                 var Result = new GeneralResponses()
                 {
                     Error = false,
                     Message = "ok",
                     Data = new ContentResponses()
                     {
-                        DetailNasabah = Data
+                        DetaillistNasabah = Data
                     }
                 };
                 return (Result.Error, Result);
