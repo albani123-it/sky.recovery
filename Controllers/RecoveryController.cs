@@ -50,6 +50,32 @@ namespace sky.recovery.Controllers
             }
         }
 
+        [HttpPost("nasabah/listSearch")]
+        public async Task<ActionResult<GeneralResponses>> ListSearchDeskCall([FromBody] SearchListRestrucutre Entity)
+        {
+            try
+            {
+                var GetData = await _recoveryService.ListSearchCollection(Entity);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
 
         [HttpGet("restruktur/monitoring/list")]
         public async Task<ActionResult<GeneralResponses>> RestructureListMonitoring()
