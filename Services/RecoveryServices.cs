@@ -178,11 +178,11 @@ namespace sky.recovery.Services
                     TanggalCore = es.master_customer.stg_date,
                     Segment = es.rfproduct_segment.prd_sgm_desc,
                     Product = es.rfproduct.prd_desc,
-                    
                     TanggalMulai = es.start_date,
                     TanggalJatuhTempo = es.maturity_date,
                     Tenor = es.tenor,
                     Plafond = es.plafond,
+                    BranchAreaCode=es.master_customer.branch.lbrc_code,
                     OutStanding = es.outstanding,
                     //OutStandingActual=es.outstanding,
                     Kolektabilitas = es.kolektibilitas,
