@@ -264,8 +264,48 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Error, GeneralResponses Returns)> UpdatePengajuanRestrukturisasi(UpdateRestrukturisasi Entity)
+        {
+            try
+            {
+                
 
-        public async Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetailByAccno(string accno)
+                var Data = await restructure.Where(es => es.rst_id == Entity.retrukid).FirstOrDefaultAsync();
+                if (Data == null)
+                {
+                    var Result = new GeneralResponses()
+                    {
+                        Error = true,
+                        Message = "Data Restrukturisasi Tidak Ditemukan"
+                    };
+                    return (Result.Error, Result);
+                }
+                else
+                {
+                    Data.rst_pola_restruk_id = Entity.PolaId;
+                    Data.rst_status_id = 8;
+                    Entry(Data).State = EntityState.Modified;
+                    SaveChanges();
+                    var Result = new GeneralResponses()
+                    {
+                        Error = false,
+                        Message = "Permohonan Sedang Diajukan"
+                    };
+                    return (Result.Error, Result);
+                }
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+
+            }
+        }
+                public async Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetailByAccno(string accno)
         {
             try
             {

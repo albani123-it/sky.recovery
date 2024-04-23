@@ -105,6 +105,35 @@ namespace sky.recovery.Controllers
                 return BadRequest(Return);
             }
         }
+
+        [HttpPost("restruktur/UpdatePengajuan")]
+        public async Task<ActionResult<GeneralResponses>> UpdatePengajuan([FromBody] UpdateRestrukturisasi Entity)
+        {
+            try
+            {
+                var GetData = await _recoveryService.UpdatePengajuanRestrukturisasi(Entity);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
         [HttpGet("restruktur/MonitoringResktrukturDetail/{accno}")]
         public async Task<ActionResult<GeneralResponses>> MonitoringResktrukturDetail(string accno)
         {
