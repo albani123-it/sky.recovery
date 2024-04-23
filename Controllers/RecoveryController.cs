@@ -7,6 +7,7 @@ using System;
 using sky.recovery.Interfaces;
 using sky.recovery.DTOs.RequestDTO;
 using sky.recovery.Model.Entity;
+using sky.recovery.Model;
 
 namespace sky.recovery.Controllers
 {
@@ -198,6 +199,36 @@ namespace sky.recovery.Controllers
             try
             {
                 var GetData = await _recoveryService.GetPolaRestrukturParam();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+
+        [HttpPost("create")]
+        public async Task<ActionResult<GeneralResponses>> CreateRestructure([FromBody] CreateNewRestructure Entity)
+
+        {
+            try
+            {
+                var GetData = await _recoveryService.CreateRestructure(Entity);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);

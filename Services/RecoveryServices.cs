@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Asn1.Ocsp;
 using sky.recovery.DTOs.RequestDTO;
 using sky.recovery.DTOs.ResponsesDTO;
 using sky.recovery.Entities;
@@ -8,9 +9,12 @@ using sky.recovery.Helper.Config;
 using sky.recovery.Insfrastructures;
 using sky.recovery.Interfaces;
 using sky.recovery.Libs;
+using sky.recovery.Model.Entity;
+using sky.recovery.Model;
 using sky.recovery.Responses;
 using System;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace sky.recovery.Services
@@ -21,6 +25,8 @@ namespace sky.recovery.Services
         public RecoveryServices(IUserService User, IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
             _User = User;
+            
+
         }
 
         public async Task<(bool Error, GeneralResponses Returns)> ListRestructure()
@@ -329,6 +335,140 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Error,GeneralResponses Returns)> CreateRestructure(CreateNewRestructure Entity)
+        {
+            try
+            {
+                var reqUser = await _User.GetDataUser(Entity.UserId);
+                if (reqUser.Returns == null)
+                {
+                    var Returns = new GeneralResponses()
+                    {
+                        Error = true,
+                        Message = "UserTidak Ditemukan"
+                    };
+                    return (false, Returns);
+                }
+                var CekLoan = master_loan.Find(Entity.LoanId);
+                if (CekLoan is null)
+                {
+                    var Returns = new GeneralResponses()
+                    {
+                        Error = true,
+                        Message = "Data Loan Tidak Ditemukan"
+                    };
+                    return (false, Returns);
+                }
+
+
+                var ne = new restructure();
+                ne.denda = Entity.Denda;
+                ne.disc_tunggakan_denda = Entity.DiskonTunggakanDenda;
+                ne.disc_tunggakan_margin = Entity.DiskonTunggakanMargin;
+                ne.jenis_pengurangan_id = Entity.JenisPenguranganId;
+                ne.keterangan = Entity.Keterangan;
+                ne.rst_loan_id = Entity.LoanId;
+                ne.margin_amount = Entity.MarginAmount;
+                ne.margin = Entity.Margin;
+                ne.margin_pembayaran = Entity.MarginPembayaran;
+                ne.margin_pinalty = Entity.MarginPinalty;
+                ne.pembayaran_gp_id = Entity.PembayaranGpId;
+                ne.pengurangan_nilai_margin = Entity.PenguranganNilaiMargin;
+                ne.periode_diskon = Entity.PeriodeDiskon;
+                ne.rst_pola_restruk_id = Entity.PolaRestrukId;
+                ne.principal_pembayaran = Entity.PrincipalPembayaran;
+                ne.principal_pinalty = Entity.PrincipalPinalty;
+                ne.tgl_jatuh_tempo_baru = Entity.TglJatuhTempoBaru;
+                ne.total_diskon_margin = Entity.TotalDiskonMargin;
+                ne.value_date = Entity.ValueDate;
+                ne.rst_mst_branch_id = CekLoan.master_customer?.branch_id;
+                ne.mst_branch_pembukuan_id = CekLoan.master_customer?.branch_id;
+                ne.mst_branch_proses_id = CekLoan.master_customer?.branch_id;
+
+                //var json = JsonSerializer.Deserialize<List<string>>(bean.Permasalahan!);
+
+                var serializeOptions = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    WriteIndented = true
+                };
+                string json = JsonSerializer.Serialize(Entity.Permasalahan, serializeOptions);
+                ne.permasalahan = json;
+
+                ne.createby_id = reqUser.Returns.DataEntities.userId;
+                ne.create_date = DateTime.Now;
+                string name = "DRAFT";
+                ne.status = status.Where(q => q.sts_name.Equals(name)).FirstOrDefault();
+                await restructure.AddAsync(ne);
+                await SaveChangesAsync();
+
+                if (Entity.CashFlow != null)
+                {
+                    var cf = Entity.CashFlow;
+                    var nrcf = new restructure_cashflow();
+                    nrcf.rsc_penghasilan_nasabah = cf.PenghasilanNasabah;
+                    nrcf.rsc_penghasilan_pasangan = cf.PenghasilanPasangan;
+                    nrcf.rsc_penghasilan_lainnya = cf.PenghasilanLainnya;
+                    nrcf.rsc_total_penghasilan = cf.TotalPenghasilan;
+                    nrcf.rsc_biaya_pendidikan = cf.BiayaPendidikan;
+                    nrcf.rsc_biaya_listrik_air_telp = cf.BiayaListrikAirTelp;
+                    nrcf.rsc_biaya_belanja = cf.BiayaBelanja;
+                    nrcf.rsc_biaya_transportasi = cf.BiayaTransportasi;
+                    nrcf.rsc_biaya_lainnya = cf.BiayaLainnya;
+                    nrcf.rsc_total_pengeluaran = cf.TotalPengeluaran;
+                    nrcf.rsc_hutang_di_bank = cf.HutangDiBank;
+                    nrcf.rsc_cicilan_lainnya = cf.CicilanLainnya;
+                    nrcf.rsc_total_kewajiban = cf.TotalKewajiban;
+                    nrcf.rsc_penghasilan_bersih = cf.PenghasilanBersih;
+                    nrcf.rsc_rpc_70_persen = cf.Rpc70Persen;
+                    nrcf.rsc_restructure_id = ne.rst_id;
+                    await restructure_cashflow.AddAsync(nrcf);
+                    await SaveChangesAsync();
+                }
+
+
+                //var appr = new RestructureApprovalEntity();
+                //// appr.Execution = this.statusService.GetRecoveryExecution("DRAFT");
+                //appr.Execution = this.entity.RecoveryExecution.Where(q => q.Name.Equals(name)).FirstOrDefault();
+                //appr.Sender = reqUser;
+                //appr.Recipient = reqUser;
+                //appr.CreateDate = DateTime.Now;
+                //appr.RestructureId = ne.Id;
+                //this.entity.RestructureApproval.Add(appr);
+                //this.entity.SaveChanges();
+
+
+                //if (Entity.Document != null)
+                //{
+                //    foreach (var item in Entity.Document)
+                //    {
+                //        var doc = this.entity.RestructureDocument.Find(item);
+                //        if (doc != null)
+                //        {
+                //            doc.RestructureId = ne.Id;
+                //            this.entity.RestructureDocument.Update(doc);
+                //            this.entity.SaveChanges();
+                //        }
+                //    }
+                //}
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "OK"
+                };
+                return (Result.Error, Result);
+            }
+            catch(Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+
+            }
+        }
         public async Task<(bool Error, GeneralResponses Returns)> GetPolaRestrukturParam()
         {
             try
