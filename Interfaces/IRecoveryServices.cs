@@ -6,7 +6,7 @@ namespace sky.recovery.Interfaces
 {
     public interface IRecoveryServices
     {
-        public Task<(bool Error, GeneralResponses Returns)> ListCollection(string userid);
+       // public Task<(bool Error, GeneralResponses Returns)> ListCollection(string userid);
         public Task<(bool Error, GeneralResponses Returns)> ListRestructure();
         public Task<(bool Error, GeneralResponses Returns)> MonitoringListDetail(string userid);
         public Task<(bool Error, GeneralResponses Returns)> GetGeneralDetailNasabah(RequestRestrukturDetail Entity);
@@ -18,6 +18,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool Error, GeneralResponses Returns)> GetDokumenParam();
 
         public Task<(bool Error, GeneralResponses Returns)> GetPolaRestrukturParam();
+        public Task<(bool Error, GeneralResponses Returns)> GetListBranch();
 
     }
 }

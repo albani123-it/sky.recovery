@@ -9,6 +9,10 @@ namespace sky.recovery.Responses
         public int userId { get; set; }
     }
 
+    public class ContentMasterDTO
+    {
+        public List<BranchDTO> BranchDTO { get; set; }
+    }
     public class ContentResponsesGenericParam
     {
         public List<GenericParamDTO> DokumenRestruktur { get; set; }

@@ -7,5 +7,6 @@
         public ContentResponses Data { get; set; }
         public ContentResponsesEntity DataEntities { get; set; }
         public ContentResponsesGenericParam DataGenericParam { get; set; }
+        public ContentMasterDTO DataMasterDTO { get; set; }
     }
 }

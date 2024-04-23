@@ -134,6 +134,36 @@ namespace sky.recovery.Controllers
             }
         }
 
+
+        [HttpGet("branch/list")]
+        public async Task<ActionResult<GeneralResponses>> GetListBranch()
+
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetListBranch();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
         [HttpGet("polarestruktur/list")]
         public async Task<ActionResult<GeneralResponses>> ListPolaRestruktur()
 

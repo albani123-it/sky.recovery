@@ -257,6 +257,40 @@ namespace sky.recovery.Services
                 return (Result.Error, Result);
             }
         }
+        public async Task<(bool Error, GeneralResponses Returns)> GetListBranch()
+        {
+            try
+            {
+                var DataBranch= await branch.Select(es => new BranchDTO
+                {
+                    lbrc_name= es.lbrc_name,
+                    lbrc_id=es.lbrc_id,
+                    lbrc_is_delete=es.lbrc_is_delete
+                  
+                }).Where(es => es.lbrc_is_delete== false).ToListAsync();
+
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "ok",
+                    DataMasterDTO = new ContentMasterDTO()
+                    {
+                        BranchDTO = DataBranch
+
+                    }
+                };
+                return (Result.Error, Result);
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+            }
+        }
 
         public async Task<(bool Error, GeneralResponses Returns)> GetPolaRestrukturParam()
         {
