@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using sky.recovery.Interfaces;
 using sky.recovery.DTOs.RequestDTO;
+using sky.recovery.Model.Entity;
 
 namespace sky.recovery.Controllers
 {
@@ -28,7 +29,7 @@ namespace sky.recovery.Controllers
         {
             try
             {
-                var GetData = await _recoveryService.ListCollection(userid);
+                var GetData = await _recoveryService.MonitoringListDetail(userid);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);
@@ -55,7 +56,7 @@ namespace sky.recovery.Controllers
         {
             try
             {
-                var GetData = await _recoveryService.ListSearchCollection(Entity);
+                var GetData = await _recoveryService.ListSearchMonitoringListDetail(Entity);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);
@@ -104,12 +105,70 @@ namespace sky.recovery.Controllers
             }
         }
 
-        [HttpPost("restruktur/NasabahDetail")]
+        [HttpGet("dokumenrestruktur/list")]
+        public async Task<ActionResult<GeneralResponses>> ListDokumenRestruktur()
+
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetDokumenParam();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        [HttpGet("polarestruktur/list")]
+        public async Task<ActionResult<GeneralResponses>> ListPolaRestruktur()
+
+        {
+            try
+            {
+                var GetData = await _recoveryService.GetPolaRestrukturParam();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        [HttpPost("restruktur/deskcall/detail")]
         public async Task<ActionResult<GeneralResponses>> RestrukturNasabahDetail([FromBody] RequestRestrukturDetail Entity)
         {
             try
             {
-                var GetData = await _recoveryService.GetRestrukturDetail(Entity);
+                var GetData = await _recoveryService.GetGeneralDetailNasabah(Entity);
                 if (GetData.Error == true)
                 {
                     return BadRequest(GetData.Returns);

@@ -122,6 +122,8 @@ namespace sky.recovery.Services
                 {
 
                     Nasabah = es.master_customer.cu_name,
+                    CustomerId=es.master_customer.Id,
+                    LoanId=es.id,
                     cucif = es.cu_cif,
                     acc_no = es.acc_no,
                     TotalKewajiban = es.kewajiban_total,
@@ -155,13 +157,13 @@ namespace sky.recovery.Services
         }
 
 
-        public async Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetail(RequestRestrukturDetail Entity)
+        public async Task<(bool Error, GeneralResponses Returns)> GetGeneralDetailNasabah(RequestRestrukturDetail Entity)
         {
             try
             {
 
                 //ambil general info
-                var Data = await (Task.Run(() => master_loan.Include(i=>i.rfproduct_segment).Include(i => i.rfproduct).Include(i => i.master_customer).Select(es => new DetailNasabah
+                var Data = await master_loan.Include(i=>i.rfproduct_segment).Include(i => i.rfproduct).Include(i => i.master_customer).Select(es => new DetailNasabah
                 {
                     accno = es.acc_no,
                     loannumber=es.loan_number,
@@ -193,98 +195,9 @@ namespace sky.recovery.Services
                     TotalKewajiban = es.kewajiban_total,
                     JumlahAngsuran = es.installment
 
-                }).AsEnumerable().Where(es => es.accno == Entity.Accno)
-                .Select(x => new DetailNasabahDTO
-                {
-                   
-                    accno = x.accno,
-                    Nasabah = x.Nasabah,
-                    NoKTP = x.NoKTP,
-                    TanggalLahir = x.TanggalLahir.ToString(),
-                    Alamat = x.Alamat,
-                    noTelp = x.noTelp,
-                    NoHp = x.NoHp,
-                    Pekerjaan = x.Pekerjaan,
-                    LoanNumber=x.loannumber,
-                    TanggalCore = x.TanggalCore.ToString(),
-                    Segment = x.Segment,
-                    Product = x.Product,
-                    TanggalMulai = x.TanggalMulai.ToString(),
-                    TanggalJatuhTempo = x.TanggalJatuhTempo.ToString(),
-                    Tenor = x.Tenor.ToString(),
-                    Plafond = x.Plafond.ToString(),
-                    OutStanding = x.OutStanding.ToString(),
-                    //OutStandingActual=es.outstanding,
-                    Kolektabilitas = x.Kolektabilitas.ToString(),
-                    DPD = x.DPD.ToString(),
-                    TanggalBayarTerakhir = x.TanggalBayarTerakhir.ToString(),
-                    TunggakanPokok = x.TunggakanPokok.ToString(),
-                    TunggakanBunga = x.TunggakanBunga.ToString(),
-                    TunggakanDenda = x.TunggakanDenda.ToString(),
-                    TotalTunggakan = x.TotalTunggakan.ToString(),
-                    TotalKewajiban = x.TotalKewajiban.ToString(),
-                    JumlahAngsuran = x.JumlahAngsuran.ToString()
-                })
-               .FirstOrDefault()));
+                }).Where(es => es.accno == Entity.Accno).FirstOrDefaultAsync();
 
-                //FASILITAS LAINNYA
-                var DataSegment = await (Task.Run(() => master_loan.Include(i => i.rfproduct_segment)
-                .Include(i => i.rfproduct)
-                .Select(es => new DetailNasabah
-                {
-                    cucif=es.cu_cif,
-                    Segment = es.rfproduct_segment.prd_sgm_desc,
-                    Product = es.rfproduct.prd_desc,
-                    TanggalMulai = es.start_date,
-                    TanggalJatuhTempo = es.maturity_date,
-                    Tenor = es.tenor,            
-                    OutStanding = es.outstanding,
-                    TotalKewajiban = es.kewajiban_total,
-                    JumlahAngsuran = es.installment
-
-                }).AsEnumerable().Where(es => es.cucif == Entity.CuCif && es.Segment!=Data.Segment)
-              .Select(x => new SegmentNasabahDTO
-              {
-                 
-                  Segment = x.Segment,
-                  Product = x.Product,
-                  TanggalMulai = x.TanggalMulai.ToString(),
-                  TanggalJatuhTempo = x.TanggalJatuhTempo.ToString(),
-                  Tenor = x.Tenor.ToString(),
-                  OutStanding = x.OutStanding.ToString(),
-                  TotalKewajiban = x.TotalKewajiban.ToString(),
-                  JumlahAngsuran = x.JumlahAngsuran.ToString()
-              })
-             .ToList()));
-
-                ////PERMASALAHAN
-                //var GetRestrukture = await restructure.Where(es => es.rst_id == Entity.RestrukturId)
-                //    .Select(es=> new DetailRestructure { Permasalahan=es.permasalahan})
-                //    .FirstOrDefaultAsync();
-
-                //CASH FLOW
-                var GetCashFlow = await restructure_cashflow.Where(es => es.rsc_restructure_id == Entity.RestrukturId).Select(es => new ListCashFlowDTO
-                {
-                    rsc_id=es.rsc_id,
-                    rsc_penghasilan_pasangan=es.rsc_penghasilan_pasangan,
-                    rsc_penghasilan_nasabah=es.rsc_penghasilan_nasabah,
-                    rsc_penghasilan_lainnya=es.rsc_penghasilan_lainnya,
-                    rsc_total_penghasilan=es.rsc_total_penghasilan,
-                    rsc_biaya_belanja=es.rsc_biaya_belanja,
-                    rsc_biaya_lainnya=es.rsc_biaya_lainnya,
-                    rsc_biaya_listrik_air_telp=es.rsc_biaya_listrik_air_telp,
-                    rsc_biaya_pendidikan=es.rsc_biaya_pendidikan,
-                    rsc_biaya_transportasi=es.rsc_biaya_transportasi,
-                    rsc_cicilan_lainnya=es.rsc_cicilan_lainnya,
-                    rsc_hutang_di_bank=es.rsc_hutang_di_bank,
-                    //rsc_pengasilan_bersih=es.rsc_pengasilan_bersih,
-                    rsc_restructure_id=es.rsc_restructure_id,
-                    rsc_rpc_70_persen=es.rsc_rpc_70_persen,
-                    rsc_total_kewajiban=es.rsc_total_kewajiban,
-                    rsc_total_pengeluaran=es.rsc_total_pengeluaran,
-                    Permasalahan=es.restructure.permasalahan
-
-                }).FirstOrDefaultAsync();
+                
 
                 var Result = new GeneralResponses()
                 {
@@ -292,14 +205,82 @@ namespace sky.recovery.Services
                     Message = "ok",
                     Data = new ContentResponses()
                     {
-                        DetailNasabah = Data,
-                        SegmentListNasabah = DataSegment,
-                        //DetailRestructures=GetRestrukture,
-                        CashFlowDTO=GetCashFlow
+                        DetailNasabah = Data
+                     
                     }
                 };
                 return (Result.Error, Result);
 
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+            }
+        }
+
+        public async Task<(bool Error, GeneralResponses Returns)> GetDokumenParam()
+        {
+            try
+            {
+                var DataDokumenRestrukture = await generic_param.Select(es=>new GenericParamDTO
+                {
+                    glp_code=es.glp_code,
+                    glp_id=es.glp_id,
+                    glp_name=es.glp_name,
+                    glp_type=es.glp_type
+                }).Where(es=>es.glp_type=="DOCR").OrderBy(es => es.glp_name).ToListAsync();
+
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "ok",
+                    DataGenericParam = new ContentResponsesGenericParam()
+                    {
+                        DokumenRestruktur = DataDokumenRestrukture
+
+                    }
+                };
+                return (Result.Error, Result);
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+            }
+        }
+
+        public async Task<(bool Error, GeneralResponses Returns)> GetPolaRestrukturParam()
+        {
+            try
+            {
+                var DataPolaRestruktur= await generic_param.Select(es => new GenericParamDTO
+                {
+                    glp_code = es.glp_code,
+                    glp_id = es.glp_id,
+                    glp_name = es.glp_name,
+                    glp_type = es.glp_type
+                }).Where(es => es.glp_type == "POLR").OrderBy(es => es.glp_name).ToListAsync();
+
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "ok",
+                    DataGenericParam = new ContentResponsesGenericParam()
+                    {
+                        PolaRestruktur = DataPolaRestruktur
+
+                    }
+                };
+                return (Result.Error, Result);
             }
             catch (Exception ex)
             {
@@ -500,7 +481,7 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool Error, GeneralResponses Returns)> ListSearchCollection(SearchListRestrucutre Entity)
+        public async Task<(bool Error, GeneralResponses Returns)> ListSearchMonitoringListDetail(SearchListRestrucutre Entity)
         {
             try
             {
@@ -519,28 +500,31 @@ namespace sky.recovery.Services
                 else
                 {
                     var Id = getCallBy.Returns.DataEntities.userId;
-                    var Data = await master_loan.Include(i => i.master_customer)
-                        .Include(i => i.rfproduct)
-                        .Include(i => i.collection_call)
-                        .Select(es => new ListNasabahDTO
-                        {
-                            AccNo = es.acc_no,
-                            CallBy = es.collection_call.call_by,
-                            CifNo = es.cu_cif,
-                            NasabahName = es.master_customer.cu_name,
-                            BranchName = es.master_customer.branch.lbrc_name,
-                            Status = es.status
+                    var Data = await master_loan.Include(i => i.master_customer).Include(i => i.collection_call).Select(es => new MonitoringDetailRestructureDTO
+                    {
 
-                        }).Where(es => es.CallBy == Id && es.Status == 1 || es.NasabahName.Contains(Entity.SearchName) ||
-                        es.AccNo.Contains(Entity.SearchAccNo)
-                        ).ToListAsync();
+                        Nasabah = es.master_customer.cu_name,
+                        CustomerId = es.master_customer.Id,
+                        LoanId = es.id,
+                        cucif = es.cu_cif,
+                        acc_no = es.acc_no,
+                        TotalKewajiban = es.kewajiban_total,
+                        DPD = es.dpd,
+                        Kolektibilitas = es.kolektibilitas,
+                        CallBy = es.collection_call.call_by,
+                        Status = es.status
+
+                    }).Where(es => es.Nasabah.Contains(Entity.SearchName) ||
+                        es.acc_no.Contains(Entity.SearchAccNo) && es.DPD > 90 && es.Status == 1 && es.CallBy == getCallBy.Returns.DataEntities.userId).ToListAsync();
+               
+                    
                     var Result = new GeneralResponses()
                     {
                         Error = false,
                         Message = "ok",
                         Data = new ContentResponses()
                         {
-                            Nasabah = Data
+                            monitoringDetailRestructures = Data
                         }
                     };
                     return (Result.Error, Result);

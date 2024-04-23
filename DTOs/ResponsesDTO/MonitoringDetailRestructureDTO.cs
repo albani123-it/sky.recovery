@@ -3,6 +3,8 @@
     public class MonitoringDetailRestructureDTO
     {
         public string acc_no { get; set; }
+        public int CustomerId { get; set; }
+        public int? LoanId { get; set; }
         public string cucif { get; set; }
         public string Nasabah { get; set; }
         public double? TotalKewajiban{ get; set; }
