@@ -5,5 +5,6 @@
         //public string accno { get; set; }
         public int retrukid { get; set; }
         public int PolaId { get; set; }
+        public string Catatan { get; set; }
     }
 }

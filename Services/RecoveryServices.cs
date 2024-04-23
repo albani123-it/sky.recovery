@@ -284,6 +284,8 @@ namespace sky.recovery.Services
                 {
                     Data.rst_pola_restruk_id = Entity.PolaId;
                     Data.rst_status_id = 8;
+                    Data.keterangan = Entity.Catatan;
+                    Data.last_update_date = DateTime.Now;
                     Entry(Data).State = EntityState.Modified;
                     SaveChanges();
                     var Result = new GeneralResponses()
