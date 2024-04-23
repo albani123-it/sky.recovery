@@ -12,6 +12,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetail(RequestRestrukturDetail Entity);
         public  Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetailByAccno(string accno);
         public Task<(bool Error, GeneralResponses Returns)> UpdatePengajuanRestrukturisasi(UpdateRestrukturisasi Entity);
+        public Task<(bool Error, GeneralResponses Returns)> ListSearchRestructure(SearchListRestrucutre Entity);
 
 
 

@@ -42,6 +42,9 @@ namespace sky.recovery.Entities
         public int? margin_amount { get; set; }
         public int? total_diskon_margin { get; set; }
         public int? rst_pola_restruk_id { get; set; }
+
+        [ForeignKey(nameof(rst_pola_restruk_id))]
+        public generic_param? generic_param_pola_restruk { get; set; }
         public int? pembayaran_gp_id { get; set; }
         public int? jenis_pengurangan_id { get; set; }
         public string permasalahan { get; set; }

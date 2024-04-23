@@ -217,6 +217,34 @@ namespace sky.recovery.Controllers
             }
         }
 
+        [HttpPost("Restruktur/monitoring/list/Search")]
+        public async Task<ActionResult<GeneralResponses>> ListSearchRestructure([FromBody] SearchListRestrucutre Entity)
+        {
+            try
+            {
+                var GetData = await _recoveryService.ListSearchRestructure(Entity);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
         [HttpGet("DummyTest/{Error}")]
         public async Task<ActionResult<GeneralResponses>> DummyTest(string Error)
         {

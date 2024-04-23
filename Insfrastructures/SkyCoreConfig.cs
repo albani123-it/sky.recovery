@@ -10,6 +10,7 @@ namespace sky.recovery.Insfrastructures
     {
         public DbSet<master_loan> master_loan { get; set; }
         public DbSet<restructure_cashflow> restructure_cashflow { get; set; }
+        public DbSet<generic_param> generic_param { get; set; }
 
         public DbSet<branch> branch { get; set; }
         public DbSet<rfproduct_segment> rfproduct_segment { get; set; }
@@ -42,6 +43,8 @@ namespace sky.recovery.Insfrastructures
         {
             modelBuilder.Entity<branch>()
 .HasKey(e => e.lbrc_id);
+            modelBuilder.Entity<generic_param>()
+.HasKey(e => e.glp_id);
             modelBuilder.Entity<restructure_cashflow>()
 .HasKey(e => e.rsc_id);
             modelBuilder.Entity<rfproduct_segment>()

@@ -34,11 +34,13 @@ namespace sky.recovery.Services
                   
                     Nasabah=es.master_loan.master_customer.cu_name,
                     CustomerId=es.master_loan.customer_id,
+                    loanId=es.master_loan.id,
                     cucif=es.master_loan.cu_cif,
                     acc_no=es.master_loan.acc_no,
                     rst_id=es.rst_id,                 
                     BranchName=es.master_loan.master_customer.branch.lbrc_name,
-                    Status=es.status.sts_name
+                    Status=es.status.sts_name,
+                    PolaRestruktur=es.generic_param_pola_restruk.glp_name
                   
                 }).ToListAsync();
                 var Result = new GeneralResponses()
@@ -48,6 +50,49 @@ namespace sky.recovery.Services
                     Data=new ContentResponses()
                     {
                         RestructureDTOs=Data
+                    }
+                };
+                return (Result.Error, Result);
+
+            }
+            catch (Exception ex)
+            {
+                var Result = new GeneralResponses()
+                {
+                    Error = true,
+                    Message = ex.Message
+                };
+                return (Result.Error, Result);
+            }
+        }
+
+        public async Task<(bool Error, GeneralResponses Returns)> ListSearchRestructure(SearchListRestrucutre Entity)
+        {
+            try
+            {
+                //var getCallBy = await _User.GetDataUser(userid);
+
+                var Data = await restructure.Include(i => i.master_loan).Include(i => i.status).Select(es => new ListRestructureDTO
+                {
+
+                    Nasabah = es.master_loan.master_customer.cu_name,
+                    CustomerId = es.master_loan.customer_id,
+                    loanId = es.master_loan.id,
+                    cucif = es.master_loan.cu_cif,
+                    acc_no = es.master_loan.acc_no,
+                    rst_id = es.rst_id,
+                    BranchName = es.master_loan.master_customer.branch.lbrc_name,
+                    Status = es.status.sts_name,
+                    PolaRestruktur = es.generic_param_pola_restruk.glp_name
+
+                }).Where(es=>es.Nasabah.Contains(Entity.SearchName) || es.acc_no.Contains(Entity.SearchAccNo)).ToListAsync();
+                var Result = new GeneralResponses()
+                {
+                    Error = false,
+                    Message = "ok",
+                    Data = new ContentResponses()
+                    {
+                        RestructureDTOs = Data
                     }
                 };
                 return (Result.Error, Result);

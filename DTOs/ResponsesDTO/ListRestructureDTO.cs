@@ -35,11 +35,12 @@ namespace sky.recovery.DTOs.ResponsesDTO
         public int rst_id { get; set; }
         public string acc_no { get; set; }
         public string cucif { get; set; }
-      
+      public int? loanId { get; set; }
 public string BranchName { get; set; }
         public string Nasabah { get; set; }
      public string Status { get; set; }
         public int? CustomerId { get; set; }
+        public string PolaRestruktur { get; set; }
      
     }
 }
