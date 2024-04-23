@@ -34,7 +34,7 @@ namespace sky.recovery.DTOs.ResponsesDTO
         public double? TotalTunggakan { get; set; }
         public double? TotalKewajiban { get; set; }
         public string BranchAreaCode { get; set; }
-        public string NoFasilitas { get; set; }
+        public string BranchName { get; set; }
 
     }
 
