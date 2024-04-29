@@ -16,6 +16,7 @@ using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace sky.recovery.Services
 {
@@ -29,10 +30,17 @@ namespace sky.recovery.Services
 
         }
 
-        public async Task<(bool Error, GeneralResponses Returns)> ListRestructure()
+        public async Task<(bool? Error, GenericResponses<ListRestructureDTO> Returns)> ListRestructure()
         {
+            var wrap = new GenericResponses<ListRestructureDTO>
+            {
+                Error = false,
+                Message = ""
+            };
             try
             {
+               
+
                 //var getCallBy = await _User.GetDataUser(userid);
 
                 var Data =await  restructure.Include(i=>i.master_loan).Include(i=>i.status).Select(es => new ListRestructureDTO
@@ -49,26 +57,19 @@ namespace sky.recovery.Services
                     PolaRestruktur=es.generic_param_pola_restruk.glp_name
                   
                 }).ToListAsync();
-                var Result = new GeneralResponses()
-                {
-                    Error = false,
-                    Message = "ok",
-                    Data=new ContentResponses()
-                    {
-                        RestructureDTOs=Data
-                    }
-                };
-                return (Result.Error, Result);
+
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = Data;
+                return (wrap.Error,wrap);
 
             }
             catch (Exception ex)
             {
-                var Result = new GeneralResponses()
-                {
-                    Error = true,
-                    Message = ex.Message
-                };
-                return (Result.Error, Result);
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+               
+                return (wrap.Error, wrap);
             }
         }
 

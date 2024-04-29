@@ -8,6 +8,7 @@ using sky.recovery.Interfaces;
 using sky.recovery.DTOs.RequestDTO;
 using sky.recovery.Model.Entity;
 using sky.recovery.Model;
+using sky.recovery.DTOs.ResponsesDTO;
 
 namespace sky.recovery.Controllers
 {
@@ -79,8 +80,9 @@ namespace sky.recovery.Controllers
             }
         }
 
+        //API YANG DIPAKAI
         [HttpGet("restruktur/monitoring/list")]
-        public async Task<ActionResult<GeneralResponses>> RestructureListMonitoring()
+        public async Task<ActionResult<GenericResponses<ListRestructureDTO>>> RestructureListMonitoring()
         {
             try
             {

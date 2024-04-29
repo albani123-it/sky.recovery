@@ -1,14 +1,6 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\bin",
-    "\\bin\\Debug",
-    "\\bin\\Release",
-    "\\Controllers",
-    "\\CustomTokenProvider",
-    "\\File",
-    "\\Libs"
+    ""
   ],
-  "SelectedNode": "\\Controllers\\TokenController.cs",
   "PreviewInSolutionExplorer": false
 }
