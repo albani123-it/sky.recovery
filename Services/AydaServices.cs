@@ -23,7 +23,7 @@ namespace sky.recovery.Services
         }
 
         //AYDA MONITORING SERVICE
-        public async Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListMonitoringAyda(int userlevel)
+        public async Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListMonitoringAyda()
         {
             var wrap = new GenericResponses<aydaDTO>
             {

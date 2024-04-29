@@ -9,11 +9,13 @@ using System;
 
 namespace sky.recovery.Controllers.ext
 {
+    [Route("skyrecovery/recovery/[controller]")]
     public class RestrukturController : RecoveryController
     {
         private IRestrukturServices _recoveryService { get; set; }
-       
-        public RestrukturController(IRestrukturServices recoveryService) : base(recoveryService)
+        private IAydaServices _aydaServices{ get; set; }
+
+        public RestrukturController(IRestrukturServices recoveryService, IAydaServices aydaServices) : base(recoveryService,aydaServices)
         {
             _recoveryService = recoveryService;
         }
@@ -286,7 +288,7 @@ namespace sky.recovery.Controllers.ext
 
         //API YANG DIPAKAI
         //restruktur-monitoring
-        [HttpGet("restruktur/monitoring/list")]
+        [HttpGet("monitoring/list")]
         public async Task<ActionResult<GenericResponses<ListRestructureDTO>>> RestructureListMonitoring()
         {
             try
@@ -315,7 +317,7 @@ namespace sky.recovery.Controllers.ext
 
         //API YANG DIPAKAI
         //TASKLIST RESTRUKTUR
-        [HttpGet("restruktur/Approval/List/{userid}")]
+        [HttpGet("Approval/List/{userid}")]
         public async Task<ActionResult<GeneralResponses>> ApprovalListMonitoring(string userid)
         {
             try

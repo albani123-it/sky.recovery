@@ -14,12 +14,15 @@ namespace sky.recovery.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("skyrecovery/[controller]")]
-    public class RecoveryController : BaseController
+    public class RecoveryController : Controller
     {
         private IRestrukturServices _recoveryService { get; set; }
-        public RecoveryController(IRestrukturServices recoveryService)
+        private IAydaServices _aydaService{ get; set; }
+
+        public RecoveryController(IRestrukturServices recoveryService, IAydaServices aydaService)
         {
             _recoveryService = recoveryService;
+            _aydaService = aydaService;
         }
         public IActionResult Index()
         {

@@ -6,7 +6,7 @@ namespace sky.recovery.Interfaces
 {
     public interface IAydaServices
     {
-        public Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListMonitoringAyda(int userlevel);
+        public Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListMonitoringAyda();
         public Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListTaskListAyda(string userid);
 
     }
