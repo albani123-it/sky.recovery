@@ -44,8 +44,9 @@ namespace sky.recovery
      .AddJsonFile("appsettings.json")
      .Build();
             services.Configure<DbContextSettings>(config.GetSection("DbContextSettings"));
-            services.AddScoped<IRecoveryServices, RecoveryServices>();
+            services.AddScoped<IRestrukturServices, RestrukturServices>();
             services.AddScoped<IUserService, UserServices>();
+            services.AddScoped<IAydaServices, AydaServices>();
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(option => option.EnableEndpointRouting = false);

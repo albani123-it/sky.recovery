@@ -8,6 +8,7 @@ namespace sky.recovery.Insfrastructures
     public class SkyCollConfig:DbContext
     {
         public DbSet<users> users { get; set; }
+        public DbSet<role> role { get; set; }
 
         private DbContextSettings _appsetting { get; set; }
 
@@ -34,7 +35,8 @@ namespace sky.recovery.Insfrastructures
 
             modelBuilder.Entity<users>()
 .HasKey(e => e.usr_id);
-
+            modelBuilder.Entity<role>()
+.HasKey(e => e.rl_id);
 
             //            modelBuilder.Entity<branch>()
             //.HasKey(e => e.lbrc_id);

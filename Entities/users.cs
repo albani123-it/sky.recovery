@@ -16,6 +16,8 @@ namespace sky.recovery.Entities
         public string usr_name { get; set; }
         public string usr_nip { get; set; }
         public string usr_access_level { get; set; }
+
+     
         public string usr_branch { get; set; }
         public bool? usr_status { get; set; }
         public DateTime? usr_last_access { get; set; }
