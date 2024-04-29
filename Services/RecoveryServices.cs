@@ -699,26 +699,32 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool Error, GeneralResponses Returns)> ListSearchMonitoringListDetail(SearchListRestrucutre Entity)
+        //SERVICE YANG DIPAKAI
+        public async Task<(bool? Error,  GenericResponses<MonitoringDetailRestructureDTO> Returns)> ListSearchMonitoringListDetail(SearchListRestrucutre Entity)
         {
+            var wrap = new GenericResponses<MonitoringDetailRestructureDTO>
+            {
+                Error = false,
+                Message = ""
+            };
             try
             {
 
                 var getCallBy = await _User.GetDataUser(Entity.UserId);
 
+               
                 if (getCallBy.Returns == null)
                 {
-                    var ResultUser = new GeneralResponses()
-                    {
-                        Error = true,
-                        Message = "User Not Found"
-                    };
-                    return (ResultUser.Error, ResultUser);
+                    wrap.Error = true;
+                    wrap.Message = "User Not Found";
+                    return (wrap.Error, wrap);
                 }
                 else
                 {
                     var Id = getCallBy.Returns.DataEntities.userId;
-                    var Data = await master_loan.Include(i => i.master_customer).Include(i => i.collection_call).Select(es => new MonitoringDetailRestructureDTO
+                    var Data = await master_loan.
+                        Include(i => i.master_customer).
+                        Include(i => i.collection_call).Select(es => new MonitoringDetailRestructureDTO
                     {
 
                         Nasabah = es.master_customer.cu_name,
@@ -733,29 +739,22 @@ namespace sky.recovery.Services
                         Status = es.status
 
                     }).Where(es => es.Nasabah.Contains(Entity.SearchName) ||
-                        es.acc_no.Contains(Entity.SearchAccNo) && es.DPD > 90 && es.Status == 1 && es.CallBy == getCallBy.Returns.DataEntities.userId).ToListAsync();
-               
-                    
-                    var Result = new GeneralResponses()
-                    {
-                        Error = false,
-                        Message = "ok",
-                        Data = new ContentResponses()
-                        {
-                            monitoringDetailRestructures = Data
-                        }
-                    };
-                    return (Result.Error, Result);
+                        es.acc_no.Contains(Entity.SearchAccNo) &&
+                        es.DPD > 90 && es.Status == 1 
+                        && es.CallBy == getCallBy.Returns.DataEntities.userId).ToListAsync();
+
+
+                    wrap.Error = false;
+                    wrap.Message = "OK";
+                    wrap.Data = Data;
+                    return (wrap.Error, wrap);
                 }
             }
             catch (Exception ex)
             {
-                var Result = new GeneralResponses()
-                {
-                    Error = true,
-                    Message = ex.Message
-                };
-                return (Result.Error, Result);
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+                return (wrap.Error, wrap);
 
             }
         }

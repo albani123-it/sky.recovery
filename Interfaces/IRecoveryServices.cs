@@ -14,7 +14,8 @@ namespace sky.recovery.Interfaces
         public  Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetailByAccno(string accno);
         public Task<(bool Error, GeneralResponses Returns)> UpdatePengajuanRestrukturisasi(UpdateRestrukturisasi Entity);
         public Task<(bool Error, GeneralResponses Returns)> ListSearchRestructure(SearchListRestrucutre Entity);
-        public  Task<(bool Error, GeneralResponses Returns)> ListSearchMonitoringListDetail(SearchListRestrucutre Entity);
+      
+       public Task<(bool? Error, GenericResponses<MonitoringDetailRestructureDTO> Returns)> ListSearchMonitoringListDetail(SearchListRestrucutre Entity);
 
         public Task<(bool Error, GeneralResponses Returns)> GetDokumenParam();
 
