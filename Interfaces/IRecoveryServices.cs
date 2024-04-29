@@ -9,7 +9,7 @@ namespace sky.recovery.Interfaces
     {
         // public Task<(bool Error, GeneralResponses Returns)> ListCollection(string userid);
         public Task<(bool? Error, GenericResponses<ListRestructureDTO> Returns)> ListRestructure();
-        public Task<(bool Error, GeneralResponses Returns)> MonitoringListDetail(string userid);
+        public Task<(bool? Error, GenericResponses<MonitoringDetailRestructureDTO> Returns)> MonitoringListDetail(string userid);
         public Task<(bool Error, GeneralResponses Returns)> GetGeneralDetailNasabah(RequestRestrukturDetail Entity);
         public  Task<(bool Error, GeneralResponses Returns)> GetRestrukturDetailByAccno(string accno);
         public Task<(bool Error, GeneralResponses Returns)> UpdatePengajuanRestrukturisasi(UpdateRestrukturisasi Entity);

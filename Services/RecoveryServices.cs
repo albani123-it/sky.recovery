@@ -30,6 +30,7 @@ namespace sky.recovery.Services
 
         }
 
+        //SERVICE YANG DIPAKAI
         public async Task<(bool? Error, GenericResponses<ListRestructureDTO> Returns)> ListRestructure()
         {
             var wrap = new GenericResponses<ListRestructureDTO>
@@ -119,13 +120,27 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool Error, GeneralResponses Returns)> MonitoringListDetail(string userid)
+        //SERVICE YANG DIPAKAI
+        public async Task<(bool? Error, GenericResponses<MonitoringDetailRestructureDTO> Returns)> MonitoringListDetail(string userid)
         {
+            var wrap = new GenericResponses<MonitoringDetailRestructureDTO>
+            {
+                Error = false,
+                Message = ""
+            };
             try
             {
                 var getCallBy = await _User.GetDataUser(userid);
 
-                var Data = await master_loan.Include(i => i.master_customer).Include(i=>i.collection_call).Select(es => new MonitoringDetailRestructureDTO
+                if(getCallBy.Returns==null)
+                {
+                    wrap.Error = true;
+                    wrap.Message = "User Not Found";
+                    return (wrap.Error,wrap);
+                }
+                var Data = await master_loan.Include(i => i.master_customer).
+                    Include(i=>i.collection_call).
+                    Select(es => new MonitoringDetailRestructureDTO
                 {
 
                     Nasabah = es.master_customer.cu_name,
@@ -140,26 +155,17 @@ namespace sky.recovery.Services
                     Status=es.status
                     
                 }).Where(es=>es.DPD>90 && es.Status==1 && es.CallBy==getCallBy.Returns.DataEntities.userId).ToListAsync();
-                var Result = new GeneralResponses()
-                {
-                    Error = false,
-                    Message = "ok",
-                    Data = new ContentResponses()
-                    {
-                        monitoringDetailRestructures = Data
-                    }
-                };
-                return (Result.Error, Result);
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = Data;
+                return (wrap.Error, wrap);
 
             }
             catch (Exception ex)
             {
-                var Result = new GeneralResponses()
-                {
-                    Error = true,
-                    Message = ex.Message
-                };
-                return (Result.Error, Result);
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+                return (wrap.Error, wrap);
             }
         }
 

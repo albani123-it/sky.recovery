@@ -26,6 +26,7 @@ namespace sky.recovery.Controllers
             return View();
         }
 
+        //API YANG DIPAKAI
         [HttpGet("nasabah/list/{userid}")]
         public async Task<ActionResult<GeneralResponses>> ListDeskCall(string userid)
         {
