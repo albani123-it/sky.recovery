@@ -7,6 +7,10 @@ namespace sky.recovery.Interfaces
 {
     public interface IRestrukturServices
     {
+        public  Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringRestrukturV2();
+        public Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId);
+
+
         // public Task<(bool Error, GeneralResponses Returns)> ListCollection(string userid);
         public Task<(bool? Error, GenericResponses<ListRestructureDTO> Returns)> ListRestructure();
         public Task<(bool? Error, GenericResponses<ListRestructureDTO> Returns)> TasklistRestrukture(string userid);

@@ -14,8 +14,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using sky.recovery.Helper.Config;
+using sky.recovery.Insfrastructures;
 using sky.recovery.Interfaces;
 using sky.recovery.Services;
+using sky.recovery.Services.DBConfig;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace sky.recovery
@@ -47,6 +49,7 @@ namespace sky.recovery
             services.AddScoped<IRestrukturServices, RestrukturServices>();
             services.AddScoped<IUserService, UserServices>();
             services.AddScoped<IAydaServices, AydaServices>();
+            services.AddScoped<IRestruktureRepository, RestruktureRepository>();
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(option => option.EnableEndpointRouting = false);

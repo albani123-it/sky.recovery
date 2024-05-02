@@ -8,7 +8,7 @@ namespace sky.recovery.Insfrastructures
     public class SkyCollConfig:DbContext
     {
         public DbSet<users> users { get; set; }
-        public DbSet<role> role { get; set; }
+        public DbSet<role> role { get; set; } 
 
         private DbContextSettings _appsetting { get; set; }
 

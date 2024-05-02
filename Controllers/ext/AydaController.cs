@@ -24,6 +24,68 @@ namespace sky.recovery.Controllers.ext
         }
 
 
+
+        //V2
+        [HttpGet("V2/Monitoring/list")]
+        public async Task<ActionResult<GeneralResponses>> MonitoringAydaV2()
+
+        {
+            try
+            {
+                var GetData = await _aydaServices.MonitoringAYDAV2();
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+        //V2
+        [HttpGet("V2/TaskList/list/{UserId}")]
+        public async Task<ActionResult<GeneralResponses>> TaskListAydaV2(string UserId)
+
+        {
+            try
+            {
+                var GetData = await _aydaServices.TaskListAYDAV2(UserId);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return BadRequest(Return);
+            }
+        }
+
+
         //API YANG DIPAKAI
         //TASKLIST RESTRUKTUR
         [HttpGet("Approval/List/{userid}")]

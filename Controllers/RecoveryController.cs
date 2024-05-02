@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using System;
 using sky.recovery.Interfaces;
 using sky.recovery.DTOs.RequestDTO;
-using sky.recovery.Model.Entity;
-using sky.recovery.Model;
+
 using sky.recovery.DTOs.ResponsesDTO;
 
 namespace sky.recovery.Controllers

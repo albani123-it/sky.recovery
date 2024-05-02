@@ -15,11 +15,69 @@ namespace sky.recovery.Services
     public class AydaServices : SkyCoreConfig, IAydaServices
     {
         private IUserService _User { get; set; }
-        public AydaServices(IUserService User, IOptions<DbContextSettings> appsetting) : base(appsetting)
+        private IAydaRepository _postgreRepository { get; set; }
+        ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+
+        public AydaServices(IUserService User,IAydaRepository postgreRepository, IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
             _User = User;
+            _postgreRepository = postgreRepository;
+
+        }
 
 
+
+        //SERVICE YANG DIPAKAI
+        //MONITORING AYDA V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringAYDAV2()
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                //var getCallBy = await _User.GetDataUser(UserId);
+                var ReturnData = await (Task.Run(() => _postgreRepository.GetAyda(1, "\"RecoveryBusinessV2\".getayda", "")));
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Error, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+
+                return (wrap.Error, wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
+        //TASKLIST AYDA V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListAYDAV2(string UserId)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(UserId);
+                var ReturnData = await (Task.Run(() => _postgreRepository.GetAyda(2, "\"RecoveryBusinessV2\".tasklistayda", getCallBy.Returns.Data.FirstOrDefault().acceslevel)));
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Error, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+
+                return (wrap.Error, wrap);
+            }
         }
 
         //AYDA MONITORING SERVICE
@@ -32,6 +90,8 @@ namespace sky.recovery.Services
             };
             try
             {
+
+
                 var Data = await ayda.Include(i=>i.master_loan)
                     .Include(i=>i.status).
                     Include(i=>i.master_loan.master_customer).

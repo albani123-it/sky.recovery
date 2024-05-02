@@ -8,6 +8,8 @@ namespace sky.recovery.Interfaces
     {
         public Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListMonitoringAyda();
         public Task<(bool? Error, GenericResponses<aydaDTO> Returns)> ListTaskListAyda(string userid);
+        public Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringAYDAV2();
+        public Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListAYDAV2(string UserId);
 
     }
 }

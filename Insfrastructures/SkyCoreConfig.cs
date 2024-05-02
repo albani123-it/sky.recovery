@@ -12,8 +12,11 @@ namespace sky.recovery.Insfrastructures
         public DbSet<restructure_cashflow> restructure_cashflow { get; set; }
         public DbSet<generic_param> generic_param { get; set; }
         public DbSet<ayda> ayda { get; set; }
+        public DbSet<auction> auction { get; set; }
 
         public DbSet<branch> branch { get; set; }
+
+
         public DbSet<rfproduct_segment> rfproduct_segment { get; set; }
 
         public DbSet<master_customer> master_customer { get; set; }

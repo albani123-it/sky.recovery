@@ -9,8 +9,7 @@ using sky.recovery.Helper.Config;
 using sky.recovery.Insfrastructures;
 using sky.recovery.Interfaces;
 using sky.recovery.Libs;
-using sky.recovery.Model.Entity;
-using sky.recovery.Model;
+
 using sky.recovery.Responses;
 using System;
 using System.Linq;
@@ -18,18 +17,79 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using sky.recovery.Services.DBConfig;
 
 namespace sky.recovery.Services
 {
     public class RestrukturServices :SkyCoreConfig, IRestrukturServices
     {
         private IUserService _User { get; set; }
-        public RestrukturServices(IUserService User, IOptions<DbContextSettings> appsetting) : base(appsetting)
+        private IRestruktureRepository _postgreRepository { get; set; }
+
+        ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+       
+            public RestrukturServices(IUserService User,  IRestruktureRepository postgreRepository,
+            IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
             _User = User;
-            
-
+            _postgreRepository = postgreRepository;
+         
         }
+
+        //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringRestrukturV2()
+        {
+            var wrap = _DataResponses.Return();
+        
+            try
+            {
+
+               // var getCallBy = await _User.GetDataUser(UserId);
+                var ReturnData =await(Task.Run(()=> _postgreRepository.GetRestukture(1,"\"RecoveryBusinessV2\".getrestrukture","")));
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Error, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+
+                return (wrap.Error, wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
+        //TASKLIST RESTRUKTUR V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(UserId);
+                var ReturnData = await (Task.Run(() => _postgreRepository.GetRestukture(2, "\"RecoveryBusinessV2\".tasklistrestrukture", getCallBy.Returns.Data.FirstOrDefault().acceslevel)));
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Error, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+
+                return (wrap.Error, wrap);
+            }
+        }
+
+
 
         //SERVICE YANG DIPAKAI
         // MONITORING RESTRUKTUR
