@@ -12,11 +12,12 @@ using sky.recovery.DTOs.ResponsesDTO;
 namespace sky.recovery.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("skyrecovery/[controller]")]
+    [Route("api/skyrecovery/[controller]")]
     public class RecoveryController : Controller
     {
         private IRestrukturServices _recoveryService { get; set; }
         private IAydaServices _aydaService{ get; set; }
+        ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
         public RecoveryController(IRestrukturServices recoveryService, IAydaServices aydaService)
         {
@@ -28,63 +29,64 @@ namespace sky.recovery.Controllers
             return View();
         }
 
-        //API YANG DIPAKAI
-        //monitroing restruktur - list add restruktur
-        [HttpGet("nasabah/list/{userid}")]
-        public async Task<ActionResult<GenericResponses<MonitoringDetailRestructureDTO>>> ListDeskCall(string userid)
-        {
-            try
-            {
-                var GetData = await _recoveryService.MonitoringListDetail(userid);
-                if (GetData.Error == true)
-                {
-                    return BadRequest(GetData.Returns);
-                }
-                else
-                {
-                    return Ok(GetData.Returns);
-                }
+        ////API YANG DIPAKAI
+        ////monitroing restruktur - list add restruktur
+        //[HttpGet("nasabah/list/{userid}")]
+        //public async Task<ActionResult<GenericResponses<MonitoringDetailRestructureDTO>>> ListDeskCall(string userid)
+        //{
+        //    var wrap = _DataResponses.Return();
 
-            }
-            catch (Exception ex)
-            {
-                var Return = new GeneralResponses()
-                {
-                    Message = ex.Message,
-                    Error = true
-                };
-                return BadRequest(Return);
-            }
-        }
+        //    try
+        //    {
+        //        var GetData = await _recoveryService.MonitoringListDetail(userid);
+        //        if (GetData.Error == true)
+        //        {
+        //            return BadRequest(GetData.Returns);
+        //        }
+        //        else
+        //        {
+        //            return Ok(GetData.Returns);
+        //        }
 
-        //API YANG DIPAKAI
-        //monitor restruktur search list
-        [HttpPost("nasabah/listSearch")]
-        public async Task<ActionResult<GenericResponses<MonitoringDetailRestructureDTO>>> ListSearchDeskCall([FromBody] SearchListRestrucutre Entity)
-        {
-            try
-            {
-                var GetData = await _recoveryService.ListSearchMonitoringListDetail(Entity);
-                if (GetData.Error == true)
-                {
-                    return BadRequest(GetData.Returns);
-                }
-                else
-                {
-                    return Ok(GetData.Returns);
-                }
+        //    }
+        //    catch (Exception ex)
+        //    {
 
-            }
-            catch (Exception ex)
-            {
-                var Return = new GeneralResponses()
-                {
-                    Message = ex.Message,
-                    Error = true
-                };
-                return BadRequest(Return);
-            }
-        }
+        //        wrap.Message = ex.Message;
+        //        wrap.Error = true;
+                   
+        //        return BadRequest(wrap);
+        //    }
+        //}
+
+        ////API YANG DIPAKAI
+        ////monitor restruktur search list
+        //[HttpPost("nasabah/listSearch")]
+        //public async Task<ActionResult<GenericResponses<MonitoringDetailRestructureDTO>>> ListSearchDeskCall([FromBody] SearchListRestrucutre Entity)
+        //{
+        //    try
+        //    {
+        //        var GetData = await _recoveryService.ListSearchMonitoringListDetail(Entity);
+        //        if (GetData.Error == true)
+        //        {
+        //            return BadRequest(GetData.Returns);
+        //        }
+        //        else
+        //        {
+        //            return Ok(GetData.Returns);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var Return = new GeneralResponses()
+        //        {
+        //            Message = ex.Message,
+        //            Error = true
+        //        };
+        //        return BadRequest(Return);
+        //    }
+        //}
 
 
         [HttpGet("DummyTest/{Error}")]

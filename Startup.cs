@@ -18,6 +18,7 @@ using sky.recovery.Insfrastructures;
 using sky.recovery.Interfaces;
 using sky.recovery.Services;
 using sky.recovery.Services.DBConfig;
+using sky.recovery.Services.Repository;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace sky.recovery
@@ -50,6 +51,8 @@ namespace sky.recovery
             services.AddScoped<IUserService, UserServices>();
             services.AddScoped<IAydaServices, AydaServices>();
             services.AddScoped<IRestruktureRepository, RestruktureRepository>();
+            services.AddScoped<IAydaRepository, AydaRepository>();
+            services.AddScoped<IHelperRepository, HelperRepository>();
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(option => option.EnableEndpointRouting = false);
