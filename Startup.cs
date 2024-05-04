@@ -50,9 +50,9 @@ namespace sky.recovery
             services.AddScoped<IRestrukturServices, RestrukturServices>();
             services.AddScoped<IUserService, UserServices>();
             services.AddScoped<IAydaServices, AydaServices>();
-            services.AddScoped<IRestruktureRepository, RestruktureRepository>();
-            services.AddScoped<IAydaRepository, AydaRepository>();
-            services.AddScoped<IHelperRepository, HelperRepository>();
+            services.AddSingleton<IRestruktureRepository, RestruktureRepository>();
+            services.AddSingleton<IAydaRepository, AydaRepository>();
+            services.AddSingleton<IHelperRepository, HelperRepository>();
 
             services.AddControllers().AddNewtonsoftJson();
             services.AddMvc(option => option.EnableEndpointRouting = false);
