@@ -9,6 +9,7 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> GetTaskList(string consstring, string spname, string FilterStatus, string UserId);
         public Task<List<dynamic>> GetMonitoring(string consstring, string spname,string UserId);
 
+        public Task<List<dynamic>> GetMasterLoan(string spname);
 
 
     }

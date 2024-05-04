@@ -106,7 +106,32 @@ namespace sky.recovery.Services
             }
         }
 
+        //SERVICE YANG DIPAKAI
+        //GET MASTER LOAN FOR RESTRUKTUR V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> GetMasterLoanV2()
+        {
+            var wrap = _DataResponses.Return();
 
+            try
+            {
+
+               // var getCallBy = await _User.GetDataUser(UserId);
+               
+                var ReturnData = await _postgreRepository.GetMasterLoan( "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getloanmaster.ToString() + "");
+                wrap.Error = false;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Error, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Error = true;
+                wrap.Message = ex.Message;
+
+                return (wrap.Error, wrap);
+            }
+        }
 
     }
 }

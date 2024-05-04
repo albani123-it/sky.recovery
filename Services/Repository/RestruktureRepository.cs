@@ -20,7 +20,7 @@ using sky.recovery.Helper.Enum;
 
 namespace sky.recovery.Services.DBConfig
 {
-    public class RestruktureRepository :PostgreSetting, IRestruktureRepository
+    public class RestruktureRepository : PostgreSetting, IRestruktureRepository
     {
         public BaseController bc = new BaseController();
 
@@ -28,18 +28,18 @@ namespace sky.recovery.Services.DBConfig
         {
         }
 
-       
-       
-        public async Task<List<dynamic>> GetRestukture( int Type,string SPName,string FilterStatus,string UserId)
+
+
+        public async Task<List<dynamic>> GetRestukture(int Type, string SPName, string FilterStatus, string UserId)
         {
             var SkyCollConsString = GetSkyCollConsString();
-            if(Type==1)
+            if (Type == 1)
             {
-                return await GetMonitoring(SkyCollConsString.Data.ConnectionSetting,SPName,UserId);
+                return await GetMonitoring(SkyCollConsString.Data.ConnectionSetting, SPName, UserId);
             }
             else
             {
-                return await GetTaskList(SkyCollConsString.Data.ConnectionSetting, SPName,FilterStatus,UserId);
+                return await GetTaskList(SkyCollConsString.Data.ConnectionSetting, SPName, FilterStatus, UserId);
 
             }
 
@@ -47,15 +47,15 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
-        public async Task< List<dynamic>> GetTaskList(string consstring, string spname,string FilterStatus,string UserId)
+        public async Task<List<dynamic>> GetTaskList(string consstring, string spname, string FilterStatus, string UserId)
         {
             string Status = "";
-            if(FilterStatus==RestrukturRole.Operator.ToString())
+            if (FilterStatus == RestrukturRole.Operator.ToString())
             {
                 Status = StatusWorkflow.DRAFT.ToString();
             }
-          
-            if(FilterStatus==RestrukturRole.Supervisor.ToString())
+
+            if (FilterStatus == RestrukturRole.Supervisor.ToString())
             {
                 Status = StatusWorkflow.DRAFT.ToString();
             }
@@ -94,14 +94,14 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
-        public async Task<List<dynamic>> GetMonitoring(string consstring,string spname,string UserId)
+        public async Task<List<dynamic>> GetMonitoring(string consstring, string spname, string UserId)
         {
             var data = new List<dynamic>();
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))
             {
                 connection.Open();
-                using(NpgsqlCommand command = new NpgsqlCommand(spname, connection))
-                { 
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@createdbyuser", Convert.ToInt32(UserId));
 
@@ -123,7 +123,49 @@ namespace sky.recovery.Services.DBConfig
 
                         }
                     }
-                   
+
+
+                }
+
+
+            }
+            return data;
+        }
+
+
+
+
+        public async Task<List<dynamic>> GetMasterLoan(string spname)
+        {
+            var data = new List<dynamic>();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+
+                        }
+                    }
+
 
                 }
 
@@ -133,4 +175,3 @@ namespace sky.recovery.Services.DBConfig
         }
     }
 }
-

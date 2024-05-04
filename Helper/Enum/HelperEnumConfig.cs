@@ -20,7 +20,8 @@
     public enum RecoveryFunctionName
     {
         getrestrukture,
-        tasklistrestrukture
+        tasklistrestrukture,
+        getloanmaster
     }
     public enum RecoverySubModule
     {
