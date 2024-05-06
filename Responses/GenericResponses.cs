@@ -10,7 +10,7 @@ namespace sky.recovery.Responses
             this.Data = new List<T>();
         }
 
-        public Boolean? Error { set; get; }
+        public Boolean? Status { set; get; }
         public string? Message { set; get; }
         //public string? Page { set; get; }
 

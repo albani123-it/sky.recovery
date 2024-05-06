@@ -13,10 +13,9 @@ namespace sky.recovery.Controllers.ext
     public class RestrukturController : RecoveryController
     {
         private IRestrukturServices _recoveryService { get; set; }
-        private IAydaServices _aydaServices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService, IAydaServices aydaServices) : base(recoveryService,aydaServices)
+        public RestrukturController(IRestrukturServices recoveryService) : base(recoveryService)
         {
             _recoveryService = recoveryService;
         }
@@ -48,11 +47,39 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                wrap.Error = true;
+                 wrap.Status  = true;
                 return BadRequest(wrap);
             }
         }
 
+        //V2
+        [HttpGet("V2/GetDetailRestruktur/{LoanId}/{AccNo}")]
+        public async Task<ActionResult<GeneralResponses>> GetDetailRestruktur(int? LoanId,string AccNo)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.GetDetailDraftingRestruktur(LoanId,AccNo);
+                if (GetData.Error == true)
+                {
+                    return BadRequest(GetData.Returns);
+                }
+                else
+                {
+                    return Ok(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                 wrap.Status  = true;
+                return BadRequest(wrap);
+            }
+        }
 
         //V2
         [HttpGet("V2/GetMasterLoan/list")]
@@ -78,7 +105,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                wrap.Error = true;
+                 wrap.Status  = true;
                 return BadRequest(wrap);
             }
         }
@@ -107,7 +134,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                wrap.Error = true;
+                 wrap.Status  = true;
                 return BadRequest(wrap);
             }
         }

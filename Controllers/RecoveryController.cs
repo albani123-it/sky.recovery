@@ -16,13 +16,11 @@ namespace sky.recovery.Controllers
     public class RecoveryController : Controller
     {
         private IRestrukturServices _recoveryService { get; set; }
-        private IAydaServices _aydaService{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RecoveryController(IRestrukturServices recoveryService, IAydaServices aydaService)
+        public RecoveryController(IRestrukturServices recoveryService)
         {
             _recoveryService = recoveryService;
-            _aydaService = aydaService;
         }
         public IActionResult Index()
         {

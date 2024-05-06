@@ -49,9 +49,7 @@ namespace sky.recovery
             services.Configure<DbContextSettings>(config.GetSection("DbContextSettings"));
             services.AddScoped<IRestrukturServices, RestrukturServices>();
             services.AddScoped<IUserService, UserServices>();
-            services.AddScoped<IAydaServices, AydaServices>();
             services.AddSingleton<IRestruktureRepository, RestruktureRepository>();
-            services.AddSingleton<IAydaRepository, AydaRepository>();
             services.AddSingleton<IHelperRepository, HelperRepository>();
 
             services.AddControllers().AddNewtonsoftJson();

@@ -53,23 +53,23 @@ namespace sky.recovery.Services
              
                 if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 {
-                    wrap.Error = true;
+                     wrap.Status  = true;
                     wrap.Message = "Not Authorize";
-                    return (wrap.Error, wrap);
+                    return ( wrap.Status , wrap);
                 }
                 var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", "", getCallBy.Returns.Data.FirstOrDefault().iduser.ToString());
-                wrap.Error = false;
+                 wrap.Status  = false;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                wrap.Error = true;
+                 wrap.Status  = true;
                 wrap.Message = ex.Message;
 
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
             }
         }
 
@@ -86,23 +86,66 @@ namespace sky.recovery.Services
                 var getCallBy = await _User.GetDataUser(UserId);
                 if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Supervisor.ToString())
                 {
-                    wrap.Error = true;
+                     wrap.Status  = true;
                     wrap.Message = "Not Authorize";
-                    return (wrap.Error, wrap);
+                    return ( wrap.Status , wrap);
                 }
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().role, UserId);
-                wrap.Error = false;
+                 wrap.Status  = false;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                wrap.Error = true;
+                 wrap.Status  = true;
                 wrap.Message = ex.Message;
 
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
+        //GET DETAIL DRAFTING RESTRUKTUR V2
+        public async Task<(bool? Error, GeneralResponsesV2 Returns)> GetDetailDraftingRestruktur(int? LoanId,string AccNo)
+        {
+            var wrap = _DataResponses.Return();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                //var getCallBy = await _User.GetDataUser(UserId);
+                if (LoanId==null)
+                {
+                     wrap.Status  = true;
+                    wrap.Message = "Anda Harus Memilih Pinjaman yang akan direstrukturisasi";
+                    return ( wrap.Status , wrap);
+                }
+                var ReturnDetail = await _postgreRepository.GetDetailDrafting(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailfordraftingrestruktur.ToString() + "", LoanId);
+                var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", AccNo);
+
+                 wrap.Status  = false;
+                wrap.Message = "OK";
+                var response = new
+                {
+                    DetailNasabah = ReturnDetail,
+                    FasilitasLainnya = ReturnFasilitas
+                };
+                wrap.Data = response.DetailNasabah;
+                //wrap.Data.FasilitasLainnya = response.FasilitasLainnya;
+
+                return ( wrap.Status , wrap);
+
+            }
+            catch (Exception ex)
+            {
+                 wrap.Status  = true;
+                wrap.Message = ex.Message;
+
+                return ( wrap.Status , wrap);
             }
         }
 
@@ -118,18 +161,18 @@ namespace sky.recovery.Services
                // var getCallBy = await _User.GetDataUser(UserId);
                
                 var ReturnData = await _postgreRepository.GetMasterLoan( "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getloanmaster.ToString() + "");
-                wrap.Error = false;
+                 wrap.Status  = false;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                wrap.Error = true;
+                 wrap.Status  = true;
                 wrap.Message = ex.Message;
 
-                return (wrap.Error, wrap);
+                return ( wrap.Status , wrap);
             }
         }
 

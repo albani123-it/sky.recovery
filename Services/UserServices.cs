@@ -20,11 +20,11 @@ namespace sky.recovery.Services
 
 
         }
-        public async Task<(bool? Error, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid)
+        public async Task<(bool? Status, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid)
         {
             var wrap = new GenericResponses<UserDetailDTO>
             {
-                Error = false,
+                Status = false,
                 Message = ""
             };
             try
@@ -55,25 +55,25 @@ namespace sky.recovery.Services
                     x.role = CheckDataRole.Returns.Data.FirstOrDefault().RoleName;
                     ListData.Add(x);
                 }
-                wrap.Error = false;
+                wrap.Status = false;
                 wrap.Message = "OK";
                 wrap.Data = ListData;
               
-                return (wrap.Error, wrap);
+                return (wrap.Status, wrap);
             }
             catch (Exception ex)
             {
-                wrap.Error = false;
+                wrap.Status = false;
                 wrap.Message = ex.Message;
-                return (wrap.Error, wrap);
+                return (wrap.Status, wrap);
             }
         }
 
-        public async Task<(bool? Error, GenericResponses<RoleDTO> Returns)> GetRoles(int userlevel)
+        public async Task<(bool? Status, GenericResponses<RoleDTO> Returns)> GetRoles(int userlevel)
         {
             var wrap = new GenericResponses<RoleDTO>
             {
-                Error = false,
+                Status = false,
                 Message = ""
             };
             try
@@ -89,17 +89,17 @@ namespace sky.recovery.Services
                     }).
                     Where(es => es.RoleId == userlevel).
                     ToListAsync();
-                wrap.Error = false;
+                wrap.Status = false;
                 wrap.Message = "OK";
                 wrap.Data = Data;
 
-                return (wrap.Error, wrap);
+                return (wrap.Status, wrap);
             }
             catch (Exception ex)
             {
-                wrap.Error = false;
+                wrap.Status = false;
                 wrap.Message = ex.Message;
-                return (wrap.Error, wrap);
+                return (wrap.Status, wrap);
             }
         }
 

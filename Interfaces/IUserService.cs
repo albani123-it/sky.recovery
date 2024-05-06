@@ -6,8 +6,8 @@ namespace sky.recovery.Interfaces
 {
     public interface IUserService
     {
-        public Task<(bool? Error, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid);
-        public Task<(bool? Error, GenericResponses<RoleDTO> Returns)> GetRoles(int userlevel);
+        public Task<(bool? Status, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid);
+        public Task<(bool? Status, GenericResponses<RoleDTO> Returns)> GetRoles(int userlevel);
 
     }
 }

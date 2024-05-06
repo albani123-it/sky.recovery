@@ -21,7 +21,9 @@
     {
         getrestrukture,
         tasklistrestrukture,
-        getloanmaster
+        getloanmaster,
+        getdetailfordraftingrestruktur,
+        getlistfasilitas
     }
     public enum RecoverySubModule
     {
