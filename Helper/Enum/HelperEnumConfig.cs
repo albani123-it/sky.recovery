@@ -33,7 +33,7 @@
     public enum StatusWorkflow
     {
         DRAFT,
-        WAITINGFORAPPROVAL,
+        REQUESTED,
         APPROVED,
         REJECT,
         REVISED

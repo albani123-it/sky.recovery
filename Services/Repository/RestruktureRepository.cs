@@ -57,7 +57,7 @@ namespace sky.recovery.Services.DBConfig
 
             if (FilterStatus == RestrukturRole.Supervisor.ToString())
             {
-                Status = StatusWorkflow.DRAFT.ToString();
+                Status = StatusWorkflow.REQUESTED.ToString();
             }
 
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))
@@ -94,6 +94,7 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
+        //SP PARAM ONLY USER ID
         public async Task<List<dynamic>> GetMonitoring(string consstring, string spname, string UserId)
         {
             var data = new List<dynamic>();
@@ -134,7 +135,7 @@ namespace sky.recovery.Services.DBConfig
 
 
 
-
+        //SP NON PARAM
         public async Task<List<dynamic>> GetMasterLoan(string spname)
         {
             var data = new List<dynamic>();
