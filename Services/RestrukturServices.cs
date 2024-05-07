@@ -41,7 +41,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
-        public async Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringRestrukturV2(string UserId)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> MonitoringRestrukturV2(string UserId)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();
@@ -60,11 +60,8 @@ namespace sky.recovery.Services
                 var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", "", getCallBy.Returns.Data.FirstOrDefault().iduser.ToString());
                  wrap.Status  = true;
                 wrap.Message = "OK";
-                var Data = new Data
-                {
-                    Restrukturisasi = ReturnData
-                };
-                wrap.Data = Data;
+              
+                wrap.Data = ReturnData;
                 return ( wrap.Status , wrap);
 
             }
@@ -80,7 +77,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //TASKLIST RESTRUKTUR V2
-        public async Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId)
         {
             var wrap = _DataResponses.Return();
 
@@ -98,10 +95,7 @@ namespace sky.recovery.Services
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().role, UserId);
                  wrap.Status  = true;
                 wrap.Message = "OK";
-                var Data = new Data
-                {
-                    Restrukturisasi = ReturnData
-                };
+                wrap.Data = ReturnData;
                 return ( wrap.Status , wrap);
 
             }
@@ -117,7 +111,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //GET DETAIL DRAFTING RESTRUKTUR V2
-        public async Task<(bool? Error, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid)
+        public async Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid)
         {
             var wrap = _DataResponses.GeneralResponseDetailRestruktur();
             var SkyCollConsString = GetSkyCollConsString();
@@ -162,7 +156,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //GET MASTER LOAN FOR RESTRUKTUR V2
-        public async Task<(bool? Error, GeneralResponsesV2 Returns)> GetMasterLoanV2()
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoanV2()
         {
             var wrap = _DataResponses.Return();
 

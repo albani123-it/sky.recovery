@@ -33,13 +33,13 @@ namespace sky.recovery.Controllers.ext
             try
             {
                 var GetData = await _recoveryService.MonitoringRestrukturV2(UserId);
-                if (GetData.Error == true)
+                if (GetData.Status == true)
                 {
-                    return BadRequest(GetData.Returns);
+                    return Ok(GetData.Returns);
                 }
                 else
                 {
-                    return Ok(GetData.Returns);
+                    return BadRequest(GetData.Returns);
                 }
 
             }
@@ -47,7 +47,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 return BadRequest(wrap);
             }
         }
@@ -62,13 +62,13 @@ namespace sky.recovery.Controllers.ext
             try
             {
                 var GetData = await _recoveryService.GetDetailDraftingRestruktur(loanid);
-                if (GetData.Error == true)
+                if (GetData.Status == true)
                 {
-                    return BadRequest(GetData.Returns);
+                    return Ok(GetData.Returns);
                 }
                 else
                 {
-                    return Ok(GetData.Returns);  
+                    return BadRequest(GetData.Returns);  
                 }
 
             }
@@ -76,7 +76,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 return BadRequest(wrap);
             }
         }
@@ -91,13 +91,13 @@ namespace sky.recovery.Controllers.ext
             try
             {
                 var GetData = await _recoveryService.GetMasterLoanV2();
-                if (GetData.Error == true)
+                if (GetData.Status == true)
                 {
-                    return BadRequest(GetData.Returns);
+                    return Ok(GetData.Returns);
                 }
                 else
                 {
-                    return Ok(GetData.Returns);
+                    return BadRequest(GetData.Returns);
                 }
 
             }
@@ -105,7 +105,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 return BadRequest(wrap);
             }
         }
@@ -120,13 +120,13 @@ namespace sky.recovery.Controllers.ext
             try
             {
                 var GetData = await _recoveryService.TaskListRestrukturV2(UserId);
-                if (GetData.Error == true)
+                if (GetData.Status == true)
                 {
-                    return BadRequest(GetData.Returns);
+                    return Ok(GetData.Returns);
                 }
                 else
                 {
-                    return Ok(GetData.Returns);
+                    return BadRequest(GetData.Returns);
                 }
 
             }
@@ -134,7 +134,7 @@ namespace sky.recovery.Controllers.ext
             catch (Exception ex)
             {
                 wrap.Message = ex.Message;
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 return BadRequest(wrap);
             }
         }
