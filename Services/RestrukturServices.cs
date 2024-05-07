@@ -132,6 +132,7 @@ namespace sky.recovery.Services
                 var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", loanid);
 
                 var GetPermasalahan = await _postgreRepository.GetPermasalahanRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getpermasalahanrestrukture.ToString() + "", loanid);
+                var GetCollateral = await _postgreRepository.GetMasterColateral("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getmastercollateral.ToString() + "", loanid);
 
                 wrap.Status  = true;
                 wrap.Message = "OK";
@@ -142,7 +143,7 @@ namespace sky.recovery.Services
                 {
                     DetailNasabah = ReturnDetail,
                     FasilitasLainnya = ReturnFasilitas,
-                    DataAgunan=xs,
+                    DataAgunan=GetCollateral,
                     Permasalahan=GetPermasalahan
                     
                 };
