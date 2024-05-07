@@ -5,6 +5,8 @@ namespace sky.recovery.DTOs.RequestDTO
 {
     public class AddRestructureDTO
     {
+        public string UserId { get; set; }
+        public int? LoanId { get; set; }
     }
     public class CreateNewRestructure
     {

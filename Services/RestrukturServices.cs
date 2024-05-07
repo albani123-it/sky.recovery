@@ -156,6 +156,51 @@ namespace sky.recovery.Services
             }
         }
 
+
+        //SERVICE YANG DIPAKAI
+        //CREATE DRAFT FOR RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(AddRestructureDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                if(Entity==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Request Tidak Valid";
+                  
+                }
+                if(Entity.LoanId==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Loan Id Harus Diisi";
+                   
+                }
+
+                 var getCallBy = await _User.GetDataUser(Entity.UserId);
+                if(getCallBy.Returns.Data.FirstOrDefault().role!=RestrukturRole.Operator.ToString())
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Not Authorize";
+                }
+                var ReturnData = await _postgreRepository.CreateDraftRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createdraftrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,getCallBy.Returns.Data.FirstOrDefault().RoleId,Entity);
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
         //SERVICE YANG DIPAKAI
         //GET MASTER LOAN FOR RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoanV2()

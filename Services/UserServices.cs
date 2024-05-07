@@ -53,6 +53,8 @@ namespace sky.recovery.Services
                     x.email = x.email;
                     x.userid = x.userid;
                     x.role = CheckDataRole.Returns.Data.FirstOrDefault().RoleName;
+                    x.RoleId = CheckDataRole.Returns.Data.FirstOrDefault().RoleId;
+
                     ListData.Add(x);
                 }
                 wrap.Status = false;

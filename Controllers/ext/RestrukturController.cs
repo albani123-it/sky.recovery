@@ -139,6 +139,36 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+        //V2
+        [HttpPost("V2/CreateDraftRestrukture")]
+        public async Task<ActionResult<GeneralResponses>> CreateDraftRestrukture([FromBody] AddRestructureDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.CreateDraftRestrukture(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
         //V2
         [HttpGet("V2/TaskList/list/{UserId}")]
         public async Task<ActionResult<GeneralResponses>> TaskListRestrukturV2(string UserId)

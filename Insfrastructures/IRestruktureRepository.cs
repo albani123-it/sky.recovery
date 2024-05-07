@@ -13,6 +13,7 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> GetListFasilitas(string consstring, string spname, int? LoanId);
 
         public Task<List<dynamic>> SearchingMonitoringRestrukture(string spname, int? Userid,SearchingRestrukturDTO Entity);
+        public Task<List<dynamic>> CreateDraftRestrukture(string spname, int? Userid, int RoleId, AddRestructureDTO Entity);
 
         public Task<List<dynamic>> GetMasterLoan(string spname);
 

@@ -24,7 +24,8 @@
         getloanmaster,
         getdetailfordraftingrestruktur,
         getlistfasilitas,
-        searchingrestruktur
+        searchingrestruktur,
+        createdraftrestrukture
     }
     public enum RecoverySubModule
     {
