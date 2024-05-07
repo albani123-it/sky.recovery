@@ -30,6 +30,8 @@ namespace sky.recovery.Responses
     {
         public List<dynamic> DetailNasabah { get; set; }
         public List<dynamic> FasilitasLainnya { get; set; }
+        public List<dynamic> DataAgunan { get; set; }
+        public List<dynamic> Permasalahan { get; set; }
 
 
     }

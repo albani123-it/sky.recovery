@@ -137,6 +137,8 @@ namespace sky.recovery.Services
                 {
                     DetailNasabah = ReturnDetail,
                     FasilitasLainnya = ReturnFasilitas,
+                    DataAgunan=null,
+                    Permasalahan=null
                     
                 };
                 wrap.Data = response;
