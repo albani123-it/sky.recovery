@@ -131,14 +131,19 @@ namespace sky.recovery.Services
                 
                 var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", loanid);
 
-                 wrap.Status  = true;
+                var GetPermasalahan = await _postgreRepository.GetPermasalahanRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getpermasalahanrestrukture.ToString() + "", loanid);
+
+                wrap.Status  = true;
                 wrap.Message = "OK";
+                List<dynamic> xs = null;
+                List<dynamic> xst = null;
+
                 var response = new DataDetailRestruktur
                 {
                     DetailNasabah = ReturnDetail,
                     FasilitasLainnya = ReturnFasilitas,
-                    DataAgunan=null,
-                    Permasalahan=null
+                    DataAgunan=xs,
+                    Permasalahan=GetPermasalahan
                     
                 };
                 wrap.Data = response;

@@ -25,7 +25,8 @@
         getdetailfordraftingrestruktur,
         getlistfasilitas,
         searchingrestruktur,
-        createdraftrestrukture
+        createdraftrestrukture,
+        getpermasalahanrestrukture
     }
     public enum RecoverySubModule
     {
