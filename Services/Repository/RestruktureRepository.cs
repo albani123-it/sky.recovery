@@ -49,16 +49,7 @@ namespace sky.recovery.Services.DBConfig
 
         public async Task<List<dynamic>> GetTaskList(string consstring, string spname, string FilterStatus, string UserId)
         {
-            string Status = "";
-            if (FilterStatus == RestrukturRole.Operator.ToString())
-            {
-                Status = StatusWorkflow.DRAFT.ToString();
-            }
-
-            if (FilterStatus == RestrukturRole.Supervisor.ToString())
-            {
-                Status = StatusWorkflow.REQUESTED.ToString();
-            }
+          
 
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))
             {
@@ -66,7 +57,7 @@ namespace sky.recovery.Services.DBConfig
                 using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@filterstatus", Status);
+                    command.Parameters.AddWithValue("@filterstatus", StatusWorkflow.REQUESTED.ToString());
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);
@@ -132,7 +123,7 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
-        public async Task<List<dynamic>> GetListFasilitas(string consstring, string spname, string AccNo)
+        public async Task<List<dynamic>> GetListFasilitas(string consstring, string spname, int? LoanId)
         {
 
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))
@@ -141,7 +132,7 @@ namespace sky.recovery.Services.DBConfig
                 using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@accno", AccNo);
+                    command.Parameters.AddWithValue("@idloan", LoanId);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);

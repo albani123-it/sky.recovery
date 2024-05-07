@@ -6,17 +6,30 @@ namespace sky.recovery.Responses
     {
         public bool Status { get; set; }
         public string Message { get; set; }
-       public List<dynamic> Data { get; set; }
+       public Data Data { get; set; }
 
     }
 
+    public class GeneralResponsesDetailRestrukturV2
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+        public DataDetailRestruktur Data { get; set; }
+
+    }
     public class Data
     {
         public List<dynamic> DetailNasabah { get; set; }
         public List<dynamic> FasilitasLainnya { get; set; }
-        public List<dynamic> Ayda { get; set; }
-        public List<dynamic> Restrukturisasi { get; set; }
+       public List<dynamic> Restrukturisasi { get; set; }
         public List<dynamic> MasterLoan { get; set; }
+
+    }
+    public class DataDetailRestruktur
+    {
+        public List<dynamic> DetailNasabah { get; set; }
+        public List<dynamic> FasilitasLainnya { get; set; }
+
 
     }
     public class ModellingGeneralResponsesV2
@@ -28,6 +41,16 @@ namespace sky.recovery.Responses
                 Status=false,
                 Message="",
                 Data=null
+            };
+            return Data;
+        }
+        public GeneralResponsesDetailRestrukturV2 GeneralResponseDetailRestruktur()
+        {
+            var Data = new GeneralResponsesDetailRestrukturV2()
+            {
+                Status = false,
+                Message = "",
+                Data = null
             };
             return Data;
         }

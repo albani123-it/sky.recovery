@@ -10,7 +10,7 @@ namespace sky.recovery.Interfaces
         public  Task<(bool? Error, GeneralResponsesV2 Returns)> MonitoringRestrukturV2(string UserId);
         public Task<(bool? Error, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId);
         public Task<(bool? Error, GeneralResponsesV2 Returns)> GetMasterLoanV2();
-        public Task<(bool? Error, GeneralResponsesV2 Returns)> GetDetailDraftingRestruktur(int? LoanId, string AccNo);
+        public Task<(bool? Error, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid);
 
 
 

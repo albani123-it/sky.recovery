@@ -50,23 +50,27 @@ namespace sky.recovery.Services
             {
 
                 var getCallBy = await _User.GetDataUser(UserId);
-             
+             // pindah ke dinamis
                 if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 {
-                     wrap.Status  = true;
+                     wrap.Status  = false;
                     wrap.Message = "Not Authorize";
                     return ( wrap.Status , wrap);
                 }
                 var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", "", getCallBy.Returns.Data.FirstOrDefault().iduser.ToString());
-                 wrap.Status  = false;
+                 wrap.Status  = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                var Data = new Data
+                {
+                    Restrukturisasi = ReturnData
+                };
+                wrap.Data = Data;
                 return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 wrap.Message = ex.Message;
 
                 return ( wrap.Status , wrap);
@@ -84,22 +88,26 @@ namespace sky.recovery.Services
             {
 
                 var getCallBy = await _User.GetDataUser(UserId);
+                // pindah ke dinamis
                 if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Supervisor.ToString())
                 {
-                     wrap.Status  = true;
+                     wrap.Status  = false;
                     wrap.Message = "Not Authorize";
                     return ( wrap.Status , wrap);
                 }
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().role, UserId);
-                 wrap.Status  = false;
+                 wrap.Status  = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                var Data = new Data
+                {
+                    Restrukturisasi = ReturnData
+                };
                 return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 wrap.Message = ex.Message;
 
                 return ( wrap.Status , wrap);
@@ -109,32 +117,35 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //GET DETAIL DRAFTING RESTRUKTUR V2
-        public async Task<(bool? Error, GeneralResponsesV2 Returns)> GetDetailDraftingRestruktur(int? LoanId,string AccNo)
+        public async Task<(bool? Error, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid)
         {
-            var wrap = _DataResponses.Return();
+            var wrap = _DataResponses.GeneralResponseDetailRestruktur();
             var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
 
                 //var getCallBy = await _User.GetDataUser(UserId);
-                if (LoanId==null)
+                if (loanid==null)
                 {
-                     wrap.Status  = true;
+                     wrap.Status  = false;
                     wrap.Message = "Anda Harus Memilih Pinjaman yang akan direstrukturisasi";
                     return ( wrap.Status , wrap);
                 }
-                var ReturnDetail = await _postgreRepository.GetDetailDrafting(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailfordraftingrestruktur.ToString() + "", LoanId);
-                var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", AccNo);
+                var ReturnDetail = await _postgreRepository.GetDetailDrafting(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailfordraftingrestruktur.ToString() + "", loanid);
+                
+                
+                var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", loanid);
 
-                 wrap.Status  = false;
+                 wrap.Status  = true;
                 wrap.Message = "OK";
-                var response = new
+                var response = new DataDetailRestruktur
                 {
                     DetailNasabah = ReturnDetail,
-                    FasilitasLainnya = ReturnFasilitas
+                    FasilitasLainnya = ReturnFasilitas,
+                    
                 };
-                wrap.Data = response.DetailNasabah;
+                wrap.Data = response;
                 //wrap.Data.FasilitasLainnya = response.FasilitasLainnya;
 
                 return ( wrap.Status , wrap);
@@ -142,7 +153,7 @@ namespace sky.recovery.Services
             }
             catch (Exception ex)
             {
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 wrap.Message = ex.Message;
 
                 return ( wrap.Status , wrap);
@@ -161,15 +172,19 @@ namespace sky.recovery.Services
                // var getCallBy = await _User.GetDataUser(UserId);
                
                 var ReturnData = await _postgreRepository.GetMasterLoan( "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getloanmaster.ToString() + "");
-                 wrap.Status  = false;
+                 wrap.Status  = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+              //  wrap.Data = ReturnData;
+                var Data = new Data
+                {
+                    MasterLoan= ReturnData
+                };
                 return ( wrap.Status , wrap);
 
             }
             catch (Exception ex)
             {
-                 wrap.Status  = true;
+                 wrap.Status  = false;
                 wrap.Message = ex.Message;
 
                 return ( wrap.Status , wrap);
