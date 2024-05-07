@@ -11,6 +11,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoanV2();
         public Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> SearchingMonitoringRestruktur(SearchingRestrukturDTO Entity);
 
 
 

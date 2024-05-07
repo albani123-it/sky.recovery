@@ -17,6 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using sky.recovery.Entities;
 using sky.recovery.Helper.Enum;
+using sky.recovery.DTOs.RequestDTO;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace sky.recovery.Services.DBConfig
 {
@@ -58,6 +60,48 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@filterstatus", StatusWorkflow.REQUESTED.ToString());
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+        public async Task<List<dynamic>> SearchingMonitoringRestrukture(string spname, int? Userid, SearchingRestrukturDTO Entity)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@namauser", string.IsNullOrEmpty(Entity.Nama) ? DBNull.Value : (object)Entity.Nama);
+                    command.Parameters.AddWithValue("@accnumber", string.IsNullOrEmpty(Entity.AccNo) ? DBNull.Value : (object)Entity.AccNo);
+                    command.Parameters.AddWithValue("@createdbyuser", Userid);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);

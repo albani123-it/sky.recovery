@@ -82,6 +82,35 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
+        [HttpPost("V2/SearchingMonitoringRestruktur")]
+        public async Task<ActionResult<GeneralResponses>> SearchingMonitoringRestruktur([FromBody] SearchingRestrukturDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.SearchingMonitoringRestruktur(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
         [HttpGet("V2/GetMasterLoan/list")]
         public async Task<ActionResult<GeneralResponses>> GetMasterLoan()
 

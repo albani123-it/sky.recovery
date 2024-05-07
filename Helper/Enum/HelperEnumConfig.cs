@@ -23,7 +23,8 @@
         tasklistrestrukture,
         getloanmaster,
         getdetailfordraftingrestruktur,
-        getlistfasilitas
+        getlistfasilitas,
+        searchingrestruktur
     }
     public enum RecoverySubModule
     {

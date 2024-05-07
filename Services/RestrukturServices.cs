@@ -182,5 +182,59 @@ namespace sky.recovery.Services
             }
         }
 
+
+        //SERVICE YANG DIPAKAI
+        //SEARCHING MONITORING FOR RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SearchingMonitoringRestruktur(SearchingRestrukturDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                // var getCallBy = await _User.GetDataUser(UserId);
+
+                if(Entity==null)
+                {
+
+                    wrap.Status = false;
+                    wrap.Message = "Request Not Valid";
+                }
+
+                if(Entity.UserId==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "User Not Authorize";
+
+                }
+                if (String.IsNullOrEmpty(Entity.Nama) && String.IsNullOrEmpty(Entity.AccNo))
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Mengisi Keyword Pencarian";
+
+                }
+                if (Entity.Nama=="" && Entity.AccNo=="")
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Mengisi Keyword Pencarian";
+
+                }
+                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                var ReturnData = await _postgreRepository.SearchingMonitoringRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.searchingrestruktur.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,Entity);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
     }
 }
