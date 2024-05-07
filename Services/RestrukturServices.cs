@@ -220,6 +220,13 @@ namespace sky.recovery.Services
 
                 }
                 var getCallBy = await _User.GetDataUser(Entity.UserId);
+                // pindah ke dinamis
+                if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Not Authorize";
+                    return (wrap.Status, wrap);
+                }
                 var ReturnData = await _postgreRepository.SearchingMonitoringRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.searchingrestruktur.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
