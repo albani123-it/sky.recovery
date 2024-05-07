@@ -168,11 +168,8 @@ namespace sky.recovery.Services
                 var ReturnData = await _postgreRepository.GetMasterLoan( "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getloanmaster.ToString() + "");
                  wrap.Status  = true;
                 wrap.Message = "OK";
-              //  wrap.Data = ReturnData;
-                var Data = new Data
-                {
-                    MasterLoan= ReturnData
-                };
+               wrap.Data = ReturnData;
+                
                 return ( wrap.Status , wrap);
 
             }
