@@ -118,9 +118,9 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //UploadDocRestrukture RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity)
         {
-            var wrap = _DataResponses.Return();
+            var wrap = _DataResponses.GeneralResponseDocRestruktur();
 
             try
             {
@@ -153,10 +153,17 @@ namespace sky.recovery.Services
                         getCallBy.Returns.Data.FirstOrDefault().iduser
                         );
 
+                    var ReturnDocStrukture = await _postgreRepository.GetMasterDocRule("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getmasterdocrules.ToString() + "", "Restrukture");
+
 
                     wrap.Status = true;
                     wrap.Message = "OK";
-                    wrap.Data = ReturnInsertOoc;
+                    var Data = new DataDocRestrukture()
+                    {
+                        DocStrukturRule = ReturnDocStrukture,
+                        DocRestruktur = ReturnInsertOoc
+                    };
+                    wrap.Data = Data;
                         
                 }
                 else
@@ -172,9 +179,18 @@ namespace sky.recovery.Services
 
                         );
 
+                    var ReturnDocStrukture = await _postgreRepository.GetMasterDocRule("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getmasterdocrules.ToString() + "", "Restrukture");
+
+
                     wrap.Status = true;
                     wrap.Message = "OK";
-                    wrap.Data = ReturnUpdateDoc;
+                    var Data = new DataDocRestrukture()
+                    {
+                        DocStrukturRule = ReturnDocStrukture,
+                        DocRestruktur = ReturnUpdateDoc
+                    };
+                    wrap.Data = Data;
+
                 }
 
                 return (wrap.Status, wrap);
