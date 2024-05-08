@@ -153,7 +153,7 @@ namespace sky.recovery.Services
 
                     string ext = Path.GetExtension(Entity.File.FileName);
 
-                    var nm = path+ ext;
+                    var nm = path+"/"+Entity.File.FileName+ ext;
 
                     using (FileStream filestream = System.IO.File.Create(nm))
                     {
@@ -189,7 +189,8 @@ namespace sky.recovery.Services
                 {
                     string ext = Path.GetExtension(Entity.File.FileName);
 
-                    var nm = path + ext;
+                    var nm = path + "/" + Entity.File.FileName + ext;
+
 
                     using (FileStream filestream = System.IO.File.Create(nm))
                     {
