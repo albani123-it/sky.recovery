@@ -16,6 +16,8 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(AddRestructureDTO Entity);
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(UpdatePermasalahanDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity);
 
 
 

@@ -228,6 +228,63 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+        //V2
+        [HttpPost("V2/Create/Permasalahan")]
+        public async Task<ActionResult<GeneralResponses>> CreatePermasalahan([FromBody] CreatePermasalahanDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.CreatePermasalahan(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        [HttpPost("V2/Update/Permasalahan")]
+        public async Task<ActionResult<GeneralResponses>> UpdatePermasalahan([FromBody] UpdatePermasalahanDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.UpdatePermasalahan(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
 
         public IActionResult Index()
         {

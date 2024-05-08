@@ -114,6 +114,94 @@ namespace sky.recovery.Services
             }
         }
 
+
+        //SERVICE YANG DIPAKAI
+        //REMOVE PERMASALAHAN RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                // var getCallBy = await _User.GetDataUser(UserId);
+                // pindah ke dinamis
+               
+                if (Entity.idrestrukture == null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih Restrukture Permasalahan yang akan di Tambahkan Permasalahan nya";
+                    return (wrap.Status, wrap);
+                }
+                if(Entity.deskripsi==null || Entity.deskripsi=="")
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Deskripsi Permasalahan Harus Diisi";
+                    return (wrap.Status, wrap);
+
+                }
+                var ReturnData = await _postgreRepository.CreatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createpermasalahanrestrukture.ToString() + "", Entity);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        //SERVICE YANG DIPAKAI
+        //UPDATE PERMASALAHAN RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(UpdatePermasalahanDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                // var getCallBy = await _User.GetDataUser(UserId);
+                // pindah ke dinamis
+                if (Entity.idpermasalahan == null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih Permasalahan yang akan diubah";
+                    return (wrap.Status, wrap);
+                }
+                if (Entity.idrestrukture == null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih Restrukture Permasalahan yang akan di Ubah Permasalahan nya";
+                    return (wrap.Status, wrap);
+                }
+                if (Entity.deskripsi == null || Entity.deskripsi == "")
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Deskripsi Permasalahan Harus Diisi";
+                    return (wrap.Status, wrap);
+
+                }
+                var ReturnData = await _postgreRepository.UpdatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updatepermasalahanrestrukture.ToString() + "", Entity);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
         //SERVICE YANG DIPAKAI
         //TASKLIST RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId)

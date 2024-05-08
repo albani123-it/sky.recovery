@@ -28,7 +28,9 @@
         createdraftrestrukture,
         getpermasalahanrestrukture,
         getmastercollateral,
-        removepermasalahanrestrukture
+        removepermasalahanrestrukture,
+        createpermasalahanrestrukture,
+        updatepermasalahanrestrukture
     }
     public enum RecoverySubModule
     {
