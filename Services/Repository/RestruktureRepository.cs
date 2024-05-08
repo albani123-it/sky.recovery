@@ -214,7 +214,7 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
-        public async Task<List<dynamic>> CreatePermasalahan(string spname, CreatePermasalahanDTO Entity)
+        public async Task<List<dynamic>> CreatePermasalahan(string spname,int iduser, CreatePermasalahanDTO Entity)
         {
 
             var SkyCollConsString = GetSkyCollConsString();
@@ -226,7 +226,7 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
-                    command.Parameters.AddWithValue("@userid", Entity.userid);
+                    command.Parameters.AddWithValue("@userid", iduser);
                     command.Parameters.AddWithValue("@deskripsi", Entity.deskripsi);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
@@ -255,8 +255,87 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
+        public async Task<List<dynamic>> GetDocRestrukture(string spname, GetDocumentRestruktureDTO Entity)
+        {
 
-        public async Task<List<dynamic>> UpdatePermasalahan(string spname, UpdatePermasalahanDTO Entity)
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idloan", Entity.IdLoan);
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.RestruktureId);
+
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+        public async Task<List<dynamic>> GetMasterDocRule(string spname,string param)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@filters", param);
+                   
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+        public async Task<List<dynamic>> UpdatePermasalahan(string spname,int iduser, UpdatePermasalahanDTO Entity)
         {
 
             var SkyCollConsString = GetSkyCollConsString();
@@ -269,7 +348,7 @@ namespace sky.recovery.Services.DBConfig
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idpermasalahan", Entity.idpermasalahan);
                     command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
-                    command.Parameters.AddWithValue("@userid", Entity.userid);
+                    command.Parameters.AddWithValue("@userid", iduser);
                     command.Parameters.AddWithValue("@deskripsi", Entity.deskripsi);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini

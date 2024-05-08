@@ -11,6 +11,23 @@ namespace sky.recovery.Responses
 
     }
 
+    public class GeneralResponsesDocRestrukturV2
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+        public DataDocRestrukture Data { get; set; }
+
+    }
+
+    public class DataDocRestrukture
+    {
+        public List<dynamic> DocStrukturRule { get; set; }
+        public List<dynamic> DocRestruktur { get; set; }
+     
+
+
+    }
+
     public class GeneralResponsesDetailRestrukturV2
     {
         public bool Status { get; set; }
@@ -57,5 +74,17 @@ namespace sky.recovery.Responses
             };
             return Data;
         }
+
+        public GeneralResponsesDocRestrukturV2 GeneralResponseDocRestruktur()
+        {
+            var Data = new GeneralResponsesDocRestrukturV2()
+            {
+                Status = false,
+                Message = "",
+                Data = null
+            };
+            return Data;
+        }
+
     }
 }

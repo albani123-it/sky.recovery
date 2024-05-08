@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <Folder Include="dbReplace\" />
+    <Folder Include="wwwroot\Documents\" />
   </ItemGroup>
 
 </Project>

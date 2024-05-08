@@ -20,9 +20,12 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> RemovePermasalahan(string spname, RemovePermasalahanDTO Entity);
 
         public Task<List<dynamic>> GetMasterLoan(string spname);
-        public  Task<List<dynamic>> CreatePermasalahan(string spname, CreatePermasalahanDTO Entity);
+        public  Task<List<dynamic>> CreatePermasalahan(string spname,int iduser, CreatePermasalahanDTO Entity);
 
-        public Task<List<dynamic>> UpdatePermasalahan(string spname, UpdatePermasalahanDTO Entity);
+        public Task<List<dynamic>> UpdatePermasalahan(string spname,int iduser, UpdatePermasalahanDTO Entity);
+
+        public  Task<List<dynamic>> GetMasterDocRule(string spname, string param);
+        public  Task<List<dynamic>> GetDocRestrukture(string spname, GetDocumentRestruktureDTO Entity);
 
     }
 }

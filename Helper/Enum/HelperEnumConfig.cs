@@ -30,7 +30,9 @@
         getmastercollateral,
         removepermasalahanrestrukture,
         createpermasalahanrestrukture,
-        updatepermasalahanrestrukture
+        updatepermasalahanrestrukture,
+        getmasterdocrules,
+        getdocrestruktrue
     }
     public enum RecoverySubModule
     {

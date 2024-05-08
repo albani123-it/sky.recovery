@@ -3,7 +3,7 @@
     public class CreatePermasalahanDTO
     {
         public int? idrestrukture { get; set; }
-        public int? userid { get; set; }
+        public string userid { get; set; }
         public string deskripsi { get; set; }
     }
 }

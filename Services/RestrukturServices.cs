@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using sky.recovery.Services.DBConfig;
 using sky.recovery.Helper.Enum;
+using System.Reflection.Metadata.Ecma335;
 
 namespace sky.recovery.Services
 {
@@ -116,6 +117,43 @@ namespace sky.recovery.Services
 
 
         //SERVICE YANG DIPAKAI
+        //GetMasterDocRuke RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> GetMasterDocRule(GetDocumentRestruktureDTO Entity)
+        {
+            var wrap = _DataResponses.GeneralResponseDocRestruktur();
+
+            try
+            {
+
+                // var getCallBy = await _User.GetDataUser(UserId);
+                // pindah ke dinamis
+               
+                var ReturnDocStrukture = await _postgreRepository.GetMasterDocRule("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getmasterdocrules.ToString() + "", "Restrukture");
+                var ReturnDoc = await _postgreRepository.GetDocRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdocrestruktrue.ToString() + "", Entity);
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+                var Data = new DataDocRestrukture()
+                {
+                    DocRestruktur=ReturnDoc,
+                    DocStrukturRule=ReturnDocStrukture
+
+                };
+                wrap.Data = Data;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity)
         {
@@ -124,7 +162,7 @@ namespace sky.recovery.Services
             try
             {
 
-                // var getCallBy = await _User.GetDataUser(UserId);
+                var getCallBy = await _User.GetDataUser(Entity.userid);
                 // pindah ke dinamis
                
                 if (Entity.idrestrukture == null)
@@ -140,7 +178,7 @@ namespace sky.recovery.Services
                     return (wrap.Status, wrap);
 
                 }
-                var ReturnData = await _postgreRepository.CreatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createpermasalahanrestrukture.ToString() + "", Entity);
+                var ReturnData = await _postgreRepository.CreatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createpermasalahanrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser, Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
@@ -165,7 +203,7 @@ namespace sky.recovery.Services
             try
             {
 
-                // var getCallBy = await _User.GetDataUser(UserId);
+                 var getCallBy = await _User.GetDataUser(Entity.userid);
                 // pindah ke dinamis
                 if (Entity.idpermasalahan == null)
                 {
@@ -186,7 +224,7 @@ namespace sky.recovery.Services
                     return (wrap.Status, wrap);
 
                 }
-                var ReturnData = await _postgreRepository.UpdatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updatepermasalahanrestrukture.ToString() + "", Entity);
+                var ReturnData = await _postgreRepository.UpdatePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updatepermasalahanrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser, Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
