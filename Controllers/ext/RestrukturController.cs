@@ -199,9 +199,36 @@ namespace sky.recovery.Controllers.ext
         }
 
 
-    
+        //V2
+        [HttpGet("V2/Remove/Permasalahan/{idpermasalahan}")]
+        public async Task<ActionResult<GeneralResponses>> RemovePermasalahanRestrukture(int? idpermasalahan)
 
-     
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.RemovePermasalahanRestrukture(idpermasalahan);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
         public IActionResult Index()
         {
             return View();
