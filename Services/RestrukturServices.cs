@@ -20,6 +20,9 @@ using System.Security.Cryptography.X509Certificates;
 using sky.recovery.Services.DBConfig;
 using sky.recovery.Helper.Enum;
 using System.Reflection.Metadata.Ecma335;
+using System.IO;
+using static System.Net.WebRequestMethods;
+using System.Net.NetworkInformation;
 
 namespace sky.recovery.Services
 {
@@ -138,18 +141,34 @@ namespace sky.recovery.Services
                     wrap.Status = false;
                     wrap.Message = "Id Loan, Jenis Doc dan Id Restrukture Harus Diisi";
                 }
-
+                var path = "~~/wwwroot/Documents";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
                 var ReturnCheckingDoc = await _postgreRepository.CheckingDocRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.checkingavailabledoc.ToString() + "", Entity.IdLoan,Entity.IdRestrukture,Entity.IdDocType);
 
                 if(ReturnCheckingDoc.Count==0)
                 {
+
+                    string ext = Path.GetExtension(Entity.File.FileName);
+
+                    var nm = path+ ext;
+
+                    using (FileStream filestream = System.IO.File.Create(nm))
+                    {
+                        Entity.File.CopyTo(filestream);
+                        filestream.Flush();
+                        //  return "\\Upload\\" + objFile.files.FileName;
+                    }
+
                     var ReturnInsertOoc = await _postgreRepository.InsertDocRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.insertdocrestrukture.ToString() + ""
                         , Entity.IdLoan, 
                         Entity.IdRestrukture, 
                         Entity.IdDocType,
                         Entity.jenisdocdesc
-                        ,Entity.urlpath
-                        ,Entity.urlname,
+                        ,nm
+                        ,Entity.File.FileName,
                         getCallBy.Returns.Data.FirstOrDefault().iduser
                         );
 
@@ -168,13 +187,23 @@ namespace sky.recovery.Services
                 }
                 else
                 {
+                    string ext = Path.GetExtension(Entity.File.FileName);
+
+                    var nm = path + ext;
+
+                    using (FileStream filestream = System.IO.File.Create(nm))
+                    {
+                        Entity.File.CopyTo(filestream);
+                        filestream.Flush();
+                        //  return "\\Upload\\" + objFile.files.FileName;
+                    }
                     var ReturnUpdateDoc= await _postgreRepository.UpdateDocRestruktur("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updateddocrestrukture.ToString() + "", 
                         Entity.IdLoan,
                         Entity.IdRestrukture,
                         Entity.IdDocType,
                         Entity.jenisdocdesc
-                        , Entity.urlpath
-                        , Entity.urlname,
+                        , nm
+                        , Entity.File.FileName,
                         getCallBy.Returns.Data.FirstOrDefault().iduser
 
                         );

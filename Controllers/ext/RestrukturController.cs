@@ -320,7 +320,7 @@ namespace sky.recovery.Controllers.ext
 
         //V2
         [HttpPost("V2/Documents/Upload")]
-        public async Task<ActionResult<GeneralResponses>> UploadDocRestruktur([FromBody] UploadDocRestrukturDTO Entity)
+        public async Task<ActionResult<GeneralResponses>> UploadDocRestruktur([FromForm] UploadDocRestrukturDTO Entity)
 
         {
             var wrap = _DataResponses.Return();
