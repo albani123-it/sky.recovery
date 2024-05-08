@@ -77,7 +77,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(int? idpermasalahan)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity)
         {
             var wrap = _DataResponses.Return();
 
@@ -86,13 +86,19 @@ namespace sky.recovery.Services
 
                // var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
-                if(idpermasalahan==null)
+                if(Entity.idpermasalahan==null)
                 {
                     wrap.Status = false;
                     wrap.Message = "Anda Harus Memilih Permasalahan yang akan di Remove";
                     return (wrap.Status, wrap);
                 }
-                var ReturnData = await _postgreRepository.RemovePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.removepermasalahanrestrukture.ToString() + "", idpermasalahan);
+                if (Entity.idrestrukture == null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih Restrukture Permasalahan yang akan di Remove";
+                    return (wrap.Status, wrap);
+                }
+                var ReturnData = await _postgreRepository.RemovePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.removepermasalahanrestrukture.ToString() + "", Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;

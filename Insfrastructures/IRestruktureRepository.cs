@@ -17,7 +17,7 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> CreateDraftRestrukture(string spname, int? Userid, int RoleId, AddRestructureDTO Entity);
         public Task<List<dynamic>> GetPermasalahanRestrukture(string spname, int? loanid);
 
-        public Task<List<dynamic>> RemovePermasalahan(string spname, int? idpermasalahan);
+        public Task<List<dynamic>> RemovePermasalahan(string spname, RemovePermasalahanDTO Entity);
 
         public Task<List<dynamic>> GetMasterLoan(string spname);
 

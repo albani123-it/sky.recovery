@@ -173,7 +173,7 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
-        public async Task<List<dynamic>> RemovePermasalahan(string spname, int? idpermasalahan)
+        public async Task<List<dynamic>> RemovePermasalahan(string spname, RemovePermasalahanDTO Entity)
         {
 
             var SkyCollConsString = GetSkyCollConsString();
@@ -184,8 +184,9 @@ namespace sky.recovery.Services.DBConfig
                 using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@idpermasalahan", idpermasalahan);
-                   
+                    command.Parameters.AddWithValue("@idpermasalahan", Entity.idpermasalahan);
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
+
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);

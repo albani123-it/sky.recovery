@@ -200,15 +200,15 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Remove/Permasalahan/{idpermasalahan}")]
-        public async Task<ActionResult<GeneralResponses>> RemovePermasalahanRestrukture(int? idpermasalahan)
+        [HttpPost("V2/Remove/Permasalahan")]
+        public async Task<ActionResult<GeneralResponses>> RemovePermasalahanRestrukture([FromBody] RemovePermasalahanDTO Entity)
 
         {
             var wrap = _DataResponses.Return();
 
             try
             {
-                var GetData = await _recoveryService.RemovePermasalahanRestrukture(idpermasalahan);
+                var GetData = await _recoveryService.RemovePermasalahanRestrukture(Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
