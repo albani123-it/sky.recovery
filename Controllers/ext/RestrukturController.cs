@@ -317,6 +317,36 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+        //V2
+        [HttpPost("V2/Documents/Upload")]
+        public async Task<ActionResult<GeneralResponses>> UploadDocRestruktur([FromBody] UploadDocRestrukturDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.UploadDocRestrukture(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
         public IActionResult Index()
         {
             return View();

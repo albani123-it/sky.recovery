@@ -32,7 +32,10 @@
         createpermasalahanrestrukture,
         updatepermasalahanrestrukture,
         getmasterdocrules,
-        getdocrestruktrue
+        getdocrestruktrue,
+        checkingavailabledoc,
+        insertdocrestrukture,
+        updateddocrestrukture
     }
     public enum RecoverySubModule
     {

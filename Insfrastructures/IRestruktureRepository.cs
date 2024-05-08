@@ -26,6 +26,25 @@ namespace sky.recovery.Insfrastructures
 
         public  Task<List<dynamic>> GetMasterDocRule(string spname, string param);
         public  Task<List<dynamic>> GetDocRestrukture(string spname, GetDocumentRestruktureDTO Entity);
+        public Task<List<dynamic>> CheckingDocRestrukture(string spname, int? LoanId, int? RestruktureId, int? DocTypeId);
+        public  Task<List<dynamic>> InsertDocRestrukture(string spname,
+           int? LoanId,
+           int? RestruktureId,
+           int? DocTypeId,
+           string jenisdocdesc,
+           string urlpath,
+           string urlname,
+           int? userid
+           );
 
+        public Task<List<dynamic>> UpdateDocRestruktur(string spname,
+            int? LoanId,
+            int? RestruktureId,
+            int? DocTypeId,
+            string jenisdocdesc,
+            string urlpath,
+            string urlname,
+            int? userid
+            );
     }
 }

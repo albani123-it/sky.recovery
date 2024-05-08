@@ -117,6 +117,79 @@ namespace sky.recovery.Services
 
 
         //SERVICE YANG DIPAKAI
+        //UploadDocRestrukture RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                // pindah ke dinamis
+
+                if(Entity==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Request Not Valid";
+                }
+                if(Entity.IdLoan==null || Entity.IdRestrukture==null || Entity.IdDocType==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Id Loan, Jenis Doc dan Id Restrukture Harus Diisi";
+                }
+
+                var ReturnCheckingDoc = await _postgreRepository.CheckingDocRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.checkingavailabledoc.ToString() + "", Entity.IdLoan,Entity.IdRestrukture,Entity.IdDocType);
+
+                if(ReturnCheckingDoc.Count==0)
+                {
+                    var ReturnInsertOoc = await _postgreRepository.InsertDocRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.insertdocrestrukture.ToString() + ""
+                        , Entity.IdLoan, 
+                        Entity.IdRestrukture, 
+                        Entity.IdDocType,
+                        Entity.jenisdocdesc
+                        ,Entity.urlpath
+                        ,Entity.urlname,
+                        getCallBy.Returns.Data.FirstOrDefault().iduser
+                        );
+
+
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+                    wrap.Data = ReturnInsertOoc;
+                        
+                }
+                else
+                {
+                    var ReturnUpdateDoc= await _postgreRepository.UpdateDocRestruktur("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updateddocrestrukture.ToString() + "", 
+                        Entity.IdLoan,
+                        Entity.IdRestrukture,
+                        Entity.IdDocType,
+                        Entity.jenisdocdesc
+                        , Entity.urlpath
+                        , Entity.urlname,
+                        getCallBy.Returns.Data.FirstOrDefault().iduser
+
+                        );
+
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+                    wrap.Data = ReturnUpdateDoc;
+                }
+
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        //SERVICE YANG DIPAKAI
         //GetMasterDocRuke RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> GetMasterDocRule(GetDocumentRestruktureDTO Entity)
         {
@@ -151,6 +224,8 @@ namespace sky.recovery.Services
                 return (wrap.Status, wrap);
             }
         }
+
+
 
 
         //SERVICE YANG DIPAKAI

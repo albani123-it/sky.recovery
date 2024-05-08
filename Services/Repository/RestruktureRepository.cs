@@ -295,6 +295,159 @@ namespace sky.recovery.Services.DBConfig
             }
 
         }
+
+
+        public async Task<List<dynamic>> CheckingDocRestrukture(string spname, int? LoanId, int? RestruktureId, int? DocTypeId)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idloan", LoanId);
+                    command.Parameters.AddWithValue("@idrestrukture", RestruktureId);
+                    command.Parameters.AddWithValue("@doctypeid", DocTypeId);
+
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+        public async Task<List<dynamic>> InsertDocRestrukture(string spname, 
+            int? LoanId, 
+            int? RestruktureId,
+            int? DocTypeId,
+            string jenisdocdesc,
+            string urlpath,
+            string urlname,
+            int? userid
+            )
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idloan", LoanId);
+                    command.Parameters.AddWithValue("@idrestrukture", RestruktureId);
+                    command.Parameters.AddWithValue("@jenisdoc_id", DocTypeId);
+                    command.Parameters.AddWithValue("@jenisdoc_desc", jenisdocdesc);
+                    command.Parameters.AddWithValue("@urlpath", urlpath);
+                    command.Parameters.AddWithValue("@urlname", urlname);
+                    command.Parameters.AddWithValue("@uploaded_by", userid);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+
+        public async Task<List<dynamic>> UpdateDocRestruktur(string spname,
+            int? LoanId,
+            int? RestruktureId,
+            int? DocTypeId,
+            string jenisdocdesc,
+            string urlpath,
+            string urlname,
+            int? userid
+            )
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idloan", LoanId);
+                    command.Parameters.AddWithValue("@idrestrukture", RestruktureId);
+                    command.Parameters.AddWithValue("@jenisdoc_id", DocTypeId);
+                    command.Parameters.AddWithValue("@jenisdoc_desc", jenisdocdesc);
+                    command.Parameters.AddWithValue("@urlpath", urlpath);
+                    command.Parameters.AddWithValue("@urlname", urlname);
+                    command.Parameters.AddWithValue("@uploaded_by", userid);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
         public async Task<List<dynamic>> GetMasterDocRule(string spname,string param)
         {
 
