@@ -23,20 +23,23 @@ using System.Reflection.Metadata.Ecma335;
 using System.IO;
 using static System.Net.WebRequestMethods;
 using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.Hosting;
 
 namespace sky.recovery.Services
 {
     public class RestrukturServices : PostgreSetting, IRestrukturServices
     {
         private IUserService _User { get; set; }
+        private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturServices(IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public RestrukturServices(IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
         IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _environment = environment;
             _User = User;
             _postgreRepository = postgreRepository;
             _helperRepository = helperRepository;
@@ -136,12 +139,23 @@ namespace sky.recovery.Services
                     wrap.Status = false;
                     wrap.Message = "Request Not Valid";
                 }
+                if(Entity.File.Length<0)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "File harus diupload";
+                }
+                if(Entity.File.FileName==null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "File harus diupload";
+                }
                 if(Entity.IdLoan==null || Entity.IdRestrukture==null || Entity.IdDocType==null)
                 {
                     wrap.Status = false;
                     wrap.Message = "Id Loan, Jenis Doc dan Id Restrukture Harus Diisi";
                 }
-                var path = "~~/wwwroot/Documents";
+                //var path = "wwwroot/Documents";
+                var path = Path.Combine(_environment.WebRootPath, "Documents");
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
@@ -153,7 +167,7 @@ namespace sky.recovery.Services
 
                     string ext = Path.GetExtension(Entity.File.FileName);
 
-                    var nm = path+"/"+Entity.File.FileName+ ext;
+                    var nm = Path.Combine(path,Entity.File.FileName+ext);
 
                     using (FileStream filestream = System.IO.File.Create(nm))
                     {
@@ -188,8 +202,9 @@ namespace sky.recovery.Services
                 else
                 {
                     string ext = Path.GetExtension(Entity.File.FileName);
+                    var nm = Path.Combine(path, Entity.File.FileName + ext);
 
-                    var nm = path + "/" + Entity.File.FileName + ext;
+                   // var nm = path + "/" + Entity.File.FileName + ext;
 
 
                     using (FileStream filestream = System.IO.File.Create(nm))
