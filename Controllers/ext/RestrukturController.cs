@@ -347,6 +347,42 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+        //V2
+        [HttpPost("V2/RemoveDraft")]
+        public async Task<ActionResult<GeneralResponses>> RemoveDraftRestrukture([FromBody] RemoveDraftRestruktureDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                if(Entity==null)
+                {
+                    wrap.Message = "Request Not Valid";
+                    wrap.Status = false;
+                    return BadRequest(wrap);
+                }
+                var GetData = await _recoveryService.RemoveDraftRestukture(Entity.userid,Entity.loanid,Entity.restruktureid);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
         public IActionResult Index()
         {
             return View();

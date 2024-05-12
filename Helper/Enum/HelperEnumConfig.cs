@@ -35,6 +35,7 @@
         getdocrestruktrue,
         checkingavailabledoc,
         insertdocrestrukture,
+        removedraftrestrukture,
         updateddocrestrukture
     }
     public enum RecoverySubModule

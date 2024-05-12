@@ -20,6 +20,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity);
         public Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> GetMasterDocRule(GetDocumentRestruktureDTO Entity);
         public Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string userid, int? idloan, int? idrestrukture);
 
 
 

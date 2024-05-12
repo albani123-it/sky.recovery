@@ -123,6 +123,49 @@ namespace sky.recovery.Services
 
 
         //SERVICE YANG DIPAKAI
+        //REMOVE DRAFT RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string userid, int? idloan,int? idrestrukture)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                 var getCallBy = await _User.GetDataUser(userid);
+                // pindah ke dinamis
+
+              
+
+                if (idloan == null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih pinjaman yang akan di Remove";
+                    return (wrap.Status, wrap);
+                }
+                if (idrestrukture== null)
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Anda Harus Memilih Restrukture yang akan di Remove";
+                    return (wrap.Status, wrap);
+                }
+                var ReturnData = await _postgreRepository.RemoveDraftRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.removedraftrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,idloan,idrestrukture);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
         //UploadDocRestrukture RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity)
         {

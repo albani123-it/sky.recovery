@@ -1,5 +1,6 @@
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\sky.recovery.exe
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
