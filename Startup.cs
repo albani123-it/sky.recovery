@@ -49,6 +49,9 @@ namespace sky.recovery
             services.Configure<DbContextSettings>(config.GetSection("DbContextSettings"));
             services.AddScoped<IRestrukturServices, RestrukturServices>();
             services.AddScoped<IUserService, UserServices>();
+
+            services.AddSingleton<IGeneralParam, RestruktureRepoConfig>();
+
             services.AddSingleton<IRestruktureRepository, RestruktureRepository>();
             services.AddSingleton<IHelperRepository, HelperRepository>();
 

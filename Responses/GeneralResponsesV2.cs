@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Org.BouncyCastle.Pkcs;
+using sky.recovery.Entities.RecoveryConfig;
+using System.Collections.Generic;
 
 namespace sky.recovery.Responses
 {
@@ -10,7 +12,16 @@ namespace sky.recovery.Responses
        public List<dynamic> Data { get; set; }
 
     }
+    public class GeneralResponsesConfigV2
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
 
+        public List<GeneralParamDetail> MetodeRestruktur { get; set; }
+        public List<GeneralParamDetail> JenisPengurangan{ get; set; }
+
+        public List<dynamic> Data { get; set; }
+    }
     public class GeneralResponsesDocRestrukturV2
     {
         public bool Status { get; set; }
@@ -64,6 +75,19 @@ namespace sky.recovery.Responses
             };
             return Data;
         }
+
+        public GeneralResponsesConfigV2 GeneralResponsesConfigData()
+        {
+            var Data = new GeneralResponsesConfigV2()
+            {
+                Status = false,
+                Message = "",
+                MetodeRestruktur=null,
+                Data = null
+            };
+            return Data;
+        }
+
         public GeneralResponsesDetailRestrukturV2 GeneralResponseDetailRestruktur()
         {
             var Data = new GeneralResponsesDetailRestrukturV2()

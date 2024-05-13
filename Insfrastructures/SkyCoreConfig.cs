@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using sky.recovery.Entities;
+using sky.recovery.Entities.RecoveryConfig;
 using sky.recovery.Helper.Config;
 
 namespace sky.recovery.Insfrastructures
@@ -19,6 +20,9 @@ namespace sky.recovery.Insfrastructures
 
         public DbSet<rfproduct_segment> rfproduct_segment { get; set; }
 
+
+        public DbSet<GeneralParamDetail> generalparamdetail { get; set; }
+        public DbSet<GeneralParamHeader> generalparamheader { get; set; }
         public DbSet<master_customer> master_customer { get; set; }
         public DbSet<collection_call> collection_call { get; set; }
         public DbSet<rfproduct> rfproduct { get; set; }
@@ -47,6 +51,10 @@ namespace sky.recovery.Insfrastructures
         {
             modelBuilder.Entity<branch>()
 .HasKey(e => e.lbrc_id);
+            modelBuilder.Entity<GeneralParamHeader>()
+.HasKey(e => e.id);
+            modelBuilder.Entity<GeneralParamDetail>()
+.HasKey(e => e.Id);
             modelBuilder.Entity<generic_param>()
 .HasKey(e => e.glp_id);
             modelBuilder.Entity<restructure_cashflow>()

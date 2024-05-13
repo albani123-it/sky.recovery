@@ -30,16 +30,18 @@ namespace sky.recovery.Services
     public class RestrukturServices : PostgreSetting, IRestrukturServices
     {
         private IUserService _User { get; set; }
+        private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturServices(IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public RestrukturServices (IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
         IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
             _environment = environment;
+            _GeneralParam = GeneralParam;
             _User = User;
             _postgreRepository = postgreRepository;
             _helperRepository = helperRepository;
@@ -81,11 +83,38 @@ namespace sky.recovery.Services
             }
         }
 
-
-
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
+        {
+            var wrap = _DataResponses.GeneralResponsesConfigData();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+                var GetMetodeRestruktur = await _GeneralParam.GetParamDetail(4);
+                var GetJenisPengurangan = await _GeneralParam.GetParamDetail(5);
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.MetodeRestruktur = GetMetodeRestruktur.DataDetail;
+                wrap.JenisPengurangan = GetJenisPengurangan.DataDetail;
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
+                //SERVICE YANG DIPAKAI
+                //MONITORING RESTRUKTUR V2
+                public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();

@@ -199,6 +199,7 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
+        //tambahkan pengecekan iscalculated
         [HttpPost("V2/Analisa")]
         public async Task<ActionResult<GeneralResponses>> AnalisaRestrukture([FromBody]ConfigAnalisaRestruktureDTO  Entity)
 
@@ -227,6 +228,56 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+
+        //V2
+        //GetMetodeRestrukture
+        [HttpPost("V2/PolaMetode")]
+        public async Task<ActionResult<GeneralResponses>> PolaMetodeRestrukture([FromBody] GetPolaDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                if(Entity==null)
+                {
+                    wrap.Message = "Request Not Valid";
+                    wrap.Status = false;
+                    return BadRequest(wrap);
+                }
+                if (Entity.idloan == null)
+                {
+                    wrap.Message = "Loan Harus Dipilih";
+                    wrap.Status = false;
+                    return BadRequest(wrap);
+                }
+                if (Entity.idrestrukture == null)
+                {
+                    wrap.Message = "Restrukture Harus Dipilih";
+                    wrap.Status = false;
+                    return BadRequest(wrap);
+                }
+
+                var GetData = await _recoveryService.GetPolaMetodeRestrukture(Entity.idrestrukture,Entity.idloan);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
 
         //V2
         [HttpPost("V2/Remove/Permasalahan")]
