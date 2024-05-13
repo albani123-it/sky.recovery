@@ -492,6 +492,157 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
+        public async Task<List<dynamic>> CreateAnalisaRestrukture(string spname, int? userid, ConfigAnalisaRestruktureDTO Entity)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userid", userid);
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
+                    command.Parameters.AddWithValue("@nasabahpenghasilan", Entity.nasabahpenghasilan);
+                    command.Parameters.AddWithValue("@pasanganpenghasilan", Entity.pasanganpenghasilan);
+                    command.Parameters.AddWithValue("@lainnyapenghasilan", Entity.lainnyapenghasilan);
+                    command.Parameters.AddWithValue("@penghasilantotal", Entity.penghasilantotal);
+                    command.Parameters.AddWithValue("@pendidikanbiaya", Entity.pendidikanbiaya);
+                    command.Parameters.AddWithValue("@listrikairteleponbiaya", Entity.listrikairteleponbiaya);
+                    command.Parameters.AddWithValue("@belanjarumahtanggabiaya", Entity.belanjarumahtanggabiaya);
+                    command.Parameters.AddWithValue("@transportasibiaya", Entity.transportasibiaya);
+                    command.Parameters.AddWithValue("@lainnyabiaya", Entity.lainnyabiaya);
+                    command.Parameters.AddWithValue("@totalpengeluaran", Entity.totalpengeluaran);
+                    command.Parameters.AddWithValue("@bankhutang", Entity.bankhutang);
+                    command.Parameters.AddWithValue("@kewajibantotal", Entity.kewajibantotal);
+                    command.Parameters.AddWithValue("@lainnyacicilan", Entity.lainnyacicilan);
+                    command.Parameters.AddWithValue("@bersihpenghasilan", Entity.bersihpenghasilan);
+                    command.Parameters.AddWithValue("@rpc", Entity.rpc);
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+        public async Task<List<dynamic>> CheckingAnalisaRestruktureExisting(string spname, int? userid,int? analisaid, int? idrestrukture, int? idloan)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@userid", userid);
+                    command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
+                    command.Parameters.AddWithValue("@analisaid", analisaid);
+                   
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+        public async Task<List<dynamic>> UpdateAnalisaRestrukture(string spname, int? userid, ConfigAnalisaRestruktureDTO Entity)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@analisaid", Entity.analisaid);
+                    command.Parameters.AddWithValue("@userid", userid);
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
+                    command.Parameters.AddWithValue("@nasabahpenghasilan", Entity.nasabahpenghasilan);
+                    command.Parameters.AddWithValue("@pasanganpenghasilan", Entity.pasanganpenghasilan);
+                    command.Parameters.AddWithValue("@lainnyapenghasilan", Entity.lainnyapenghasilan);
+                    command.Parameters.AddWithValue("@penghasilantotal", Entity.penghasilantotal);
+                    command.Parameters.AddWithValue("@pendidikanbiaya", Entity.pendidikanbiaya);
+                    command.Parameters.AddWithValue("@listrikairteleponbiaya", Entity.listrikairteleponbiaya);
+                    command.Parameters.AddWithValue("@belanjarumahtanggabiaya", Entity.belanjarumahtanggabiaya);
+                    command.Parameters.AddWithValue("@transportasibiaya", Entity.transportasibiaya);
+                    command.Parameters.AddWithValue("@lainnyabiaya", Entity.lainnyabiaya);
+                    command.Parameters.AddWithValue("@totalpengeluaran", Entity.totalpengeluaran);
+                    command.Parameters.AddWithValue("@bankhutang", Entity.bankhutang);
+                    command.Parameters.AddWithValue("@kewajibantotal", Entity.kewajibantotal);
+                    command.Parameters.AddWithValue("@lainnyacicilan", Entity.lainnyacicilan);
+                    command.Parameters.AddWithValue("@bersihpenghasilan", Entity.bersihpenghasilan);
+                    command.Parameters.AddWithValue("@rpc", Entity.rpc);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
         public async Task<List<dynamic>> GetMasterDocRule(string spname,string param)
         {
 

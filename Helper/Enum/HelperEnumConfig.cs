@@ -36,6 +36,10 @@
         checkingavailabledoc,
         insertdocrestrukture,
         removedraftrestrukture,
+        checkingexistingrestrukture,
+        checkinganalisaexistingrestrukture,
+        updateanalisarestrukture,
+        configanalisarestruktur,
         updateddocrestrukture
     }
     public enum RecoverySubModule

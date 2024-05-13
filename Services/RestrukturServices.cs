@@ -82,6 +82,59 @@ namespace sky.recovery.Services
         }
 
 
+
+        //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(Entity.userid);
+                // pindah ke dinamis
+                if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Not Authorize";
+                    return (wrap.Status, wrap);
+                }
+                var ReturnData = await _postgreRepository.CheckingAnalisaRestruktureExisting("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.checkinganalisaexistingrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,Entity.analisaid,Entity.idrestrukture,Entity.loanid);
+                if(ReturnData.Count>0)
+                {
+                    //update
+                    var UpdateAnalisa = await _postgreRepository.UpdateAnalisaRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.updateanalisarestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,  Entity);
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+
+                    wrap.Data = UpdateAnalisa;
+                }
+                else
+                {
+                    //insert
+                    var InsertAnalisa = await _postgreRepository.CreateAnalisaRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.configanalisarestruktur.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,  Entity);
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+
+                    wrap.Data = InsertAnalisa;
+                }
+
+                
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
         //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity)
