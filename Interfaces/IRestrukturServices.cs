@@ -24,6 +24,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string userid, int? idloan, int? idrestrukture);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity);
 
+        public Task<(bool? Status, GeneralResponsesConfigV2 Returns)> ConfigPola(RequestPolaDTO Entity);
 
 
     }

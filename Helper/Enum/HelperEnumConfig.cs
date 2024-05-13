@@ -4,6 +4,11 @@
     {
        
     }
+    public enum ConfigSPVNumber
+    {
+        SPVC=32,
+        SPVG=38
+    }
     public enum RestrukturRole
     {
         Operator,

@@ -112,9 +112,40 @@ namespace sky.recovery.Services
         }
 
 
-                //SERVICE YANG DIPAKAI
-                //MONITORING RESTRUKTUR V2
-                public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
+        //SERVICE YANG DIPAKAI
+        //CREATE POLA RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesConfigV2 Returns)> ConfigPola(RequestPolaDTO Entity)
+        {
+            var wrap = _DataResponses.GeneralResponsesConfigData();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+              
+
+                var GetMetodeRestruktur = await _GeneralParam.GetParamDetail(4);
+                var GetJenisPengurangan = await _GeneralParam.GetParamDetail(5);
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.MetodeRestruktur = GetMetodeRestruktur.DataDetail;
+                wrap.JenisPengurangan = GetJenisPengurangan.DataDetail;
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
+        //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();
@@ -512,7 +543,9 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
-                if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Supervisor.ToString())
+                if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
+                    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
+                    )
                 {
                      wrap.Status  = false;
                     wrap.Message = "Not Authorize";
