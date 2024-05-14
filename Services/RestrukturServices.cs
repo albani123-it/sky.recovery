@@ -645,11 +645,11 @@ namespace sky.recovery.Services
                 }
 
                  var getCallBy = await _User.GetDataUser(Entity.UserId);
-                if(getCallBy.Returns.Data.FirstOrDefault().role!=RestrukturRole.Operator.ToString())
-                {
-                    wrap.Status = false;
-                    wrap.Message = "Not Authorize";
-                }
+                //if(getCallBy.Returns.Data.FirstOrDefault().role!=RestrukturRole.Operator.ToString())
+                //{
+                //    wrap.Status = false;
+                //    wrap.Message = "Not Authorize";
+                //}
                 var ReturnData = await _postgreRepository.CreateDraftRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createdraftrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,getCallBy.Returns.Data.FirstOrDefault().RoleId,Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
