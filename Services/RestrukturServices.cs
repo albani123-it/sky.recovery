@@ -60,12 +60,12 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
              // pindah ke dinamis
-                if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
-                {
-                     wrap.Status  = false;
-                    wrap.Message = "Not Authorize";
-                    return ( wrap.Status , wrap);
-                }
+                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
+                //{
+                //     wrap.Status  = false;
+                //    wrap.Message = "Not Authorize";
+                //    return ( wrap.Status , wrap);
+                //}
                 var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", "", getCallBy.Returns.Data.FirstOrDefault().iduser.ToString());
                  wrap.Status  = true;
                 wrap.Message = "OK";
@@ -543,14 +543,14 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
-                if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
-                    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
-                    )
-                {
-                     wrap.Status  = false;
-                    wrap.Message = "Not Authorize";
-                    return ( wrap.Status , wrap);
-                }
+                //if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
+                //    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
+                //    )
+                //{
+                //     wrap.Status  = false;
+                //    wrap.Message = "Not Authorize";
+                //    return ( wrap.Status , wrap);
+                //}
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().role, UserId);
                  wrap.Status  = true;
                 wrap.Message = "OK";
