@@ -19,6 +19,7 @@ namespace sky.recovery.Responses
 
         public List<GeneralParamDetail> MetodeRestruktur { get; set; }
         public List<GeneralParamDetail> JenisPengurangan{ get; set; }
+        public List<dynamic> BranchList{ get; set; }
 
         public List<dynamic> Data { get; set; }
     }
@@ -83,6 +84,7 @@ namespace sky.recovery.Responses
                 Status = false,
                 Message = "",
                 MetodeRestruktur=null,
+                BranchList=null,
                 Data = null
             };
             return Data;

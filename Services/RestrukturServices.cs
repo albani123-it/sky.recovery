@@ -94,11 +94,12 @@ namespace sky.recovery.Services
             {
                 var GetMetodeRestruktur = await _GeneralParam.GetParamDetail(4);
                 var GetJenisPengurangan = await _GeneralParam.GetParamDetail(5);
-
+                var GetBranchList = await _postgreRepository.GetBranchList("\"" + CoreSchema.param.ToString() + "\"." + CoreFunctionName.getallbranchactived.ToString()+"");
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.MetodeRestruktur = GetMetodeRestruktur.DataDetail;
                 wrap.JenisPengurangan = GetJenisPengurangan.DataDetail;
+                wrap.BranchList = GetBranchList;
 
                 return (wrap.Status, wrap);
             }

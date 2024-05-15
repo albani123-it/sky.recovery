@@ -22,6 +22,14 @@
     {
         RecoveryBusinessV2
     }
+    public enum CoreSchema
+    {
+        param
+    }
+    public enum CoreFunctionName
+    {
+        getallbranchactived
+    }
     public enum RecoveryFunctionName
     {
         getrestrukture,
