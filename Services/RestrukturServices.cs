@@ -199,6 +199,42 @@ namespace sky.recovery.Services
         }
 
 
+
+        //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigPolaRestrukture(AddPolaDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(Entity.userid);
+               
+               
+                    //insert
+                    var InsertAnalisa = await _postgreRepository.UpdateConfigPolaRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.configpolarestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser, Entity);
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+
+                    wrap.Data = null;
+                
+
+
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
         //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity)

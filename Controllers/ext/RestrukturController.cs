@@ -198,6 +198,36 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+        //V2
+        [HttpPost("V2/ConfigPolaRestrukture")]
+        public async Task<ActionResult<GeneralResponses>> ConfigPolaRestrukture([FromBody] AddPolaDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.ConfigPolaRestrukture(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
         //V2
         //tambahkan pengecekan iscalculated
         [HttpPost("V2/Analisa")]

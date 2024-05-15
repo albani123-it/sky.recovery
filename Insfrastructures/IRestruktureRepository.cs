@@ -6,7 +6,10 @@ namespace sky.recovery.Insfrastructures
 {
     public interface IRestruktureRepository
     {
-        public  Task<List<dynamic>> GetBranchList(string spname);
+        public Task<List<dynamic>> CheckingRestruktureExisting(string spname, int? idrestrukture, int? idloan);
+        public Task<List<dynamic>> UpdateConfigPolaRestrukture(string spname, int? userid, AddPolaDTO Entity);
+
+        public Task<List<dynamic>> GetBranchList(string spname);
         public  Task<List<dynamic>> GetDetailPolaRestruktur(string spname, int? idrestrukture, int? idloan, string accno);
 
         public Task<List<dynamic>> GetRestukture(int Type, string SPName, string FilterStatus,string UserId);

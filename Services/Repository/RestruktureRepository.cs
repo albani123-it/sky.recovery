@@ -87,6 +87,94 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
+        public async Task<List<dynamic>> CheckingRestruktureExisting(string spname, int? idrestrukture, int? idloan)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
+                    command.Parameters.AddWithValue("@idloan", idloan);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+        public async Task<List<dynamic>> UpdateConfigPolaRestrukture(string spname, int? userid, AddPolaDTO Entity)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
+                    command.Parameters.AddWithValue("@idloan", Entity.idloan);
+                    command.Parameters.AddWithValue("@branchid", Entity.branchid);
+                    command.Parameters.AddWithValue("@pola_restrukture", Entity.PolaId);
+
+                    command.Parameters.AddWithValue("@keterangans", Entity.keterangan);
+                    command.Parameters.AddWithValue("@pengurangan_nilai_margin", Entity.pengurangannilaimargin);
+                    command.Parameters.AddWithValue("@jenis_pengurangan", Entity.jenispengurangan);
+                    command.Parameters.AddWithValue("@grace_periode", Entity.graceperiode);
+                   // command.Parameters.AddWithValue("@tgl_jatuhtempo_baru", Entity.tgljatuhtempobaru);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
 
         public async Task<List<dynamic>> GetDetailPolaRestruktur(string spname,int? idrestrukture, int? idloan, string accno)
         {
