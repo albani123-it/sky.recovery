@@ -246,10 +246,11 @@ namespace sky.recovery.Services
             {
 
                 var getCallBy = await _User.GetDataUser(Entity.userid);
+                var getCallBySPV = await _User.GetDataUser(getCallBy.Returns.Data.FirstOrDefault().spvname);
 
 
                 //insert
-                var CheckingDataRestrukture = await _postgreRepository.CheckingForSubmitRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.checkingdatarestrukturforsubmitapproval.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,Entity.idrestrukture,Entity.idloan);
+                var CheckingDataRestrukture = await _postgreRepository.SubmitRestrukturApproval("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.submitapprovalrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,getCallBySPV.Returns.Data.FirstOrDefault().iduser,Entity.idrestrukture);
                 if (CheckingDataRestrukture.Count > 0)
                 {
                     wrap.Status = true;

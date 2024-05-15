@@ -37,7 +37,8 @@ namespace sky.recovery.Services
                         
                         acceslevel=es.usr_access_level,
                         email=es.usr_email,
-                        userid=es.usr_userid
+                        userid=es.usr_userid,
+                        spvname=es.usr_supervisor
 
                     }).
                     Where(es => es.userid== userid).

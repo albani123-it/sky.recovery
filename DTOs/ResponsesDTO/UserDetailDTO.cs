@@ -10,5 +10,6 @@
         public string position { get; set; }
         public string acceslevel { get; set; }
         public int RoleId { get; set; }
+        public string spvname { get; set; }
     }
 }
