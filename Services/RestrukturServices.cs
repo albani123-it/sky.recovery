@@ -84,7 +84,7 @@ namespace sky.recovery.Services
         }
 
         //SERVICE YANG DIPAKAI
-        //MONITORING RESTRUKTUR V2
+        //Get Pola Metode RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
         {
             var wrap = _DataResponses.GeneralResponsesConfigData();
