@@ -72,6 +72,7 @@
         REQUESTED,
         APPROVED,
         REJECT,
-        REVISED
+        REVISED,
+        CHECK
     }
 }

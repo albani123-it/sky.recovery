@@ -59,7 +59,7 @@ namespace sky.recovery.Services.DBConfig
                 using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@filterstatus", StatusWorkflow.REQUESTED.ToString());
+                    command.Parameters.AddWithValue("@filterstatus", StatusWorkflow.CHECK.ToString());
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);
