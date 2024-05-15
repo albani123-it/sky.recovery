@@ -53,7 +53,8 @@
         checkinganalisaexistingrestrukture,
         updateanalisarestrukture,
         configanalisarestruktur,
-        updateddocrestrukture
+        updateddocrestrukture,
+        getdetailpolarestrukture
     }
     public enum RecoverySubModule
     {
