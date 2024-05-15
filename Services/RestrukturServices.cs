@@ -236,6 +236,47 @@ namespace sky.recovery.Services
 
 
         //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(SubmitRestruktureDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(Entity.userid);
+
+
+                //insert
+                var CheckingDataRestrukture = await _postgreRepository.CheckingForSubmitRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.checkingdatarestrukturforsubmitapproval.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,Entity.idrestrukture,Entity.idloan);
+                if (CheckingDataRestrukture.Count > 0)
+                {
+                    wrap.Status = true;
+                    wrap.Message = "OK";
+
+                    wrap.Data = null;
+
+                }
+                else
+                {
+                    wrap.Status = false;
+                    wrap.Message = "Data Belum Sepenuhnya Lengkap, Proses Submit Approval Belum Dapat Dilakukan";
+                    wrap.Data = null;
+                }
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity)
         {
