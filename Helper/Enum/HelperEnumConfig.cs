@@ -58,7 +58,8 @@
         configpolarestrukture,
         checkingdatarestrukturforsubmitapproval,
         submitapprovalrestrukture,
-        actionapproval
+        actionapproval,
+        getworkflowhistory
     }
     public enum RecoverySubModule
     {

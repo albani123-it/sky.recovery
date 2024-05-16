@@ -15,6 +15,7 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> GetBranchList(string spname);
         public  Task<List<dynamic>> GetDetailPolaRestruktur(string spname, int? idrestrukture, int? idloan, string accno);
         public Task<List<dynamic>> ActionApproval(string spname,int? userid, ApprovalActionDTO Entity);
+        public Task<List<dynamic>> GetWorkflowHistory(string spname, int? idrequest);
 
         public Task<List<dynamic>> GetRestukture(int Type, string SPName, int?roleid,int?user);
         public Task<List<dynamic>> GetTaskList(string consstring, string spname, int? roleid, int? user);
