@@ -46,7 +46,7 @@ namespace sky.recovery.Services
             _postgreRepository = postgreRepository;
             _helperRepository = helperRepository;
 
-        }
+        }  
 
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
@@ -66,7 +66,7 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", "", getCallBy.Returns.Data.FirstOrDefault().iduser.ToString());
+                var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", Convert.ToInt32(getCallBy.Returns.Data.FirstOrDefault().acceslevel), getCallBy.Returns.Data.FirstOrDefault().iduser);
                  wrap.Status  = true;
                 wrap.Message = "OK";
               
@@ -633,7 +633,7 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().role, UserId);
+                var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", Convert.ToInt32(getCallBy.Returns.Data.FirstOrDefault().acceslevel), getCallBy.Returns.Data.FirstOrDefault().iduser);
                  wrap.Status  = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;

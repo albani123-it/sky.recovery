@@ -32,16 +32,16 @@ namespace sky.recovery.Services.DBConfig
 
 
 
-        public async Task<List<dynamic>> GetRestukture(int Type, string SPName, string FilterStatus, string UserId)
+        public async Task<List<dynamic>> GetRestukture(int Type, string SPName, int?roleid, int?user)
         {
             var SkyCollConsString = GetSkyCollConsString();
             if (Type == 1)
             {
-                return await GetMonitoring(SkyCollConsString.Data.ConnectionSetting, SPName, UserId);
+                return await GetMonitoring(SkyCollConsString.Data.ConnectionSetting, SPName, user);
             }
             else
             {
-                return await GetTaskList(SkyCollConsString.Data.ConnectionSetting, SPName, FilterStatus, UserId);
+                return await GetTaskList(SkyCollConsString.Data.ConnectionSetting, SPName, roleid, user);
 
             }
 
@@ -49,7 +49,7 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
-        public async Task<List<dynamic>> GetTaskList(string consstring, string spname, string FilterStatus, string UserId)
+        public async Task<List<dynamic>> GetTaskList(string consstring, string spname, int? roleid, int? user)
         {
           
 
@@ -59,7 +59,8 @@ namespace sky.recovery.Services.DBConfig
                 using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@filterstatus", StatusWorkflow.CHECK.ToString());
+                    command.Parameters.AddWithValue("@roleid", roleid);
+                    command.Parameters.AddWithValue("@users", user);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);
@@ -1140,7 +1141,7 @@ namespace sky.recovery.Services.DBConfig
 
 
         //SP PARAM ONLY USER ID
-        public async Task<List<dynamic>> GetMonitoring(string consstring, string spname, string UserId)
+        public async Task<List<dynamic>> GetMonitoring(string consstring, string spname, int? UserId)
         {
             var data = new List<dynamic>();
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))

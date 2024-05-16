@@ -15,9 +15,9 @@ namespace sky.recovery.Insfrastructures
         public Task<List<dynamic>> GetBranchList(string spname);
         public  Task<List<dynamic>> GetDetailPolaRestruktur(string spname, int? idrestrukture, int? idloan, string accno);
 
-        public Task<List<dynamic>> GetRestukture(int Type, string SPName, string FilterStatus,string UserId);
-        public Task<List<dynamic>> GetTaskList(string consstring, string spname, string FilterStatus, string UserId);
-        public Task<List<dynamic>> GetMonitoring(string consstring, string spname,string UserId);
+        public Task<List<dynamic>> GetRestukture(int Type, string SPName, int?roleid,int?user);
+        public Task<List<dynamic>> GetTaskList(string consstring, string spname, int? roleid, int? user);
+        public Task<List<dynamic>> GetMonitoring(string consstring, string spname,int? user);
         public  Task<List<dynamic>> GetDetailDrafting(string consstring, string spname, int? LoanId);
         public Task<List<dynamic>> GetListFasilitas(string consstring, string spname, int? LoanId);
         public Task<List<dynamic>> GetMasterColateral(string spname, int? loanid);
