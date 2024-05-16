@@ -650,6 +650,43 @@ namespace sky.recovery.Services
         }
 
 
+
+        //SERVICE YANG DIPAKAI
+        //TASKLIST RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(ApprovalActionDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+
+                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                // pindah ke dinamis
+                //if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
+                //    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
+                //    )
+                //{
+                //     wrap.Status  = false;
+                //    wrap.Message = "Not Authorize";
+                //    return ( wrap.Status , wrap);
+                //}
+                var ReturnData = await _postgreRepository.ActionApproval("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.actionapproval.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,Entity);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ReturnData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
         //SERVICE YANG DIPAKAI
         //GET DETAIL DRAFTING RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid)

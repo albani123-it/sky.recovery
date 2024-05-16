@@ -57,7 +57,8 @@
         getdetailpolarestrukture,
         configpolarestrukture,
         checkingdatarestrukturforsubmitapproval,
-        submitapprovalrestrukture
+        submitapprovalrestrukture,
+        actionapproval
     }
     public enum RecoverySubModule
     {

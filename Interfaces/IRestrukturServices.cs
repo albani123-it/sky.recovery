@@ -17,6 +17,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigPolaRestrukture(AddPolaDTO Entity);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(SubmitRestruktureDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(ApprovalActionDTO Entity);
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(UpdatePermasalahanDTO Entity);

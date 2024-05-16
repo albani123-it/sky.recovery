@@ -88,6 +88,51 @@ namespace sky.recovery.Services.DBConfig
 
         }
 
+        public async Task<List<dynamic>> ActionApproval(string spname,int? userid, ApprovalActionDTO Entity)
+        {
+
+            var SkyCollConsString = GetSkyCollConsString();
+
+            using (NpgsqlConnection connection = new NpgsqlConnection(SkyCollConsString.Data.ConnectionSetting))
+            {
+                connection.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand(spname, connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@approverid", userid);
+                    command.Parameters.AddWithValue("@idrestrukture", Entity.idrestrukture);
+                    command.Parameters.AddWithValue("@actionreason", Entity.actionreason);
+                    command.Parameters.AddWithValue("@workflowid", Entity.workflowid);
+                    command.Parameters.AddWithValue("@actions", Entity.actions);
+
+                    // Jika stored procedure memiliki parameter, tambahkan mereka di sini
+                    // command.Parameters.AddWithValue("@ParameterName", value);
+
+                    var data = new List<dynamic>();
+                    using (NpgsqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            dynamic result = new ExpandoObject();
+                            var dict = (IDictionary<string, object>)result;
+
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                string columnName = reader.GetName(i);
+                                object value = reader.GetValue(i);
+                                dict[columnName] = value;
+                            }
+                            data.Add(result);
+                        }
+                    }
+                    return data;
+                }
+            }
+
+        }
+
+
+
         public async Task<List<dynamic>> CheckingRestruktureExisting(string spname, int? idrestrukture, int? idloan)
         {
 
