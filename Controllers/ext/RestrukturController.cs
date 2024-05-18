@@ -31,7 +31,7 @@ namespace sky.recovery.Controllers.ext
 
             try
             {
-                var GetData = await _workflowService.CallbackApproval(Entity);
+                var GetData = await _workflowService.CallbackApproval_Dummy(Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
