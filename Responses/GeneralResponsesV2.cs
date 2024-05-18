@@ -1,4 +1,5 @@
 ﻿using Org.BouncyCastle.Pkcs;
+using sky.recovery.DTOs.HelperDTO;
 using sky.recovery.Entities.RecoveryConfig;
 using System.Collections.Generic;
 
@@ -10,6 +11,15 @@ namespace sky.recovery.Responses
         public string Message { get; set; }
 
        public List<dynamic> Data { get; set; }
+
+    }
+
+    public class GeneralResponsesV2DocExcel
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+
+        public List<DummyExcelDTO> Data { get; set; }
 
     }
     public class GeneralResponsesConfigV2
@@ -74,6 +84,17 @@ namespace sky.recovery.Responses
                 Status=false,
                 Message="",
                 Data=null
+            };
+            return Data;
+        }
+        public GeneralResponsesV2DocExcel ExcelReturn()
+        {
+            var Data = new GeneralResponsesV2DocExcel()
+            {
+                Status = false,
+                Message = "",
+              
+                Data = null
             };
             return Data;
         }

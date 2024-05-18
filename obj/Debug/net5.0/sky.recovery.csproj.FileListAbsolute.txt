@@ -287,3 +287,7 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Debug\net5.0\refint\sky.recovery.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Debug\net5.0\sky.recovery.pdb
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Debug\net5.0\sky.recovery.genruntimeconfig.cache
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Debug\net5.0\ref\sky.recovery.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\EPPlus.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\EPPlus.Interfaces.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\EPPlus.System.Drawing.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\Microsoft.IO.RecyclableMemoryStream.dll

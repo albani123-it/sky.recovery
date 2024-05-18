@@ -14,11 +14,14 @@ namespace sky.recovery.Controllers.ext
     {
         private IRestrukturServices _recoveryService { get; set; }
         private IWorkflowServices _workflowService { get; set; }
+
+        private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService, IWorkflowServices workflowService) : base(recoveryService)
+        public RestrukturController(IRestrukturServices recoveryService, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
         {
             _recoveryService = recoveryService;
+            _documentservices = documentservices;
             _workflowService = workflowService;
         }
 
@@ -51,7 +54,34 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+        //V2
+        [HttpGet("V2/ExcelReader")]
+        public async Task<ActionResult<GeneralResponses>> ExcelReader()
 
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _documentservices.ExcelReader();
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
         //V2
         [HttpPost("V2/WorkflowSubmit")]
         public async Task<ActionResult<GeneralResponses>> WorkflowSubmit([FromBody] SubmitWorkflowDTO Entity )
