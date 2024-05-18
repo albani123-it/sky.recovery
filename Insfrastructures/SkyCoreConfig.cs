@@ -20,7 +20,9 @@ namespace sky.recovery.Insfrastructures
 
         public DbSet<rfproduct_segment> rfproduct_segment { get; set; }
 
-
+        public DbSet<workflowhistory> workflowhistory { get; set; }
+        public DbSet<workflow> workflow { get; set; }
+        public DbSet<MasterFlow> masterflow { get; set; }
         public DbSet<GeneralParamDetail> generalparamdetail { get; set; }
         public DbSet<GeneralParamHeader> generalparamheader { get; set; }
         public DbSet<master_customer> master_customer { get; set; }
@@ -29,7 +31,8 @@ namespace sky.recovery.Insfrastructures
         public DbSet<collection_add_contact> collection_add_contact { get; set; }
         public DbSet<restructure> restructure { get; set; }
         public DbSet<status> status { get; set; }
-
+        public DbSet<masterworkflowrule> masterworkflowrule { get; set; }
+        public DbSet<masterworkflow> masterworkflow { get; set; }
         private DbContextSettings _appsetting { get; set; }
         public SkyCoreConfig(IOptions<DbContextSettings> appsetting)
         {
@@ -49,6 +52,14 @@ namespace sky.recovery.Insfrastructures
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<workflow>()
+.HasKey(e => e.Id);
+            modelBuilder.Entity<masterworkflow>()
+.HasKey(e => e.id);
+            modelBuilder.Entity<MasterFlow>()
+.HasKey(e => e.id);
+
             modelBuilder.Entity<branch>()
 .HasKey(e => e.lbrc_id);
             modelBuilder.Entity<GeneralParamHeader>()
@@ -62,7 +73,7 @@ namespace sky.recovery.Insfrastructures
             modelBuilder.Entity<rfproduct_segment>()
 .HasKey(e => e.prd_sgm_id);
             modelBuilder.Entity<restructure>()
-.HasKey(e => e.rst_id);
+.HasKey(e => e.id);
             modelBuilder.Entity<master_loan>()
               .HasKey(e => e.id);
             modelBuilder.Entity<master_customer>()
@@ -75,9 +86,12 @@ namespace sky.recovery.Insfrastructures
      .HasKey(e => e.prd_id);
             modelBuilder.Entity<collection_add_contact>()
     .HasKey(e => e.id);
-   
- 
- 
+
+            modelBuilder.Entity<masterworkflow>()
+               .HasKey(e => e.id);
+            modelBuilder.Entity<masterworkflowrule>()
+    .HasKey(e => e.id);
+
         }
     }
 }

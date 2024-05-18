@@ -29,7 +29,7 @@ namespace sky.recovery.Services
             };
             try
             {
-                var Data = await users.
+                var Data = await users.AsQueryable().
                     Select(es=>new UserDetailDTO
                     {
                         iduser=es.usr_id,
@@ -81,7 +81,7 @@ namespace sky.recovery.Services
             };
             try
             {
-                var Data = await role.
+                var Data = await role.AsQueryable().
                     Select(es => new RoleDTO
                     {
                         RoleId = es.rl_id,

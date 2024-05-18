@@ -4,60 +4,52 @@ using System.ComponentModel.DataAnnotations;
 
 namespace sky.recovery.Entities
 {
+    [Table("restrukture", Schema = "RecoveryBusinessV2")]
+
     public class restructure
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("rst_id")]
-        public int rst_id { get; set; }
-        public int? rst_loan_id { get; set; }
+        [Column("id")]
 
-        [ForeignKey(nameof(rst_loan_id))]
-        public master_loan master_loan { get; set; }
-
-        public int? rst_mst_branch_id { get; set; }
-
-        [ForeignKey(nameof(rst_mst_branch_id))]
-
-        public branch branch { get; set; }
-
-        public DateTime? last_update_date { get; set; }
-        public int? mst_branch_pembukuan_id { get; set; }
-        public int? mst_branch_proses_id { get; set; }
-        public int? margin_pembayaran { get; set; }
-        public int? principal_pinalty { get; set; }
-        public int? margin_pinalty { get; set; }
-        public DateTime? tgl_jatuh_tempo_baru { get; set; }
+        public int id { get; set; }
+        public int? loanid { get; set; }
+        public int? mstbranchid { get; set; }
+        public int? lastupdatedid { get; set; }
+        public int? mstbranchpembukuanid { get; set; }
+        public int? mstbranchprosesid { get; set; }
+        public int? marginpembayaran { get; set; }
+        public int? principalpinalty { get; set; }
+        public DateTime? tgljatuhtempobaru { get; set; }
         public string keterangan { get; set; }
-        public int? grace_periode { get; set; }
-        public int? pengurangan_nilai_margin { get; set; }
-        public DateTime? tgl_awal_periode_diskon { get; set; }
-        public DateTime? tgl_akhir_periode_diskon { get; set; }
-        public int? periode_diskon { get; set; }
-        public DateTime? value_date { get; set; }
-        public int? disc_tunggakan_margin { get; set; }
-        public int? disc_tunggakan_denda { get; set; }
+        public int? graceperiode { get; set; }
+        public int? pengurangannilaimargin { get; set; }
+        public DateTime? tglawalperiodediskon { get; set; }
+        public DateTime? tglakhirperiodediskon { get; set; }
+        public int? periodediskon { get; set; }
+        public DateTime? valuedate { get; set; }
+        public int? disctunggakanmargin { get; set; }
+        public int? disctunggakandenda { get; set; }
         public int? margin { get; set; }
         public int? denda { get; set; }
-        public int? margin_amount { get; set; }
-        public int? total_diskon_margin { get; set; }
-        public int? rst_pola_restruk_id { get; set; }
-
-        [ForeignKey(nameof(rst_pola_restruk_id))]
-        public generic_param? generic_param_pola_restruk { get; set; }
-        public int? pembayaran_gp_id { get; set; }
-        public int? jenis_pengurangan_id { get; set; }
+        public int? totaldiskonmargin { get; set; }
+        public int? polarestrukturid { get; set; }
+        public int? pembayarangpid { get; set; }
+        public int? jenispenguranganid { get; set; }
         public string permasalahan { get; set; }
-        public int? createby_id { get; set; }
-        public DateTime? create_date { get; set; }
-        public int? checkby_id { get; set; }
-        public DateTime? check_date { get; set; }
-        public int? approveby_id { get; set; }
-        public DateTime? approve_date { get; set; }
-        public int? rst_status_id { get; set; }
-        [ForeignKey(nameof(rst_status_id))]
-        public status? status{ get; set; }
-        public int? principal_pembayaran { get; set; }
+        public int? createdby { get; set; }
+        public DateTime? createddated { get; set; }
+        public int? checkby { get; set; }
+        public DateTime? checkdate { get; set; }
+        public int? approvedby { get; set; }
+        public int? statusid { get; set; }
+        public int? principalpembayaran { get; set; }
+        public int? approver { get; set; }
+        public int? approverrole { get; set; }
+        public int? requesterrole { get; set; }
+        public DateTime? statusmodifydated { get; set; }
+       
+        
     
     }
 }

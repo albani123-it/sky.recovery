@@ -13,14 +13,73 @@ namespace sky.recovery.Controllers.ext
     public class RestrukturController : RecoveryController
     {
         private IRestrukturServices _recoveryService { get; set; }
+        private IWorkflowServices _workflowService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService) : base(recoveryService)
+        public RestrukturController(IRestrukturServices recoveryService, IWorkflowServices workflowService) : base(recoveryService)
         {
             _recoveryService = recoveryService;
+            _workflowService = workflowService;
+        }
+
+        //V2
+        [HttpPost("V2/CallbackApproval")]
+        public async Task<ActionResult<GeneralResponses>> CallbackApproval([FromBody] CallbackApprovalDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _workflowService.CallbackApproval(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
         }
 
 
+        //V2
+        [HttpPost("V2/WorkflowSubmit")]
+        public async Task<ActionResult<GeneralResponses>> WorkflowSubmit([FromBody] SubmitWorkflowDTO Entity )
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _workflowService.SubmitWorkflowStep(Entity);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
 
 
         //V2
@@ -457,7 +516,7 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
-        //V2
+        //V2  
         [HttpPost("V2/Update/Permasalahan")]
         public async Task<ActionResult<GeneralResponses>> UpdatePermasalahan([FromBody] UpdatePermasalahanDTO Entity)
 
@@ -473,7 +532,7 @@ namespace sky.recovery.Controllers.ext
                 }
                 else
                 {
-                    return BadRequest(GetData.Returns);
+                    return BadRequest(GetData.Returns);     
                 }
 
             }

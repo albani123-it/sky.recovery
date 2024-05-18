@@ -44,7 +44,7 @@ namespace sky.recovery.Services.Repository
             var Return = new ReturnObjectConfig();
             try
             {
-                var Data = await generalparamdetail.Where(es => es.paramheaderid == IdParamHeader).ToListAsync();
+                var Data = await generalparamdetail.AsQueryable().Where(es => es.paramheaderid == IdParamHeader).ToListAsync();
                 return Return.ReturnObject(true, "OK", Data);
             }
             catch(Exception ex)
