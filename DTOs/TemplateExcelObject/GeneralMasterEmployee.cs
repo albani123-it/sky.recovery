@@ -1,10 +1,6 @@
-﻿namespace sky.recovery.DTOs.HelperDTO
+﻿namespace sky.recovery.DTOs.TemplateExcelObject
 {
-    public class PositionCell
-    {
-        public string Cell { get; set; }
-    }
-    public class DummyExcelDTO
+    public class GeneralMasterEmployee
     {
         public int Id { get; set; }
         public string CellId { get; set; }
@@ -19,6 +15,5 @@
 
         public string BranchCity { get; set; }
         public string CellBranchCity { get; set; }
-
     }
 }

@@ -20,7 +20,8 @@ namespace sky.recovery.Responses
         public bool Status { get; set; }
         public string Message { get; set; }
 
-        public List<DummyExcelDTO> Data { get; set; }
+        public List<dynamic> Data { get; set; }
+
         public List<WorkSheetCustom> Worksheet { get; set; }
         public List<List<object>> DataBySheet{ get; set; }
 
