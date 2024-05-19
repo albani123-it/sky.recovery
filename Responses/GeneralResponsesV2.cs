@@ -21,6 +21,8 @@ namespace sky.recovery.Responses
         public string Message { get; set; }
 
         public List<dynamic> Data { get; set; }
+        public List<List<dynamic>> DataFile { get; set; }
+
         public List<dynamic> DataSheet { get; set; }
 
     }
@@ -96,7 +98,7 @@ namespace sky.recovery.Responses
                 Status = false,
                 Message = "",
               DataSheet=null,
-             
+             DataFile=null,
                 Data = null
             };
             return Data;

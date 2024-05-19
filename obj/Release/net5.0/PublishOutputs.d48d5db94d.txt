@@ -2,6 +2,8 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\sky.recovery.exe
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\File\DOCTemplateDUmmy.xlsx.xlsx
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\File\masterloan.xlsx.xlsx
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map
@@ -61,6 +63,9 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\App.Metrics.Extensio
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\App.Metrics.Formatters.Ascii.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\App.Metrics.Formatters.Json.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\App.Metrics.Formatters.Prometheus.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\EPPlus.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\EPPlus.Interfaces.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\EPPlus.System.Drawing.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\MailKit.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
@@ -75,6 +80,7 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityMo
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Microsoft.IO.RecyclableMemoryStream.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\MimeKit.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.Bson.dll

@@ -144,10 +144,10 @@ namespace sky.recovery.Helper
         }
 
 
-        public (List<List<object>> Data, List<List<object>> Cell) ReadExcelToListDynamic(string filePath,string sheet)
+        public List<List<object>> ReadExcelToListDynamic(string filePath,string sheet)
         {
             var excelData = new List<List<object>>();
-            var excelDatacell = new List<List<object>>();
+            //var excelDatacell = new List<List<object>>();
          
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -168,12 +168,12 @@ namespace sky.recovery.Helper
                     for (int col = 1; col <= colCount; col++)
                     {
                         var cellValue = worksheet.Cells[row, col].Value;
-                        var DataCell = worksheet.Cells[row, col];
+                       // var DataCell = worksheet.Cells[row, col];
                         rowData.Add(cellValue);
-                        rowDataCell.Add(DataCell);
+                       // rowDataCell.Add(DataCell);
                     }
                     excelData.Add(rowData);
-                    excelDatacell.Add(rowDataCell);
+                   // excelDatacell.Add(rowDataCell);
 
                 }
 
@@ -186,7 +186,7 @@ namespace sky.recovery.Helper
 
             
 
-            return (excelData,excelDatacell);
+            return excelData;
         }
 
 

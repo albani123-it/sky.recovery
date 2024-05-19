@@ -69,15 +69,15 @@ namespace sky.recovery.Services
 
             try
             {
-                var  data = _DocHelper.ReadExcelToListBySheet(path, sheet);
-                //var data = _DocHelper.ReadExcelToListDynamic(path, sheet);
+                //var  data = _DocHelper.ReadExcelToListBySheet(path, sheet);
+                var data = _DocHelper.ReadExcelToListDynamic(path, sheet);
 
-                var ConverDynamicExcel = await _DocHelper.ConvertDataExcel(sheet, data);
+                //var ConverDynamicExcel = await _DocHelper.ConvertDataExcel(sheet, data);
                 //var ConverDynamicExcel = await _DocHelper.ConvertDataExcel_Dummy(sheet,data.Data,data.Cell);
 
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ConverDynamicExcel;
+                wrap.DataFile = data;
                 return (wrap.Status, wrap);
             }
             catch (Exception ex)
