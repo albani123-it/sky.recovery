@@ -1,4 +1,5 @@
-﻿using Org.BouncyCastle.Pkcs;
+﻿using OfficeOpenXml;
+using Org.BouncyCastle.Pkcs;
 using sky.recovery.DTOs.HelperDTO;
 using sky.recovery.Entities.RecoveryConfig;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace sky.recovery.Responses
         public string Message { get; set; }
 
         public List<DummyExcelDTO> Data { get; set; }
+        public List<WorkSheetCustom> Worksheet { get; set; }
+        public List<List<object>> DataBySheet{ get; set; }
 
     }
     public class GeneralResponsesConfigV2
@@ -93,7 +96,8 @@ namespace sky.recovery.Responses
             {
                 Status = false,
                 Message = "",
-              
+              DataBySheet=null,
+              Worksheet=null,
                 Data = null
             };
             return Data;

@@ -55,6 +55,7 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
+        //tidak baca sheet
         [HttpGet("V2/ExcelReader")]
         public async Task<ActionResult<GeneralResponses>> ExcelReader()
 
@@ -82,6 +83,69 @@ namespace sky.recovery.Controllers.ext
                 return BadRequest(wrap);
             }
         }
+
+
+        //V2
+        //tidak baca sheet
+        [HttpGet("V2/RetrieveSheet")]
+        public async Task<ActionResult<GeneralResponses>> RetrieveSheet()
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _documentservices.ReadExcelSheet();
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        //tidak baca sheet
+        [HttpGet("V2/ReadExcelBySheet/{sheetname}")]
+        public async Task<ActionResult<GeneralResponses>> GetDataBySheet(string sheetname)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _documentservices.RetrieveDataBySheet(sheetname);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
         //V2
         [HttpPost("V2/WorkflowSubmit")]
         public async Task<ActionResult<GeneralResponses>> WorkflowSubmit([FromBody] SubmitWorkflowDTO Entity )
