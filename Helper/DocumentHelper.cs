@@ -1,13 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using sky.recovery.DTOs.HelperDTO;
 using sky.recovery.DTOs.TemplateExcelObject;
 using System;
 using System.Collections.Generic;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
+using System.Drawing;
+using PdfSharp.Pdf;
+using PdfSharp.Drawing;
 namespace sky.recovery.Helper
 {
     public class DocumentHelper
@@ -189,8 +196,16 @@ namespace sky.recovery.Helper
             return excelData;
         }
 
+        public async Task<MemoryStream> GenerateLetterDummy()
+        {
+            return null;
+        }
 
-        public async Task<List<dynamic>> ConvertDataExcel_Dummy(string sheet,  List<List<object>> Data,
+
+            
+
+
+            public async Task<List<dynamic>> ConvertDataExcel_Dummy(string sheet,  List<List<object>> Data,
             List<List<object>> Cell)
         {
             var ListData = new List<object>();

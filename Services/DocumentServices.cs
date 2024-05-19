@@ -89,7 +89,31 @@ namespace sky.recovery.Services
             }
         }
 
-            public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByUpload(UploadExcelDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesPDFV2 Datareturn)> GetTemplateLetter()
+        {
+            var wrap = _DataResponses.PDFReturn();
+            //var getCallBy = await _User.GetDataUser(Entity.userid);
+
+            try
+            {
+                var GetData = await _DocHelper.GenerateLetterDummy();
+                wrap.Status = true;
+                wrap.Message = "ok";
+                wrap.Data = GetData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+
+            }
+        }
+
+                public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByUpload(UploadExcelDTO Entity)
         {
             var wrap = _DataResponses.ExcelReturn();
             var getCallBy = await _User.GetDataUser(Entity.userid);

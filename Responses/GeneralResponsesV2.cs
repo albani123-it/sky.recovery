@@ -3,6 +3,7 @@ using Org.BouncyCastle.Pkcs;
 using sky.recovery.DTOs.HelperDTO;
 using sky.recovery.Entities.RecoveryConfig;
 using System.Collections.Generic;
+using System.IO;
 
 namespace sky.recovery.Responses
 {
@@ -14,7 +15,14 @@ namespace sky.recovery.Responses
        public List<dynamic> Data { get; set; }
 
     }
+    public class GeneralResponsesPDFV2
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
 
+        public MemoryStream Data { get; set; }
+
+    }
     public class GeneralResponsesV2DocExcel
     {
         public bool Status { get; set; }
@@ -88,6 +96,16 @@ namespace sky.recovery.Responses
                 Status=false,
                 Message="",
                 Data=null
+            };
+            return Data;
+        }
+        public GeneralResponsesPDFV2 PDFReturn()
+        {
+            var Data = new GeneralResponsesPDFV2()
+            {
+                Status = false,
+                Message = "",
+                Data = null
             };
             return Data;
         }

@@ -100,3 +100,17 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\EPPlus.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\EPPlus.Interfaces.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\EPPlus.System.Drawing.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\Microsoft.IO.RecyclableMemoryStream.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.barcodes.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.bouncy-castle-connector.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.forms.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.io.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.kernel.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.layout.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.pdfa.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.pdfua.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.sign.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.styledxmlparser.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.svg.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\itext.commons.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\Microsoft.DotNet.PlatformAbstractions.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Release\net5.0\Microsoft.Extensions.DependencyModel.dll

@@ -17,6 +17,11 @@ namespace sky.recovery.Insfrastructures
 
         public DbSet<branch> branch { get; set; }
 
+        public DbSet<templatedetail> templatedetail { get; set; }
+        public DbSet<masterdocumenttype> masterdocumenttype { get; set; }
+
+        public DbSet<masterlayoutposition> masterlayoutposition { get; set; }
+        public DbSet<mastertemplate> mastertemplate { get; set; }
 
         public DbSet<rfproduct_segment> rfproduct_segment { get; set; }
 
@@ -95,6 +100,15 @@ namespace sky.recovery.Insfrastructures
                .HasKey(e => e.id);
             modelBuilder.Entity<masterworkflowrule>()
     .HasKey(e => e.id);
+
+            modelBuilder.Entity<mastertemplate>()
+   .HasKey(e => e.id);
+            modelBuilder.Entity<masterlayoutposition>()
+   .HasKey(e => e.id);
+            modelBuilder.Entity<masterdocumenttype>()
+   .HasKey(e => e.id);
+            modelBuilder.Entity<templatedetail>()
+   .HasKey(e => e.id);
 
         }
     }

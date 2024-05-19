@@ -19,7 +19,7 @@ using sky.recovery.Interfaces;
 using sky.recovery.Services;
 using sky.recovery.Services.DBConfig;
 using sky.recovery.Services.Repository;
-using static Org.BouncyCastle.Math.EC.ECCurve;
+//using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace sky.recovery
 {

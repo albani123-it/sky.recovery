@@ -81,6 +81,10 @@
               "target": "Package",
               "version": "[1.1.0, )"
             },
+            "PDFsharp": {
+              "target": "Package",
+              "version": "[1.50.5147, )"
+            },
             "System.Data.SqlClient": {
               "target": "Package",
               "version": "[4.8.2, )"
