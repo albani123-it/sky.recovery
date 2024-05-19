@@ -9,6 +9,9 @@ using sky.recovery.DTOs.RepositoryDTO;
 using System.IO;
 using PdfSharp.Drawing;
 using PdfSharp.Pdf;
+using sky.recovery.DTOs.HelperDTO;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Hosting;
 
 namespace sky.recovery.Controllers
 {
@@ -16,11 +19,15 @@ namespace sky.recovery.Controllers
 
     public class RepositoryController : Controller
     {
+        private readonly IWebHostEnvironment _environment;
+
         private IDocServices _documentservices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RepositoryController(IDocServices docservice)
+        public RepositoryController(IWebHostEnvironment environment, IDocServices docservice)
         {
+            _environment = environment;
+
             _documentservices = docservice;
         }
 
@@ -119,8 +126,8 @@ namespace sky.recovery.Controllers
 
         //V2
         //tidak baca sheet
-        [HttpGet("V2/GenerateLetterDummy")]
-        public async Task<ActionResult> GenerateLetterDummy()
+        [HttpPost("V2/GenerateLetterDummy")]
+        public async Task<ActionResult> GenerateLetterDummy([FromBody] FormatDTO Entity)
 
         {
             var wrap = _DataResponses.Return();
@@ -144,18 +151,58 @@ namespace sky.recovery.Controllers
 
                 // Set the font
                 XFont font = new XFont("Arial", 12, XFontStyle.Regular);
+                var path = Path.Combine(_environment.WebRootPath, "File");
+                var nm = Path.Combine(path, "arthagraha.png");
 
                 // Draw the letter content
-                gfx.DrawString("Your Company Name", font, XBrushes.Black, new XRect(30, 30, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("123 Main Street", font, XBrushes.Black, new XRect(30, 50, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("City, State ZIP", font, XBrushes.Black, new XRect(30, 70, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Date: May 20, 2024", font, XBrushes.Black, new XRect(30, 100, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Recipient Name:", font, XBrushes.Black, new XRect(30, 120, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Recipient Address:", font, XBrushes.Black, new XRect(30, 140, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Dear Recipient,", font, XBrushes.Black, new XRect(30, 170, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vehicula, ligula nec ultrices viverra, ex turpis sollicitudin nisl, nec placerat lectus quam a odio.", font, XBrushes.Black, new XRect(30, 190, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Sincerely,", font, XBrushes.Black, new XRect(30, 220, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString("Your Name", font, XBrushes.Black, new XRect(30, 240, page.Width, page.Height), XStringFormats.TopLeft);
+               // gfx.DrawString("Logo Company", font, XBrushes.Black, new XRect(30, 30, page.Width, page.Height), XStringFormats.TopLeft);
+                XImage image = XImage.FromFile(nm);
+
+                // Draw the image onto the page
+                gfx.DrawImage(image, 30, 30, 200, 100);
+
+                var FormatHeaderAlamat = Entity.Header.AlamatPT + "\n" +  Entity.Header.NamaGedung 
+                    + "\n" + Entity.Header.AlamatJalanSurat
+                    + "\n" + Entity.Header.fax + "\n" + Entity.Header.phone + "\n"
+                    + Entity.Header.email
+                    + "\n" + Entity.Header.namakota + "," + DateTime.Now.ToString("dd MMMM yyyy");
+                string[] lines = FormatHeaderAlamat.Split('\n');
+
+                var FormatKepada = "Kepada YTH." + "\n" + Entity.KepadaDTO.Namakepada + "\n" + "Di Tempat";
+                var FormatPerihal = "Perihal : " + Entity.Perihal.Perihal;
+                //  var path2 = Path.Combine(_environment.WebRootPath, "File");
+                // var nm2 = Path.Combine(path2, "logoalamat.png");
+                //  XImage image2 = XImage.FromFile(nm2);
+
+                // Draw the image onto the page
+                // gfx.DrawImage(image2, 10, 30, 200, 100);
+                //header alamat pt
+                XPoint startPoint = new XPoint(100, 100);
+
+                foreach (var x in lines)
+                {
+                    gfx.DrawString(x, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y, page.Width, page.Height), XStringFormats.TopRight);
+                    Entity.Header.y += 15;
+                }
+
+                //gfx.DrawString(Entity.Header.NamaGedung, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+10, page.Width, page.Height), XStringFormats.TopRight);
+                //gfx.DrawString(Entity.Header.AlamatJalanSurat, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+30, page.Width, page.Height), XStringFormats.TopRight);
+                //gfx.DrawString(Entity.Header.fax, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+40, page.Width, page.Height), XStringFormats.TopRight);
+                //gfx.DrawString(Entity.Header.phone, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+50, page.Width, page.Height), XStringFormats.TopRight);
+                //gfx.DrawString(Entity.Header.email, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+60, page.Width, page.Height), XStringFormats.TopRight);
+
+                gfx.DrawString("No: "+Entity.NoSurat.nomor, font, XBrushes.Black, new XRect(Entity.NoSurat.x, Entity.NoSurat.y, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString(FormatKepada, font, XBrushes.Black, new XRect(Entity.KepadaDTO.x, Entity.KepadaDTO.y, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString(FormatPerihal, font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
+
+
+
+                //gfx.DrawString("Recipient Name:", font, XBrushes.Black, new XRect(30, 120, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("Recipient Address:", font, XBrushes.Black, new XRect(30, 140, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("Dear Recipient,", font, XBrushes.Black, new XRect(30, 170, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vehicula, ligula nec ultrices viverra, ex turpis sollicitudin nisl, nec placerat lectus quam a odio.", font, XBrushes.Black, new XRect(30, 190, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("Sincerely,", font, XBrushes.Black, new XRect(30, 220, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("Your Name", font, XBrushes.Black, new XRect(30, 240, page.Width, page.Height), XStringFormats.TopLeft);
 
                 // Save the PDF to the MemoryStream
                 document.Save(stream);
