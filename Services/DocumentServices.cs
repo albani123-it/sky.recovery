@@ -69,8 +69,12 @@ namespace sky.recovery.Services
 
             try
             {
-                var data = _DocHelper.ReadExcelToListBySheet(path, sheet);
+                var  data = _DocHelper.ReadExcelToListBySheet(path, sheet);
+                //var data = _DocHelper.ReadExcelToListDynamic(path, sheet);
+
                 var ConverDynamicExcel = await _DocHelper.ConvertDataExcel(sheet, data);
+                //var ConverDynamicExcel = await _DocHelper.ConvertDataExcel_Dummy(sheet,data.Data,data.Cell);
+
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ConverDynamicExcel;
@@ -134,12 +138,14 @@ namespace sky.recovery.Services
                 masterrepository.Add(Data);
                 await SaveChangesAsync();
                 var ReturnSheet =await ReadExcelSheetByFileUpload(nm);
+                var ListData = new List<dynamic>();
+                ListData.Add(Data);
                 if(ReturnSheet.Status==true)
                 {
                     wrap.Status = true;
                     wrap.Message = ReturnSheet.Returns.Message;
-                    wrap.Data = ReturnSheet.Returns.Data;
-                    wrap.DataFile = Data;
+                    wrap.DataSheet = ReturnSheet.Returns.Data;
+                    wrap.Data = ListData;
 
                 }
                 else
@@ -185,6 +191,7 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelSheetByFileExisting(int Id)
         {
             var wrap = _DataResponses.ExcelReturn();
+            var listdata = new List<dynamic>();
             try
             {
                 var Data = masterrepository.Where(es => es.id == Id).FirstOrDefault();
@@ -193,8 +200,10 @@ namespace sky.recovery.Services
                 {
                     wrap.Status = true;
                     wrap.Message = ReturnSheet.Returns.Message;
-                    wrap.Data = ReturnSheet.Returns.Data;
-                    wrap.DataFile = Data;
+                    listdata.Add(Data);       
+                    wrap.Data = listdata;
+                    wrap.DataSheet = ReturnSheet.Returns.Data;
+                   // wrap.DataFile = Data;
 
                 }
                 else

@@ -21,11 +21,7 @@ namespace sky.recovery.Responses
         public string Message { get; set; }
 
         public List<dynamic> Data { get; set; }
-        public masterrepository DataFile { get; set; }
-            
-
-        public List<WorkSheetCustom> Worksheet { get; set; }
-        public List<List<object>> DataBySheet{ get; set; }
+        public List<dynamic> DataSheet { get; set; }
 
     }
     public class GeneralResponsesConfigV2
@@ -99,9 +95,8 @@ namespace sky.recovery.Responses
             {
                 Status = false,
                 Message = "",
-              DataBySheet=null,
-              Worksheet=null,
-              DataFile=null,
+              DataSheet=null,
+             
                 Data = null
             };
             return Data;

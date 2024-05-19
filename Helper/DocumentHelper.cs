@@ -1,4 +1,5 @@
-﻿using OfficeOpenXml;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using OfficeOpenXml;
 using sky.recovery.DTOs.HelperDTO;
 using sky.recovery.DTOs.TemplateExcelObject;
 using System;
@@ -136,10 +137,79 @@ namespace sky.recovery.Helper
             }
         }
 
+        public class DataExcel
+        {
+            public string Data { get; set; }
+            public string Cell { get; set; }
+        }
+
+
+        public (List<List<object>> Data, List<List<object>> Cell) ReadExcelToListDynamic(string filePath,string sheet)
+        {
+            var excelData = new List<List<object>>();
+            var excelDatacell = new List<List<object>>();
+         
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            var package = new ExcelPackage(new FileInfo(filePath));
+
+            ExcelWorksheet worksheet = package.Workbook.Worksheets.Where(ES => ES.Name == sheet).FirstOrDefault();
+
+            if (worksheet != null)
+            {
+                int rowCount = worksheet.Dimension.Rows;
+                int colCount = worksheet.Dimension.Columns;
+
+                for (int row = 3; row <= rowCount; row++)
+                {
+                    var rowData = new List<object>();
+                    var rowDataCell = new List<object>();
+
+                    for (int col = 1; col <= colCount; col++)
+                    {
+                        var cellValue = worksheet.Cells[row, col].Value;
+                        var DataCell = worksheet.Cells[row, col];
+                        rowData.Add(cellValue);
+                        rowDataCell.Add(DataCell);
+                    }
+                    excelData.Add(rowData);
+                    excelDatacell.Add(rowDataCell);
+
+                }
+
+
+            }
+            else
+            {
+                Console.WriteLine("No worksheet found in the Excel file.");
+            }
+
+            
+
+            return (excelData,excelDatacell);
+        }
+
+
+        public async Task<List<dynamic>> ConvertDataExcel_Dummy(string sheet,  List<List<object>> Data,
+            List<List<object>> Cell)
+        {
+            var ListData = new List<object>();
+            var ListCell = new List<dynamic>();
+
+            ListData.Add(Data);
+            ListData.Add(Cell);
+            
+
+            return ListData;
+        }
+
 
         public async Task<List<dynamic>> ConvertDataExcel(string sheet, List<List<ExcelRange>> DataRange)
+
         {
             var ListData = new List<dynamic>();
+            var ListCell = new List<dynamic>();
+            var po = new List<DataExcel>();
             if (sheet == "GeneralMasterLoan")
             {
                 var e = DataRange.Select(es => new GeneralMasterLoan
@@ -177,7 +247,27 @@ namespace sky.recovery.Helper
                 ListData.Add(e);
 
             }
+            else
+            {
+                foreach (var x in DataRange)
+                {
+                    foreach (var p in x)
+                    {
+                        var Data = new DataExcel();
+                        if (!String.IsNullOrEmpty(p.Text))
+                        {
+                            Data.Data = p.Text.ToString();
+                            Data.Cell = p.Address;
+                            po.Add(Data);
 
+                        }
+
+                    }
+                };
+                var op = po.Where(es => es != null).ToList();
+                ListData.Add(op);
+                
+            }
             return ListData;
         }
 
