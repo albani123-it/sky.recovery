@@ -16,6 +16,7 @@ namespace sky.recovery.Interfaces
         public  Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelSheetByFileExisting(int Id);
         public Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> RetriveAllListByUserId(string userid);
 
+        public Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByFileExisting(string path, string sheet);
 
     }
 }

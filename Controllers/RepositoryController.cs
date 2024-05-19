@@ -5,6 +5,7 @@ using sky.recovery.Responses;
 using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.DTOs.RepositoryDTO;
 
 namespace sky.recovery.Controllers
 {
@@ -62,6 +63,36 @@ namespace sky.recovery.Controllers
             try
             {
                 var GetData = await _documentservices.ReadExcelSheetByFileExisting(id);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        //tidak baca sheet
+        [HttpPost("V2/ReadMyFile")]
+        public async Task<ActionResult<GeneralResponses>> ReadMyFileBySheet([FromBody] ReadMyFileByExistingDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _documentservices.ReadExcelByFileExisting(Entity.path,Entity.sheet);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

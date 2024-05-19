@@ -198,7 +198,30 @@ public async Task <List<dynamic>> ConvertDataExcel(string sheet, List<List<Excel
             
         }
 
-        public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByUpload(UploadExcelDTO Entity)
+
+        public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByFileExisting(string path,string sheet)
+        {
+            var wrap = _DataResponses.ExcelReturn();
+
+            try
+            {
+                var data = ReadExcelToListBySheet(path, sheet);
+                var ConverDynamicExcel = await ConvertDataExcel(sheet, data);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ConverDynamicExcel;
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+            public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByUpload(UploadExcelDTO Entity)
         {
             var wrap = _DataResponses.ExcelReturn();
             var getCallBy = await _User.GetDataUser(Entity.userid);
