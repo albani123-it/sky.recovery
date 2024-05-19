@@ -23,6 +23,8 @@ namespace sky.recovery.Insfrastructures
         public DbSet<workflowhistory> workflowhistory { get; set; }
         public DbSet<workflow> workflow { get; set; }
         public DbSet<MasterFlow> masterflow { get; set; }
+        public DbSet<masterrepository> masterrepository { get; set; }
+
         public DbSet<GeneralParamDetail> generalparamdetail { get; set; }
         public DbSet<GeneralParamHeader> generalparamheader { get; set; }
         public DbSet<master_customer> master_customer { get; set; }
@@ -55,6 +57,8 @@ namespace sky.recovery.Insfrastructures
 
             modelBuilder.Entity<workflow>()
 .HasKey(e => e.Id);
+            modelBuilder.Entity<masterrepository>()
+.HasKey(e => e.id);
             modelBuilder.Entity<masterworkflow>()
 .HasKey(e => e.id);
             modelBuilder.Entity<MasterFlow>()
