@@ -1,4 +1,4 @@
-﻿namespace sky.recovery.DTOs.RequestDTO
+﻿namespace sky.recovery.DTOs.WorkflowDTO
 {
     public class CallbackApprovalDTO
     {

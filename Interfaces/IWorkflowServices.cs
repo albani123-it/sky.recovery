@@ -1,4 +1,4 @@
-﻿using sky.recovery.DTOs.RequestDTO;
+﻿using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Responses;
 using System.Threading.Tasks;
 

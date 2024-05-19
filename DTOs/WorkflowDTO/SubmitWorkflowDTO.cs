@@ -1,6 +1,6 @@
-﻿namespace sky.recovery.DTOs.RequestDTO
+﻿namespace sky.recovery.DTOs.WorkflowDTO
 {
-   
+
     public class SubmitWorkflowDTO
     {
         public int? idrequest { get; set; }

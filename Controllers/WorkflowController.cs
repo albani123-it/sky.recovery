@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using sky.recovery.DTOs.RequestDTO;
 using sky.recovery.Interfaces;
 using sky.recovery.Responses;
 using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Controllers
 {
