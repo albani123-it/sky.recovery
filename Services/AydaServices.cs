@@ -224,7 +224,86 @@ namespace sky.recovery.Services
             }
         }
 
-                public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaMonitoring(string UserId)
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> DummyNasabah(int pagenumber,int pagesieze)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var Data = await master_loan.AsNoTracking().Where(es => es.dpd > 10).OrderBy(es => es.id).Skip((pagenumber - 1) * pagesieze).Take(pagesieze)
+                    .ToListAsync();
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+                ListData.Add(Data);
+                wrap.Data = ListData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaTaskList(string UserId)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+                if (String.IsNullOrEmpty(UserId))
+                {
+                    wrap.Status = false;
+                    wrap.Message = "User Id Harus Diisi";
+                }
+
+                var getCallBy = await _User.GetDataUser(UserId);
+                // pindah ke dinamis
+                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
+                //{
+                //     wrap.Status  = false;
+                //    wrap.Message = "Not Authorize";
+                //    return ( wrap.Status , wrap);
+                //}
+                var ReturnData = await ayda.Include(i => i.master_loan).Where(es => es.statusid==11).Select(
+                    es => new MonitoringBean
+                    {
+                        cabang = es.master_loan.master_customer.branch.lbrc_name,
+                        noloan = es.master_loan.acc_no,
+                        namanasabah = es.master_loan.master_customer.cu_name,
+                        totaltunggakan = es.master_loan.tunggakan_total,
+                        jenisjaminan = es.master_loan.master_collateral.col_type,
+                        alamatjaminan = es.master_loan.master_collateral.col_address,
+                        status = es.status.sts_name
+
+                    }
+                    ).ToListAsync();
+                wrap.Status = true;
+                wrap.Message = "OK";
+                ListData.Add(ReturnData);
+                wrap.Data = ListData;
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaMonitoring(string UserId)
         {
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();

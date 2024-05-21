@@ -11,6 +11,7 @@ namespace sky.recovery.Controllers.ext
 
     public class AydaController : RecoveryController
     {
+        private IAuctionService _auctionservice { get; set; }
 
         private IAydaServices _aydaservices{ get; set; }
         private IWorkflowServices _workflowService { get; set; }
@@ -20,8 +21,9 @@ namespace sky.recovery.Controllers.ext
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public AydaController(IRestrukturServices recoveryService, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, aydaservices)
+        public AydaController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, aydaservices,auctionservice)
         {
+            _auctionservice = auctionservice;
             _recoveryService = recoveryService;
             _aydaservices = aydaservices;
             _documentservices = documentservices;
@@ -148,16 +150,17 @@ namespace sky.recovery.Controllers.ext
         }
 
 
+
         //V2
-        [HttpGet("V2/Tasklist/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
+        [HttpGet("V2/DummyLoan/{pagenumber:int}/{pagesize:int}")]
+        public async Task<ActionResult<GeneralResponses>> DummyLoan(int pagenumber, int pagesize)
 
         {
             var wrap = _DataResponses.Return();
 
             try
             {
-                var GetData = await _aydaservices.AydaMonitoring(userid);
+                var GetData = await _aydaservices.DummyNasabah(pagenumber, pagesize);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -176,6 +179,38 @@ namespace sky.recovery.Controllers.ext
                 return BadRequest(wrap);
             }
         }
+
+
+        //V2
+        [HttpGet("V2/Tasklist/{userid}")]
+        public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _aydaservices.AydaTaskList(userid);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+       
 
 
 

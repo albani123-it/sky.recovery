@@ -16,12 +16,14 @@ namespace sky.recovery.Controllers.ext
 
         private IRestrukturServices _recoveryService { get; set; }
         private IWorkflowServices _workflowService { get; set; }
+        private IAuctionService _auctionservice { get; set; }
 
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( recoveryService,aydaservices)
+        public RestrukturController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( recoveryService,aydaservices,auctionservice)
         {
+            _auctionservice = auctionservice;
             _recoveryService = recoveryService;
             _aydaservices = aydaservices;
             _documentservices = documentservices;

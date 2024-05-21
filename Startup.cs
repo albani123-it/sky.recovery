@@ -52,6 +52,7 @@ namespace sky.recovery
             services.AddScoped<IWorkflowServices, WorkflowServices>();
             services.AddScoped<IDocServices, DocumentServices>();
             services.AddScoped<IAydaServices, AydaServices>();
+            services.AddScoped<IAuctionService, AuctionServices>();
 
             services.AddSingleton<IGeneralParam, RestruktureRepoConfig>();
 
