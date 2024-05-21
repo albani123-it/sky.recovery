@@ -12,15 +12,18 @@ namespace sky.recovery.Controllers.ext
     [Route("api/skyrecovery/recovery/[controller]")]
     public class RestrukturController : RecoveryController
     {
+        private IAydaServices _aydaservices { get; set; }
+
         private IRestrukturServices _recoveryService { get; set; }
         private IWorkflowServices _workflowService { get; set; }
 
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
+        public RestrukturController(IRestrukturServices recoveryService, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( recoveryService,aydaservices)
         {
             _recoveryService = recoveryService;
+            _aydaservices = aydaservices;
             _documentservices = documentservices;
             _workflowService = workflowService;
         }

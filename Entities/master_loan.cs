@@ -13,6 +13,8 @@ namespace sky.recovery.Entities
 
 
         public int? customer_id { get; set; }
+        [ForeignKey(nameof(id))]
+        public master_collateral? master_collateral { get; set; }
 
         [ForeignKey(nameof(id))]
         public collection_add_contact? collection_add_contact { get; set; }

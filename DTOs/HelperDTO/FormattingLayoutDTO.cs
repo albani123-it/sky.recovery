@@ -9,8 +9,23 @@ namespace sky.recovery.DTOs.HelperDTO
         public FormatKepadaDTO KepadaDTO { get; set; }
         public PerihalDTO Perihal { get; set; }
         public FormatNoSuratDTO NoSurat { get; set; }
+        public FormatParagrafDTO Paragraf_pertama { get; set; }
+        public PenutupDTO Penutup { get; set; }
+
     }
 
+    public class FormatParagrafDTO
+    {
+        public string text { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
+    }
+    public class PenutupDTO
+    {
+        public string text { get; set; }
+        public int x { get; set; }
+        public int y { get; set; }
+    }
     public class FormatNoSuratDTO
     {
         public string nomor { get; set; }

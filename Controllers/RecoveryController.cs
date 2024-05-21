@@ -8,6 +8,7 @@ using sky.recovery.Interfaces;
 using sky.recovery.DTOs.RequestDTO;
 
 using sky.recovery.DTOs.ResponsesDTO;
+using sky.recovery.Services;
 
 namespace sky.recovery.Controllers
 {
@@ -15,11 +16,14 @@ namespace sky.recovery.Controllers
     [Route("api/skyrecovery/[controller]")]
     public class RecoveryController : Controller
     {
+        private IAydaServices _aydaservices { get; set; }
+
         private IRestrukturServices _recoveryService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RecoveryController(IRestrukturServices recoveryService)
+        public RecoveryController(IRestrukturServices recoveryService, IAydaServices aydaservice)
         {
+            _aydaservices = aydaservice;
             _recoveryService = recoveryService;
         }
         public IActionResult Index()

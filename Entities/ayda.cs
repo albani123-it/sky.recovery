@@ -4,33 +4,38 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace sky.recovery.Entities
 {
+    [Table("ayda", Schema = "RecoveryBusinessV2")]
+
     public class ayda
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int id { get; set; }
-        public int? loan_id { get; set; }
-        [ForeignKey(nameof(loan_id))]
+        public int? loanid { get; set; }
+        [ForeignKey(nameof(loanid))]
         public master_loan? master_loan { get; set; }
-        public int? mst_branch_id { get; set; }
-        [ForeignKey(nameof(mst_branch_id))]
+
+        public int? mstbranchid { get; set; }
+        [ForeignKey(nameof(mstbranchid))]
         public branch? branch{ get; set; }
-        public int? last_update_id { get; set; }
-        public DateTime? last_update_date { get; set; }
-        public int? mst_branch_pembukuan_id { get; set; }
-        public int? mst_branch_proses_id { get; set; }
-        public int? hubungan_bank_id { get; set; }
-        public DateTime? tgl_ambil_alih { get; set; }
+        public int? lastupdatedid { get; set; }
+        public DateTime? lastupdatedate { get; set; }
+        public int? mstbranchpembukuanid { get; set; }
+        public int? mstbanchprosesid { get; set; }
+        public int? hubunganbankid { get; set; }
+        public DateTime? tglambilalih { get; set; }
         public string kualitas { get; set; }
-        public decimal? nilai_pembiayaan_pokok { get; set; }
-        public decimal? nilai_margin { get; set; }
-        public decimal? nilai_perolehan_agunan { get; set; }
-        public decimal? perkiraan_biaya_jual { get; set; }
+        public decimal? nilaipembiayaanpokok { get; set; }
+        public decimal? nilaimargin { get; set; }
+        public decimal? nilaiperolehanagunan { get; set; }
+        public decimal? perkiraanbiayajual { get; set; }
         public decimal? ppa { get; set; }
-        public decimal? jumlah_ayda { get; set; }
-        public int? status_id { get; set; }
-        [ForeignKey(nameof(status_id))]
+        public decimal? jumlahayda { get; set; }
+        public int? statusid { get; set; }
+        [ForeignKey(nameof(statusid))]
         public status? status { get; set; }
+        public int? createdby { get; set; }
+        public DateTime? createddated { get; set; }
     }
 }

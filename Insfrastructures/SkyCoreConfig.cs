@@ -36,6 +36,8 @@ namespace sky.recovery.Insfrastructures
         public DbSet<collection_call> collection_call { get; set; }
         public DbSet<rfproduct> rfproduct { get; set; }
         public DbSet<collection_add_contact> collection_add_contact { get; set; }
+        public DbSet<master_collateral> master_collateral { get; set; }
+
         public DbSet<restructure> restructure { get; set; }
         public DbSet<status> status { get; set; }
         public DbSet<masterworkflowrule> masterworkflowrule { get; set; }
@@ -109,6 +111,8 @@ namespace sky.recovery.Insfrastructures
    .HasKey(e => e.id);
             modelBuilder.Entity<templatedetail>()
    .HasKey(e => e.id);
+            modelBuilder.Entity<master_collateral>()
+.HasKey(e => e.id);
 
         }
     }

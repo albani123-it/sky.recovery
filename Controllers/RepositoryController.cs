@@ -12,6 +12,7 @@ using PdfSharp.Pdf;
 using sky.recovery.DTOs.HelperDTO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace sky.recovery.Controllers
 {
@@ -169,6 +170,8 @@ namespace sky.recovery.Controllers
                 string[] lines = FormatHeaderAlamat.Split('\n');
 
                 var FormatKepada = "Kepada YTH." + "\n" + Entity.KepadaDTO.Namakepada + "\n" + "Di Tempat";
+                string[] linesKepada = FormatKepada.Split('\n');
+
                 var FormatPerihal = "Perihal : " + Entity.Perihal.Perihal;
                 //  var path2 = Path.Combine(_environment.WebRootPath, "File");
                 // var nm2 = Path.Combine(path2, "logoalamat.png");
@@ -192,9 +195,22 @@ namespace sky.recovery.Controllers
                 //gfx.DrawString(Entity.Header.email, font, XBrushes.Black, new XRect(Entity.Header.x, Entity.Header.y+60, page.Width, page.Height), XStringFormats.TopRight);
 
                 gfx.DrawString("No: "+Entity.NoSurat.nomor, font, XBrushes.Black, new XRect(Entity.NoSurat.x, Entity.NoSurat.y, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString(FormatKepada, font, XBrushes.Black, new XRect(Entity.KepadaDTO.x, Entity.KepadaDTO.y, page.Width, page.Height), XStringFormats.TopLeft);
-                gfx.DrawString(FormatPerihal, font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
+               foreach(var x in linesKepada)
+                {
+                    gfx.DrawString(x, font, XBrushes.Black, new XRect(Entity.KepadaDTO.x, Entity.KepadaDTO.y, page.Width, page.Height), XStringFormats.TopLeft);
+                    Entity.KepadaDTO.y += 15;
 
+                }
+
+                gfx.DrawString(FormatPerihal, font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
+                //gfx.DrawString("test/ntest", font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
+
+                gfx.DrawString("Dengan hormat,", font, XBrushes.Black, new XRect(30, Entity.Perihal.y+20, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString(Entity.Paragraf_pertama.text, font, XBrushes.Black, new XRect(Entity.Paragraf_pertama.x, Entity.Paragraf_pertama.y, page.Width, page.Height), XStringFormats.TopLeft);
+                gfx.DrawString(Entity.Penutup.text, font, XBrushes.Black, new XRect(Entity.Penutup.x, Entity.Penutup.y, page.Width, page.Height), XStringFormats.TopLeft);
+                //   gfx.DrawString(FormatPerihal, font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
+
+                // gfx.DrawString(FormatPerihal, font, XBrushes.Black, new XRect(Entity.Perihal.x, Entity.Perihal.y, page.Width, page.Height), XStringFormats.TopLeft);
 
 
                 //gfx.DrawString("Recipient Name:", font, XBrushes.Black, new XRect(30, 120, page.Width, page.Height), XStringFormats.TopLeft);
