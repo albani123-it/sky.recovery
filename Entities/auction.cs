@@ -10,32 +10,36 @@ namespace sky.recovery.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public int id { get; set; }
-        public int? loan_id { get; set; }
-        [ForeignKey(nameof(loan_id))]
+        public int? loanid { get; set; }
+        [ForeignKey(nameof(loanid))]
         public master_loan? master_loan { get; set; }
-        public int? mst_branch_id { get; set; }
-        [ForeignKey(nameof(mst_branch_id))]
+        public int? mstbranchid { get; set; }
+        [ForeignKey(nameof(mstbranchid))]
         public branch? branch { get; set; }
-        public int? last_update_id { get; set; }
-        public DateTime? last_update_date { get; set; }
-        public int? mst_branch_pembukuan_id { get; set; }
-        public int? mst_branch_proses_id { get; set; }
-        public int? alasan_lelang_id { get; set; }
-        public string no_pk { get; set; }
-        public double? nilai_limit_lelang { get; set; }
-        public double? uang_jaminan { get; set; }
-        public string objek_lelang { get; set; }
+        public int? lastupdateid { get; set; }
+        public DateTime? lastupdatedate { get; set; }
+        public int? mstbranchpembukuanid { get; set; }
+        public int? mstbranchprosesid { get; set; }
+        public int? alasanlelangid { get; set; }
+        public string nopk { get; set; }
+        public double? nilailimitlelang { get; set; }
+        public double? uangjaminan { get; set; }
+        public string objeklelang { get; set; }
         public string keterangan { get; set; }
-        public int? balai_lelang_id { get; set; }
-        public int? jenis_lelang_id { get; set; }
-        public string tata_cara_lelang { get; set; }
-        public double? biaya_lelang { get; set; }
-        public string catatan_lelang { get; set; }
-        public DateTime? tgl_penetapan_lelang { get; set; }
-        public string no_rekening { get; set; }
-        public string nama_rekening { get; set; }
-        public int? status_id { get; set; }
-        [ForeignKey(nameof(status_id))]
+        public int? balailelangid { get; set; }
+        public int? jenislelangid { get; set; }
+        public string tatacaralelang { get; set; }
+        public double? biayalelang { get; set; }
+        public string catatanlelang { get; set; }
+        public DateTime? tglpenetapanlelang { get; set; }
+        public string norekening { get; set; }
+        public string namarekening { get; set; }
+        public int? statusid { get; set; }
+        [ForeignKey(nameof(statusid))]
         public status? status { get; set; }
+
+        public int? createdby { get; set; }
+        public DateTime? createddated { get; set; }
+        public int? isactive { get; set; }
     }
 }
