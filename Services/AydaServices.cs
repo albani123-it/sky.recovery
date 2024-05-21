@@ -39,7 +39,36 @@ namespace sky.recovery.Services
 
         }
 
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SetIsActive(int Id, int status)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            //var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+                var GetData = await ayda.Where(es => es.id == Id).FirstOrDefaultAsync();
+                GetData.isactive = status;
+                GetData.lastupdatedate = DateTime.Now;
+                Entry(GetData).State = EntityState.Modified;
+                await SaveChangesAsync();
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+                public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();

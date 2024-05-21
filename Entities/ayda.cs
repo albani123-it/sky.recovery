@@ -37,5 +37,6 @@ namespace sky.recovery.Entities
         public status? status { get; set; }
         public int? createdby { get; set; }
         public DateTime? createddated { get; set; }
+        public int? isactive { get; set; }
     }
 }

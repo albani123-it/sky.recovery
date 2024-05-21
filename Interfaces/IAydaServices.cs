@@ -10,6 +10,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(CreateAydaDTO Entity);
         public  Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity);
 
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> SetIsActive(int Id, int status);
 
     }
 }

@@ -116,6 +116,38 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+
+        //V2
+        [HttpGet("V2/SetActive/{id:int}/{status:int}")]
+        public async Task<ActionResult<GeneralResponses>> SetActive(int id, int status)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _aydaservices.SetIsActive(id,status);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
         //V2
         [HttpGet("V2/Tasklist/{userid}")]
         public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
