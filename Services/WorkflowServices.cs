@@ -306,6 +306,51 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<bool> UpdateStatusRequest(int? fiturid, int? idrequest, int status)
+        {
+            try
+            {
+                if (fiturid == 9)
+                {
+                    var Data = await restructure.Where(es => es.id == idrequest).FirstOrDefaultAsync();
+                    Data.statusid = 11;
+                    Data.statusmodifydated = DateTime.Now;
+                    Entry(Data).State = EntityState.Modified;
+
+
+                }
+                if (fiturid == 10)
+                {
+                    var Data = await ayda.Where(es => es.id == idrequest).FirstOrDefaultAsync();
+                    Data.statusid = 11;
+                    Data.lastupdatedate = DateTime.Now;
+                    Entry(Data).State = EntityState.Modified;
+                }
+                if (fiturid == 16)
+                {
+                    var Data = await insurance.Where(es => es.Id == idrequest).FirstOrDefaultAsync();
+                    Data.statusid = 11;
+                    Data.lastupdateddated = DateTime.Now;
+                    Entry(Data).State = EntityState.Modified;
+                }
+                if (fiturid == 15)
+                {
+                    var Data = await auction.Where(es => es.id == idrequest).FirstOrDefaultAsync();
+                    Data.statusid = 11;
+                    Data.lastupdatedate = DateTime.Now;
+                    Entry(Data).State = EntityState.Modified;
+                }
+                await SaveChangesAsync();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+
             //SERVICE YANG DIPAKAI
             //TASKLIST RESTRUKTUR V2
             public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitWorkflowStep(SubmitWorkflowDTO Entity)
@@ -359,6 +404,9 @@ namespace sky.recovery.Services
                 };
                 await workflowhistory.AddAsync(DataWFHistory_Usr);
                 await SaveChangesAsync();
+
+                //update status request
+              await  UpdateStatusRequest(Entity.idfitur, Entity.idrequest, 8);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 
