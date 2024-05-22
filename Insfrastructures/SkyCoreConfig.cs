@@ -39,6 +39,8 @@ namespace sky.recovery.Insfrastructures
         public DbSet<master_collateral> master_collateral { get; set; }
 
         public DbSet<restructure> restructure { get; set; }
+        public DbSet<insurance> insurance { get; set; }
+
         public DbSet<status> status { get; set; }
         public DbSet<masterworkflowrule> masterworkflowrule { get; set; }
         public DbSet<masterworkflow> masterworkflow { get; set; }
@@ -63,6 +65,8 @@ namespace sky.recovery.Insfrastructures
         {
 
             modelBuilder.Entity<workflow>()
+.HasKey(e => e.Id);
+            modelBuilder.Entity<insurance>()
 .HasKey(e => e.Id);
             modelBuilder.Entity<masterrepository>()
 .HasKey(e => e.id);

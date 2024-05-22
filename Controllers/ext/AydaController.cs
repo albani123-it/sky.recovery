@@ -21,7 +21,7 @@ namespace sky.recovery.Controllers.ext
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public AydaController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, aydaservices,auctionservice)
+        public AydaController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base()
         {
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
@@ -161,6 +161,37 @@ namespace sky.recovery.Controllers.ext
             try
             {
                 var GetData = await _aydaservices.DummyNasabah(pagenumber, pagesize);
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
+
+        //V2
+        [HttpGet("V2/InsertBulk/{banyak:int}")]
+        public async Task<ActionResult<GeneralResponses>> InsertBulk(int banyak)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _aydaservices.InsertBulk(banyak);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

@@ -7,11 +7,12 @@ using System;
 
 namespace sky.recovery.Controllers.ext
 {
-    [Route("api/skyrecovery/auction/[controller]")]
+    [Route("api/skyrecovery/Asuransi/[controller]")]
 
-    public class AuctionController : RecoveryController
+    public class AsuransiController : RecoveryController
     {
         private IAuctionService _auctionservice { get; set; }
+        private IAsuransiServices _asuransiservices{ get; set; }
 
         private IAydaServices _aydaservices { get; set; }
     private IWorkflowServices _workflowService { get; set; }
@@ -21,8 +22,9 @@ namespace sky.recovery.Controllers.ext
 
     ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-    public AuctionController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base()
+    public AsuransiController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IAsuransiServices asuransiservices, IDocServices documentservices, IWorkflowServices workflowService) : base()
     {
+            _asuransiservices = asuransiservices;
             _auctionservice = auctionservice;
         _recoveryService = recoveryService;
         _aydaservices = aydaservices;
@@ -40,7 +42,7 @@ namespace sky.recovery.Controllers.ext
 
             try
             {
-                var GetData = await _auctionservice.AuctionMonitoring(userid);
+                var GetData = await _asuransiservices.InsuranceMonitoring(userid);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -69,7 +71,7 @@ namespace sky.recovery.Controllers.ext
 
             try
             {
-                var GetData = await _auctionservice.SetIsActive(id,status);
+                var GetData = await _asuransiservices.SetIsActive(id,status);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -97,7 +99,7 @@ namespace sky.recovery.Controllers.ext
 
             try
             {
-                var GetData = await _auctionservice.AuctionTaskList(userid);
+                var GetData = await _asuransiservices.InsuranceTaskList(userid);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

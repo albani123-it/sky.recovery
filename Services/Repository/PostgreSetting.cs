@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using sky.recovery.Controllers;
 using sky.recovery.Helper.Config;
+using sky.recovery.Insfrastructures;
 using sky.recovery.Libs;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace sky.recovery.Services.DBConfig
 {
-    public class PostgreSetting
+    public class PostgreSetting 
     {
         private lDbConn dbconn = new lDbConn();
         private DbContextSettings _appsetting { get; set; }

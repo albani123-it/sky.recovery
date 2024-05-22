@@ -224,7 +224,44 @@ namespace sky.recovery.Services
             }
         }
 
+        //SERVICE YANG DIPAKAI
+        //MONITORING RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsertBulk(int banyak)
+        {
+            var wrap = _DataResponses.Return();
 
+            try
+            {
+                for (var x = 0; x < banyak; x++)
+                {
+                    var Data = new restructure()
+                    {
+                        loanid = 1175,
+                        statusid = 4,
+                        mstbranchid = 129,
+                        createdby = 354
+                    };
+
+                    await restructure.AddAsync(Data);
+                    await SaveChangesAsync();
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                
+                return (wrap.Status, wrap);
+
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> DummyNasabah(int pagenumber,int pagesieze)
         {
             var wrap = _DataResponses.Return();
@@ -234,7 +271,9 @@ namespace sky.recovery.Services
             try
             {
 
-                var Data = await master_loan.AsNoTracking().Where(es => es.dpd > 10).OrderBy(es => es.id).Skip((pagenumber - 1) * pagesieze).Take(pagesieze)
+                var Data = await master_loan.AsNoTracking()
+                    .Where(es => es.dpd > 10).OrderBy(es => es.id)
+                    .Skip((pagenumber - 1) * pagesieze).Take(pagesieze)
                     .ToListAsync();
 
                 wrap.Status = true;

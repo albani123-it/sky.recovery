@@ -22,11 +22,11 @@ namespace sky.recovery.Controllers
         private IRestrukturServices _recoveryService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RecoveryController(IRestrukturServices recoveryService, IAydaServices aydaservice, IAuctionService auctionservice)
+        public RecoveryController()
         {
-            _aydaservices = aydaservice;
-            _auctionservice = auctionservice;
-            _recoveryService = recoveryService;
+            //_aydaservices = aydaservice;
+            //_auctionservice = auctionservice;
+            //_recoveryService = recoveryService;
         }
         public IActionResult Index()
         {
