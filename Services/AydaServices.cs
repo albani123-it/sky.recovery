@@ -14,6 +14,7 @@ using sky.recovery.Entities;
 using sky.recovery.DTOs.ResponsesDTO.Ayda;
 using System.Collections.Generic;
 using sky.recovery.DTOs.RequestDTO.Ayda;
+using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Services
 {
@@ -25,12 +26,13 @@ namespace sky.recovery.Services
         private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
-
+        private IWorkflowServices _workflowServices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AydaServices(IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AydaServices(IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
             _User = User;
@@ -68,6 +70,24 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(string message,bool? status)> WorkflowSubmit(int? idrequest,int? idfitur, string userid)
+        {
+            try
+            {
+                var Data = new SubmitWorkflowDTO()
+                {
+                    idfitur=idfitur,
+                    idrequest=idrequest,
+                    userid=userid
+                };
+                var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+                return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
+            }
+            catch(Exception ex)
+            {
+                return (ex.Message, false);
+            }
+        }
                 public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity)
         {
             var wrap = _DataResponses.Return();
@@ -106,7 +126,8 @@ namespace sky.recovery.Services
 
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
-
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,GetIdAyda,Entity.User.UserId);
 
                 }
                 else
@@ -120,6 +141,7 @@ namespace sky.recovery.Services
                         kualitas = Entity.Data.kualitas,
                         nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok,
                         nilaimargin = Entity.Data.nilaimargin,
+                        isactive = 1,
                         nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan,
                         perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
                         ppa = Entity.Data.ppa,
@@ -130,6 +152,9 @@ namespace sky.recovery.Services
                     };
                     await ayda.AddAsync(Data);
                     await SaveChangesAsync();
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid, Data.id, Entity.User.UserId);
+
                 }
 
                 wrap.Status = true;

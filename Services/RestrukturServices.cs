@@ -24,6 +24,7 @@ using System.IO;
 using static System.Net.WebRequestMethods;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Hosting;
+using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Services
 {
@@ -34,12 +35,14 @@ namespace sky.recovery.Services
         private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
+        private IWorkflowServices _workflowServices { get; set; }
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturServices (IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public RestrukturServices (IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
         IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
             _User = User;
@@ -51,7 +54,24 @@ namespace sky.recovery.Services
 
 
 
-       
+        public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
+        {
+            try
+            {
+                var Data = new SubmitWorkflowDTO()
+                {
+                    idfitur = idfitur,
+                    idrequest = idrequest,
+                    userid = userid
+                };
+                var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+                return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, false);
+            }
+        }
 
 
 
@@ -259,6 +279,8 @@ namespace sky.recovery.Services
 
                 //insert
                 var CheckingDataRestrukture = await _postgreRepository.SubmitRestrukturApproval("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.submitapprovalrestrukture.ToString() + "", getCallBy.Returns.Data.FirstOrDefault().iduser,getCallBySPV.Returns.Data.FirstOrDefault().iduser,Entity.idrestrukture);
+               
+                
                 if (CheckingDataRestrukture.Count > 0)
                 {
                     wrap.Status = true;

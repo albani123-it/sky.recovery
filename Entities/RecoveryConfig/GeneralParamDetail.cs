@@ -11,7 +11,7 @@ namespace sky.recovery.Entities.RecoveryConfig
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
-        public long Id { get; set; }
+        public int Id { get; set; }
         public long? paramheaderid { get; set; }
         public string title { get; set; }
         public string descriptions { get; set; }

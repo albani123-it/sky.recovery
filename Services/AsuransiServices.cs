@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Services
 {
@@ -20,12 +21,13 @@ namespace sky.recovery.Services
         private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
-
+        private IWorkflowServices _workflowServices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AsuransiServices(IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AsuransiServices(IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
             _User = User;
@@ -33,6 +35,26 @@ namespace sky.recovery.Services
             _helperRepository = helperRepository;
 
         }
+
+        public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
+        {
+            try
+            {
+                var Data = new SubmitWorkflowDTO()
+                {
+                    idfitur = idfitur,
+                    idrequest = idrequest,
+                    userid = userid
+                };
+                var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+                return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, false);
+            }
+        }
+
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsuranceTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();

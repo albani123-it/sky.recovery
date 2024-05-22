@@ -406,7 +406,7 @@ namespace sky.recovery.Services
                 await SaveChangesAsync();
 
                 //update status request
-              await  UpdateStatusRequest(Entity.idfitur, Entity.idrequest, 8);
+              //await  UpdateStatusRequest(Entity.idfitur, Entity.idrequest, 8);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 

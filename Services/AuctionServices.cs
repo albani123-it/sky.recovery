@@ -11,12 +11,13 @@ using System.Threading.Tasks;
 using System;
 using sky.recovery.DTOs.ResponsesDTO.Ayda;
 using sky.recovery.DTOs.ResponsesDTO.Aucton;
+using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Services
 {
     public class AuctionServices : SkyCoreConfig, IAuctionService
     {
-
+        private IWorkflowServices _workflowServices { get; set; }
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
@@ -25,9 +26,10 @@ namespace sky.recovery.Services
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AuctionServices(IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AuctionServices(IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
             _User = User;
@@ -136,6 +138,26 @@ namespace sky.recovery.Services
                 return (wrap.Status, wrap);
             }
         }
+
+        public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
+        {
+            try
+            {
+                var Data = new SubmitWorkflowDTO()
+                {
+                    idfitur = idfitur,
+                    idrequest = idrequest,
+                    userid = userid
+                };
+                var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+                return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, false);
+            }
+        }
+
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> SetIsActive(int Id, int status)
         {
