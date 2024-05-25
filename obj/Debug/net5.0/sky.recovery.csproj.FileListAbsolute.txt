@@ -297,3 +297,5 @@ D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\de\PdfSharp.Charting.resources.dl
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\de\PdfSharp.resources.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\HtmlRenderer.dll
 D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\HtmlRenderer.PdfSharp.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\PROJECT\SKY.RECOVERY.LOCAL\bin\Debug\net5.0\Humanizer.dll
