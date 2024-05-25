@@ -12,6 +12,9 @@ using System;
 using sky.recovery.DTOs.ResponsesDTO.Ayda;
 using sky.recovery.DTOs.ResponsesDTO.Aucton;
 using sky.recovery.DTOs.WorkflowDTO;
+using sky.recovery.DTOs.RequestDTO.Ayda;
+using sky.recovery.Entities;
+using sky.recovery.DTOs.RequestDTO.Auction;
 
 namespace sky.recovery.Services
 {
@@ -129,6 +132,73 @@ namespace sky.recovery.Services
                 wrap.Data = ListData;
                 return (wrap.Status, wrap);
 
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionSubmit(CreateAuctionDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
+                if (Entity.Data != null)// update draft
+                {
+                    var GetData = await auction.Where(es => es.id == Entity.Data.AuctionId && es.loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsDraft(GetData.statusid) == true)
+                    {
+                        wrap.Status = false;
+                        wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
+                    }
+
+                    GetData.loanid = Entity.DataNasabahLoan.loanid;
+                    GetData.mstbranchid = Entity.DataNasabahLoan.BranchId;
+                  
+                    GetData.statusid = status.Where(es => es.sts_name == "REQUESTED").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.lastupdatedate = DateTime.Now;
+
+                    Entry(GetData).State = EntityState.Modified;
+                    await SaveChangesAsync();
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, GetIdAyda, Entity.User.UserId);
+
+                }
+                else
+                {
+                    var Data = new auction()
+                    {
+                        loanid = Entity.DataNasabahLoan.loanid,
+                        mstbranchid = Entity.DataNasabahLoan.BranchId,
+                    
+                        statusid = status.Where(es => es.sts_name == "REQUESTED").Select(es => es.sts_id).FirstOrDefault(),
+                        createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        createddated = DateTime.Now
+                    };
+                    await auction.AddAsync(Data);
+                    await SaveChangesAsync();
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Auction").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, Data.id, Entity.User.UserId);
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
             }
             catch (Exception ex)
             {

@@ -21,6 +21,8 @@
 
   <ItemGroup>
     <Folder Include="dbReplace\" />
+    <Folder Include="DTOs\RequestDTO\WriteOff\" />
+    <Folder Include="Insfrastructures\Scafolding\" />
     <Folder Include="wwwroot\Documents\" />
   </ItemGroup>
 
