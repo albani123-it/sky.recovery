@@ -13,7 +13,7 @@ using sky.recovery.Services;
 namespace sky.recovery.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Route("api/skyrecovery/[controller]")]
+    [Route("skyrecovery/[controller]")]
     public class RecoveryController : ControllerBase
     {
         private IAydaServices _aydaservices { get; set; }

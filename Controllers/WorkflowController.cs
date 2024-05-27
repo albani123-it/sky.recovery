@@ -8,7 +8,7 @@ using sky.recovery.DTOs.WorkflowDTO;
 
 namespace sky.recovery.Controllers
 {
-    [Route("api/skyrecovery/[controller]")]
+    [Route("skyrecovery/[controller]")]
 
     public class WorkflowController : ControllerBase
     {

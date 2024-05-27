@@ -9,7 +9,7 @@ using System;
 
 namespace sky.recovery.Controllers.ext
 {
-    [Route("api/skyrecovery/recovery/[controller]")]
+    [Route("skyrecovery/recovery/[controller]")]
     public class RestrukturController : RecoveryController
     {
         private IAydaServices _aydaservices { get; set; }

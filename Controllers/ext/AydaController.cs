@@ -7,7 +7,7 @@ using sky.recovery.DTOs.RequestDTO.Ayda;
 
 namespace sky.recovery.Controllers.ext
 {
-    [Route("api/skyrecovery/ayda/[controller]")]
+    [Route("skyrecovery/ayda/[controller]")]
 
     public class AydaController : RecoveryController
     {

@@ -7,7 +7,7 @@ using System;
 
 namespace sky.recovery.Controllers.ext
 {
-    [Route("api/skyrecovery/auction/[controller]")]
+    [Route("skyrecovery/auction/[controller]")]
 
     public class AuctionController : RecoveryController
     {

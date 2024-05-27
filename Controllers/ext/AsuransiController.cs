@@ -7,7 +7,7 @@ using System;
 
 namespace sky.recovery.Controllers.ext
 {
-    [Route("api/skyrecovery/Asuransi/[controller]")]
+    [Route("skyrecovery/Asuransi/[controller]")]
 
     public class AsuransiController : RecoveryController
     {
