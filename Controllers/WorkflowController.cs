@@ -10,7 +10,7 @@ namespace sky.recovery.Controllers
 {
     [Route("api/skyrecovery/[controller]")]
 
-    public class WorkflowController : Controller
+    public class WorkflowController : ControllerBase
     {
         private IWorkflowServices _workflowService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
@@ -80,9 +80,6 @@ namespace sky.recovery.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
     }
 }

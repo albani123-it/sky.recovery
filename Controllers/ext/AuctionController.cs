@@ -118,9 +118,6 @@ namespace sky.recovery.Controllers.ext
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+        
     }
 }

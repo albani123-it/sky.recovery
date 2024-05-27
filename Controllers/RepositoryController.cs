@@ -18,7 +18,7 @@ namespace sky.recovery.Controllers
 {
     [Route("api/skyrecovery/[controller]")]
 
-    public class RepositoryController : Controller
+    public class RepositoryController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
 
@@ -360,9 +360,6 @@ namespace sky.recovery.Controllers
         }
 
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
     }
 }

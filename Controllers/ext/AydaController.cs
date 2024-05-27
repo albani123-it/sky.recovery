@@ -241,13 +241,38 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
-       
 
 
+        //V2
+        [HttpGet("V2/GetMasterLoan")]
+        public async Task<ActionResult<GeneralResponses>> GetMasterLoan()
 
-        public IActionResult Index()
         {
-            return View();
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _aydaservices.GetMasterLoan();
+                if (GetData.Status == true)
+                {
+                    return Ok(GetData.Returns);
+                }
+                else
+                {
+                    return BadRequest(GetData.Returns);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
         }
+
+
+
     }
 }

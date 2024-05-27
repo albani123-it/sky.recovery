@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace sky.recovery.Entities
 {
+    [Table("auction", Schema = "RecoveryBusinessV2")]
+
     public class auction
     {
         [Key]

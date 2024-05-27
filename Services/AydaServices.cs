@@ -15,12 +15,13 @@ using sky.recovery.DTOs.ResponsesDTO.Ayda;
 using System.Collections.Generic;
 using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.DTOs.WorkflowDTO;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 
 namespace sky.recovery.Services
 {
     public class AydaServices : SkyCoreConfig, IAydaServices
     {
-
+        skycollContext _sky = new skycollContext();
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
@@ -41,6 +42,32 @@ namespace sky.recovery.Services
 
         }
 
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoan()
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            //var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+                var getdata = await _sky.MasterLoans.AsNoTracking().Where(es => es.Dpd > 90).ToListAsync();
+                ListData.Add(getdata);
+                wrap.Status = true;
+                wrap.Message = "OK";
+                wrap.Data = ListData;
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> SetIsActive(int Id, int status)
         {
             var wrap = _DataResponses.Return();

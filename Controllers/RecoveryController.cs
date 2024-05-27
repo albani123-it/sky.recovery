@@ -14,7 +14,7 @@ namespace sky.recovery.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/skyrecovery/[controller]")]
-    public class RecoveryController : Controller
+    public class RecoveryController : ControllerBase
     {
         private IAydaServices _aydaservices { get; set; }
         private IAuctionService _auctionservice{ get; set; }
@@ -28,10 +28,7 @@ namespace sky.recovery.Controllers
             //_auctionservice = auctionservice;
             //_recoveryService = recoveryService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
 
         ////API YANG DIPAKAI
         ////monitroing restruktur - list add restruktur
