@@ -8903,19 +8903,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\syahm\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PROJECT\\SKY.RECOVERY.LOCAL\\sky.recovery.csproj",
+      "projectUniqueName": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj",
       "projectName": "sky.recovery",
-      "projectPath": "D:\\PROJECT\\SKY.RECOVERY.LOCAL\\sky.recovery.csproj",
-      "packagesPath": "C:\\Users\\syahm\\.nuget\\packages\\",
-      "outputPath": "D:\\PROJECT\\SKY.RECOVERY.LOCAL\\obj\\",
+      "projectPath": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\syahm\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -8935,11 +8935,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -9030,7 +9025,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   },
