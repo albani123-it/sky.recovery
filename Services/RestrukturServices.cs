@@ -25,11 +25,18 @@ using static System.Net.WebRequestMethods;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.Hosting;
 using sky.recovery.DTOs.WorkflowDTO;
+using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class RestrukturServices : PostgreSetting, IRestrukturServices
     {
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _recoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
+
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Public.skycollContext _collContext = new Insfrastructures.Scafolding.SkyColl.Public.skycollContext();
+
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
@@ -51,7 +58,69 @@ namespace sky.recovery.Services
 
         }
 
+        public async Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId)
+        {
+            var ListData = new List<dynamic>();
+            try
+            {
+                var Data = await _recoveryContext.Restructurecashflows.Where(es => es.Restruktureid == RestruktureId).ToListAsync();
+                ListData.Add(Data);
+                return (true, "OK", ListData);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
 
+        public async Task<(bool Status, string Message, List<dynamic> Data)> GetPolaRestrukture(int RestruktureId)
+        {
+            var ListData = new List<dynamic>();
+            try
+            {
+                var Data = await _recoveryContext.Restruktures. 
+                    Where(es => es.Id == RestruktureId)
+                    .Select(es => new GetPolaRestrukDTO
+                    {
+
+                        idloan = es.Loanid,
+                        idrestrukture = (int)es.Id,
+                        branchid = es.Mstbranchid,
+                        polaid = es.Polarestrukturid,
+                        keterangan = es.Keterangan,
+                        pengurangannilaimargin = es.Pengurangannilaimargin,
+                        jenispenguranganid = es.Jenispenguranganid,
+                        graceperiode = es.Graceperiode
+
+                    }).ToListAsync();
+                  
+                foreach(var x in Data)
+                {
+
+                    var Wraps = new GetPolaRestrukDTO();
+                    Wraps.idloan = x.idloan;
+                    Wraps.idrestrukture = x.idrestrukture;
+                    Wraps.branchid = x.branchid;
+                    Wraps.polaid = x.polaid;
+                    Wraps.keterangan = x.keterangan;
+                    Wraps.pengurangannilaimargin = x.pengurangannilaimargin;
+                    Wraps.jenispenguranganid = x.jenispenguranganid;
+                    Wraps.graceperiode = x.graceperiode;
+                    Wraps.cabang = await _collContext.Branches.Where(es => es.LbrcId == x.branchid).Select(es => es.LbrcName).FirstOrDefaultAsync();
+                    Wraps.jenispengurangan = await _recoveryContext.Generalparamdetails.Where(es => es.Id == x.jenispenguranganid).Select(es => es.Title).FirstOrDefaultAsync();
+                    Wraps.pola = await _recoveryContext.Generalparamdetails.Where(es => es.Id == x.polaid).Select(es => es.Title).FirstOrDefaultAsync();
+
+                    ListData.Add(Wraps);
+                };
+
+               
+                return (true, "OK", ListData);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
 
 
         public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)

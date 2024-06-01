@@ -35,6 +35,7 @@
         "dependencies": {
           "App.Metrics.AspNetCore": "3.2.0",
           "App.Metrics.Formatters.Prometheus": "3.2.0",
+          "Dapper": "2.1.35",
           "EPPlus": "6.0.3",
           "HtmlRenderer.PdfSharp": "1.5.0.6",
           "MailKit": "2.4.0.1",
@@ -577,6 +578,17 @@
         },
         "compile": {
           "lib/netstandard2.0/App.Metrics.Formatters.Prometheus.dll": {}
+        }
+      },
+      "Dapper/2.1.35": {
+        "runtime": {
+          "lib/net5.0/Dapper.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.1.35.13827"
+          }
+        },
+        "compile": {
+          "lib/net5.0/Dapper.dll": {}
         }
       },
       "EPPlus/6.0.3": {
@@ -3887,6 +3899,13 @@
       "sha512": "sha512-N/PS6eDuS0zSz1ISUQ4F+y7CsSAb3iAerkgO7bAMAD6c2A+7oso7YPIs8yuJZqW/jol93C40jIcrH2ZZY4yLYQ==",
       "path": "app.metrics.formatters.prometheus/3.2.0",
       "hashPath": "app.metrics.formatters.prometheus.3.2.0.nupkg.sha512"
+    },
+    "Dapper/2.1.35": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw==",
+      "path": "dapper/2.1.35",
+      "hashPath": "dapper.2.1.35.nupkg.sha512"
     },
     "EPPlus/6.0.3": {
       "type": "package",
