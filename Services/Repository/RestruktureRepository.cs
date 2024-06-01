@@ -104,6 +104,7 @@ namespace sky.recovery.Services.DBConfig
                     command.Parameters.AddWithValue("@actionreason", Entity.actionreason);
                     command.Parameters.AddWithValue("@workflowid", Entity.workflowid);
                     command.Parameters.AddWithValue("@actions", Entity.actions);
+                    command.Parameters.AddWithValue("@idfitur", 9);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);
@@ -318,6 +319,8 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
+                    command.Parameters.AddWithValue("@idfitur", 9);
+
                     command.Parameters.AddWithValue("@requestorid", userid);
                     command.Parameters.AddWithValue("@approverid", approverid);
 

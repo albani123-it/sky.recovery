@@ -14,10 +14,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using sky.recovery.Helper.Config;
+using sky.recovery.Helper.Query;
 using sky.recovery.Insfrastructures;
 using sky.recovery.Interfaces;
+using sky.recovery.Interfaces.Ext;
 using sky.recovery.Services;
 using sky.recovery.Services.DBConfig;
+using sky.recovery.Services.Ext;
 using sky.recovery.Services.Repository;
 //using static Org.BouncyCastle.Math.EC.ECCurve;
 
@@ -54,6 +57,8 @@ namespace sky.recovery
             services.AddScoped<IAydaServices, AydaServices>();
             services.AddScoped<IAuctionService, AuctionServices>();
             services.AddScoped<IAsuransiServices, AsuransiServices>();
+            services.AddScoped<IExtRestruktureServices, ExtRestruktureServices>();
+            services.AddScoped<IQuery, Query>();
 
             services.AddSingleton<IGeneralParam, RestruktureRepoConfig>();
 

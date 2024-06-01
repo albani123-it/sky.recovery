@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj": {}
+    "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj": {}
   },
   "projects": {
-    "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj": {
+    "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj",
+        "projectUniqueName": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj",
         "projectName": "sky.recovery",
-        "projectPath": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\sky.recovery.csproj",
+        "projectPath": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\Project\\SKYPROJECT\\NEW RECOVERY\\sky.recovery\\obj\\",
+        "outputPath": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -47,6 +47,10 @@
             "App.Metrics.Formatters.Prometheus": {
               "target": "Package",
               "version": "[3.2.0, )"
+            },
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.35, )"
             },
             "EPPlus": {
               "target": "Package",

@@ -6,6 +6,7 @@ using sky.recovery.Responses;
 using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.Interfaces.Ext;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -15,19 +16,22 @@ namespace sky.recovery.Controllers.ext
         private IAydaServices _aydaservices { get; set; }
 
         private IRestrukturServices _recoveryService { get; set; }
+        private IExtRestruktureServices _ExtrecoveryService { get; set; }
+
         private IWorkflowServices _workflowService { get; set; }
         private IAuctionService _auctionservice { get; set; }
 
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( )
+        public RestrukturController(IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( )
         {
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
             _aydaservices = aydaservices;
             _documentservices = documentservices;
             _workflowService = workflowService;
+            _ExtrecoveryService = ExtrecoveryService;
         }
 
        
@@ -61,6 +65,42 @@ namespace sky.recovery.Controllers.ext
                 wrap.Message = ex.Message;
                  wrap.Status  = false;
                 return BadRequest(wrap);
+            }
+        }
+
+
+        //V2
+        [HttpGet("V3/Monitoring/list/{UserId}")]
+        public async Task<ActionResult<GeneralResponses>> MonitoringRestrukturV3(string UserId)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _ExtrecoveryService.GetMonitoringlist(UserId);
+                wrap.Data = GetData.Data;
+                wrap.Status = GetData.Status;
+                wrap.Message = GetData.Message;
+                if (GetData.Status == true)
+                {
+                 
+                    return Ok(wrap);
+                }
+                else
+                {
+                  
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+
             }
         }
 
