@@ -7,6 +7,7 @@ using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
 using sky.recovery.Interfaces.Ext;
+using sky.recovery.DTOs.RequestDTO.Restrukture;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -250,7 +251,37 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+        //V2
+        [HttpPost("V2/DetailRestruktureForApprover")]
+        public async Task<ActionResult<GeneralResponsesDictionaryV2>> DetailRestruktureForApprover([FromBody] GetDetailForApprover Entity)
 
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+
+            try
+            {
+                var GetData = await _recoveryService.GetDetailRestruktureForApproval(Entity.Id,Entity.loanid,Entity.customerid);
+                wrap.Status = GetData.Status;
+                wrap.Message = GetData.Message;
+                wrap.Data = GetData.DataNasabah;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500,wrap);
+            }
+        }
         //V2
         [HttpPost("V2/ActionApproval")]
         public async Task<ActionResult<GeneralResponses>> ActionApproval([FromBody] ApprovalActionDTO Entity)

@@ -8,6 +8,8 @@ namespace sky.recovery.Interfaces
 {
     public interface IRestrukturServices
     {
+        public Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId);
+
         public Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId);
         public Task<(bool Status, string Message, List<dynamic> Data)> GetPolaRestrukture(int RestruktureId);
 

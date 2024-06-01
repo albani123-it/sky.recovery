@@ -73,6 +73,97 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status,string Message, Dictionary<string,List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
+        {
+            try
+            {
+
+                var DataNasabah =await _collContext.MasterCustomers.Where(es => es.Id == CustomerId).Select(es => new NasabahDetailDTO
+                {
+                    Nama=es.CuName,
+                    NoKTP=es.CuIdnumber,
+                    alamat=es.CuAddress,
+                    nohp=es.CuHmphone,
+                    pekerjaan=es.Pekerjaan,
+                    tanggallahir=es.CuBorndate.ToString(),
+                    TglCore=es.StgDate.ToString()
+                }).ToListAsync();
+                var DataLoan = await _collContext.MasterLoans.Where(es => es.Id == loanid).Select(es => new DataLoan
+                {
+                    SegmentId=es.PrdSegmentId,
+                    ProductId=es.Product,
+                    JumlahAngsuran=es.Installment.ToString(),
+                    TanggalMulai=es.StartDate.ToString(),
+                    TanggalJatuhTempo=es.MaturityDate.ToString(),
+                    Tenor=es.Tenor.ToString(),
+                    Plafond=es.Plafond.ToString(),
+                    OutStanding=es.Outstanding.ToString(),
+                    Kolektabilitas=es.Kolektibilitas.ToString(),
+                    DPD=es.Dpd.ToString(),
+                    TglBayarTerakhir=es.LastPayDate.ToString(),
+                    TunggakanPokok=es.TunggakanPokok.ToString(),
+                    TunggakanBunga=es.TunggakanBunga.ToString(),
+                    TunggakanDenda=es.TunggakanDenda.ToString(),
+                    TotalTunggakan=es.TunggakanTotal.ToString(),
+                    TotalKewajiban=es.KewajibanTotal.ToString()
+                }).ToListAsync();
+                var DataFasilitas = await _collContext.MasterLoans.Where(es => es.CustomerId == CustomerId).Select(es => new DataFasilitasLain
+                {
+                    productid=es.Product,
+                    segmentid=es.PrdSegmentId,
+                    JumlahAngsuran=es.Installment.ToString(),
+                    TanggalMulai=es.StartDate.ToString(),
+                    TanggalJatuhTempo=es.MaturityDate.ToString(),
+                    Tenor=es.Tenor.ToString(),
+                    JumlahPinjaman=es.KewajibanTotal.ToString(),
+                    Outstanding=es.Outstanding.ToString()
+
+
+                }).ToListAsync();
+
+                var DataPermasalahan = await _recoveryContext.Permasalahanrestruktures.Where(es => es.Restruktureid == restruktureid).ToListAsync();
+                var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid).ToListAsync();
+                var Analisa = await _recoveryContext.Restructurecashflows.Where(es => es.Restruktureid == restruktureid).ToListAsync();
+                var PolaRestruk = await _recoveryContext.Restruktures.Where(es => es.Id == restruktureid).
+                    Select(es => new DetailPolaRestruk
+                    {
+                        keterangan=es.Keterangan,
+                        pengurangannilaimargin=es.Pengurangannilaimargin,
+                        jenispengurangan=es.Jenispenguranganid,
+                        graceperiod=es.Graceperiode,
+                        polaid=es.Polarestrukturid
+                    }).ToListAsync();
+                
+              
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+                Collection["DataNasabah"] = new List<dynamic>();
+                Collection["DataLoan"] = new List<dynamic>();
+                Collection["FasilitasLainnya"] = new List<dynamic>();
+                Collection["Permasalahan"] = new List<dynamic>();
+                Collection["Dokumen"] = new List<dynamic>();
+                Collection["Analisa"] = new List<dynamic>();
+                Collection["PolaRestrukturisasi"] = new List<dynamic>();
+
+                Collection["DataNasabah"].Add(DataNasabah);
+                Collection["DataLoan"].Add(DataLoan);
+                Collection["FasilitasLainnya"].Add(DataFasilitas);
+                Collection["Permasalahan"].Add(DataPermasalahan);
+                Collection["Dokumen"].Add(Dokumen);
+                Collection["Analisa"].Add(Analisa);
+                Collection["PolaRestrukturisasi"].Add(PolaRestruk);
+
+                return (true, "OK", Collection);
+
+            }
+
+
+            catch(Exception ex)
+            {
+                return (false, ex.Message,null);
+            }
+        }
+
         public async Task<(bool Status, string Message, List<dynamic> Data)> GetPolaRestrukture(int RestruktureId)
         {
             var ListData = new List<dynamic>();

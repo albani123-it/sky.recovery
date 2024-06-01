@@ -15,6 +15,15 @@ namespace sky.recovery.Responses
        public List<dynamic> Data { get; set; }
 
     }
+
+    public class GeneralResponsesDictionaryV2
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+
+        public Dictionary<string,List<dynamic>> Data { get; set; }
+
+    }
     public class GeneralResponsesPDFV2
     {
         public bool Status { get; set; }
@@ -96,6 +105,16 @@ namespace sky.recovery.Responses
                 Status=false,
                 Message="",
                 Data=null
+            };
+            return Data;
+        }
+        public GeneralResponsesDictionaryV2 ReturnDictionary()
+        {
+            var Data = new GeneralResponsesDictionaryV2()
+            {
+                Status = false,
+                Message = "",
+                Data = null
             };
             return Data;
         }
