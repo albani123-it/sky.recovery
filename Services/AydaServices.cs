@@ -369,6 +369,8 @@ namespace sky.recovery.Services
                 var ReturnData = await ayda.Include(i => i.master_loan).Where(es => es.statusid==11).Select(
                     es => new MonitoringBean
                     {
+                        LoanId=es.loanid,
+                        customerid=es.master_loan.customer_id,
                         cabang = es.master_loan.master_customer.branch.lbrc_name,
                         noloan = es.master_loan.acc_no,
                         namanasabah = es.master_loan.master_customer.cu_name,
@@ -419,7 +421,9 @@ namespace sky.recovery.Services
                 var ReturnData =await  ayda.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
                     es => new MonitoringBean
                     {
-                        cabang=es.master_loan.master_customer.branch.lbrc_name,
+                        LoanId = es.loanid,
+                        customerid = es.master_loan.customer_id,
+                        cabang =es.master_loan.master_customer.branch.lbrc_name,
                         noloan=es.master_loan.acc_no,
                         namanasabah=es.master_loan.master_customer.cu_name,
                         totaltunggakan=es.master_loan.tunggakan_total,
