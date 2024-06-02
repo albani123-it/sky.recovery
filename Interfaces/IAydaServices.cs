@@ -1,11 +1,14 @@
 ﻿using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.Responses;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace sky.recovery.Interfaces
 {
     public interface IAydaServices
     {
+        public Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAyda(GetDetailAydaDTO Entity);
+
         public Task<(bool? Status, GeneralResponsesV2 Returns)> DummyNasabah(int pagenumber, int pagesieze);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> InsertBulk(int banyak);
 

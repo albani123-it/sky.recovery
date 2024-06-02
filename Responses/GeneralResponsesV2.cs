@@ -18,7 +18,7 @@ namespace sky.recovery.Responses
 
     public class GeneralResponsesDictionaryV2
     {
-        public bool Status { get; set; }
+        public bool? Status { get; set; }
         public string Message { get; set; }
 
         public Dictionary<string,List<dynamic>> Data { get; set; }
@@ -96,6 +96,14 @@ namespace sky.recovery.Responses
 
 
     }
+    public class GeneralResponsesDictionary
+    {
+        public bool Status { get; set; }
+        public string Message { get; set; }
+        Dictionary<string, List<dynamic>> Data { get; set; }
+
+
+    }
     public class ModellingGeneralResponsesV2
     {
         public GeneralResponsesV2 Return()
@@ -108,6 +116,8 @@ namespace sky.recovery.Responses
             };
             return Data;
         }
+
+        
         public GeneralResponsesDictionaryV2 ReturnDictionary()
         {
             var Data = new GeneralResponsesDictionaryV2()

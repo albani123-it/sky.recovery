@@ -1,0 +1,33 @@
+https://collectium.cloud/api/Recovery/restruktur/monitoring/list?Page=1&PageRow=5
+      "ConnectionString_core": "User ID=postgres;Password=User123!;HOST=103.53.197.67;Port=5432;Database=sky.core;Integrated Security=true;Pooling=true;MinPoolSize=1;MaxPoolSize=1000;",
+
+
+git config --global core.compression 0
+
+git clone --depth 1 https://github.com/albani123-it/sky.deservice.git
+
+
+{Microsoft.IdentityModel.Tokens.SymmetricSecurityKey, KeyId: '', InternalId: 'jVRWXDzKoWAMkn7cIrMBL3Y1bboSV3WxigVHhg33HJU'.}
+
+
+{Microsoft.IdentityModel.Tokens.SymmetricSecurityKey, KeyId: '', InternalId: 'jVRWXDzKoWAMkn7cIrMBL3Y1bboSV3WxigVHhg33HJU'.}
+
+
+{Microsoft.IdentityModel.Tokens.SymmetricSecurityKey, KeyId: '', InternalId: 
+'80ON4RUHnobZNqDvsYfVHRLQ8IHXJL5rgFBO1qAcHlc'.}
+
+
+//RECOVERY 
+dotnet ef dbcontext scaffold "Host=103.53.197.67;Database=sky.coll;User Id=postgres;Password=User123!" Npgsql.EntityFrameworkCore.PostgreSQL --schema RecoveryBusinessV2 --force  -o  D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\Insfrastructures\Scafolding\SkyColl\Recovery
+
+
+
+//DISTRIBUTION
+--SKY CORE \\ User
+dotnet ef dbcontext scaffold "Host=103.53.197.67;Database=sky.core;User Id=postgres;Password=User123!" Npgsql.EntityFrameworkCore.PostgreSQL --schema public --force  -o  D:\Project\SKYPROJECT\Sky.Rule\Sky.Rule\Insftastruktures\Postgre\SkyCore\publics
+
+--SKY COLL \\ RULE ENGINE
+dotnet ef dbcontext scaffold "Host=103.53.197.67;Database=sky.coll;User Id=postgres;Password=User123!" Npgsql.EntityFrameworkCore.PostgreSQL --schema RuleEngine --force  -o  D:\Project\SKYPROJECT\Sky.Rule\Sky.Rule\Insftastruktures\Postgre\SkyColl\RuleEngine
+
+--SKY COLL \\ PUBLIC
+dotnet ef dbcontext scaffold "Host=103.53.197.67;Database=sky.coll;User Id=postgres;Password=User123!" Npgsql.EntityFrameworkCore.PostgreSQL --schema Public --force  -o  D:\Project\SKYPROJECT\Sky.Rule\Sky.Rule\Insftastruktures\Postgre\SkyColl\Publics

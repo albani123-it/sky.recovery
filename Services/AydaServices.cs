@@ -17,12 +17,16 @@ using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 using sky.recovery.DTOs.RequestDTO.CommonDTO;
+using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using System.Reflection.Metadata;
 
 namespace sky.recovery.Services
 {
     public class AydaServices : SkyCoreConfig, IAydaServices
     {
         skycollContext _sky = new skycollContext();
+        Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _skyRecovery = new Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
+
         private IDocServices _DocService { get; set; }
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
@@ -460,6 +464,92 @@ namespace sky.recovery.Services
                 wrap.Message = ex.Message;
 
                 return (wrap.Status, wrap);
+            }
+        }
+
+
+        //GET DETAIL AYDA
+        public async Task<(bool? Status,string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAyda(GetDetailAydaDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var  Nasabah = await _sky.MasterCustomers.Where(es => es.Id == Entity.CustomerId).Select(
+                   es => new NasabahAydaDTO
+                   {
+                      Nama=es.CuName,
+                      Address=es.CuAddress,
+                      KTP=es.CuIdnumber,
+                      CuCif=es.CuCif,
+                      BranchId=es.BranchId,
+                      Branch=_sky.Branches.Where(x=>x.LbrcId==es.BranchId).Select(es=>es.LbrcName).FirstOrDefault(),
+                      AccNo=_sky.MasterLoans.Where(es=>es.Id==Entity.LoanId).Select(es=>es.AccNo).FirstOrDefault()
+
+                   }
+                   ).ToListAsync();
+
+                var Files = await _skyRecovery.masterrepository.Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
+                   es => new RepoAydaDTO
+                   {
+                      Id=es.Id,
+                      url=es.Fileurl,
+                      urlname=es.Filename,
+                      uploaddated=es.Uploaddated.ToString(),
+                      doctype=es.Doctype
+
+                   }
+                   ).ToListAsync();
+
+                var DataLoan = await _sky.MasterLoans.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAydaDTO
+                {
+                    loanid=es.Id,
+                    Fasilitas=es.Fasilitas,
+                    Tenor=es.Tenor.ToString(),
+                    LoanType=_sky.Rfproducts.Where(x=>x.PrdId==es.Product).Select(es=>es.PrdDesc).FirstOrDefault(),
+                    Plafond=es.Plafond.ToString()
+                }).ToListAsync();
+
+                var DataCollateral = await ayda.Where(es => es.id == Entity.AydaId).Select(es => new JaminanAyda_2
+                {
+                    bankid = es.hubunganbankid,
+                    //status = _sky.Statuses.Where(x => x.StsId == es.statusid).Select(es => es.StsName).FirstOrDefault(),
+                    jumlahayda = es.jumlahayda.ToString(),
+                    kualitas = es.kualitas,
+                    nilaimargin = es.nilaimargin.ToString(),
+                    nilaipembiayaanpokok = es.nilaipembiayaanpokok.ToString(),
+                    nilaiperolehanagunan = es.nilaiperolehanagunan.ToString(),
+                    perkiraanbiayajual = es.perkiraanbiayajual.ToString(),
+                    ppa = es.ppa.ToString(),
+                    tglambilalih = es.tglambilalih
+                }).ToListAsync();
+
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+                Collection["DataNasabah"] = new List<dynamic>();
+                Collection["DataFiles"] = new List<dynamic>();
+                Collection["DataLoan"] = new List<dynamic>();
+                Collection["DataCollateral"] = new List<dynamic>();
+
+
+                Collection["DataNasabah"].Add(Nasabah);
+                Collection["DataFiles"].Add(Files);
+                Collection["DataLoan"].Add(DataLoan);
+                Collection["DataCollateral"].Add(DataCollateral);
+
+
+
+                return (true,"OK", Collection);
+
+            }
+            catch (Exception ex)
+            {
+              
+
+                return (false,ex.Message, null);
             }
         }
 

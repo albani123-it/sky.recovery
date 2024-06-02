@@ -5,9 +5,11 @@ D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\www
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\arthagraha.png
+D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\CATATAN KERJAAN SISI.txt.txt
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\DOCTemplateDUmmy.xlsx.xlsx
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\logoalamat.png
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\masterloan.xlsx
+D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\NOTE PROJECT SKY.txt.txt
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\tesdummy.xlsx
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 D:\Project\SKYPROJECT\NEWRECOVERY\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
