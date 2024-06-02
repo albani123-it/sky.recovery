@@ -1,4 +1,5 @@
-﻿using System;
+﻿using sky.recovery.DTOs.RequestDTO.CommonDTO;
+using System;
 
 namespace sky.recovery.DTOs.RequestDTO.Ayda
 {

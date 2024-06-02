@@ -18,6 +18,8 @@ namespace sky.recovery.Entities.RecoveryConfig
         public string filename { get; set; }
         public string fileurl { get; set; }
         public DateTime? uploaddated { get; set; }
+        public int? requestid { get; set; }
+        public int? doctype { get; set; }
         public DateTime? modifydated { get; set; }
         public int? isactive { get; set; }
     }

@@ -16,12 +16,14 @@ using System.Collections.Generic;
 using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
+using sky.recovery.DTOs.RequestDTO.CommonDTO;
 
 namespace sky.recovery.Services
 {
     public class AydaServices : SkyCoreConfig, IAydaServices
     {
         skycollContext _sky = new skycollContext();
+        private IDocServices _DocService { get; set; }
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
@@ -30,9 +32,10 @@ namespace sky.recovery.Services
         private IWorkflowServices _workflowServices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AydaServices(IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AydaServices(IDocServices DocService, IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _DocService = DocService;
             _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
@@ -126,6 +129,7 @@ namespace sky.recovery.Services
             try
             {
 
+               
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
                 if (Entity.Data.aydaid != null)// update draft
                 {
@@ -150,9 +154,11 @@ namespace sky.recovery.Services
                     GetData.statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
                     GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.lastupdatedate = DateTime.Now;
-
+                    GetData.isactive = 1;
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
+                   
+                     
                     var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,GetIdAyda,Entity.User.UserId);
 
@@ -175,10 +181,12 @@ namespace sky.recovery.Services
                         jumlahayda = Entity.Data.jumlahayda,
                         statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault(),
                         createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        createddated = DateTime.Now
+                        createddated = DateTime.Now,
+                        
                     };
                     await ayda.AddAsync(Data);
                     await SaveChangesAsync();
+
                     var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid, Data.id, Entity.User.UserId);
 
@@ -198,6 +206,7 @@ namespace sky.recovery.Services
             }
         }
 
+       
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(CreateAydaDTO Entity)
         {
@@ -233,7 +242,7 @@ namespace sky.recovery.Services
                     GetData.statusid = status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault();
                     GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.lastupdatedate = DateTime.Now;
-
+                    GetData.isactive = 1;
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
 
@@ -256,10 +265,13 @@ namespace sky.recovery.Services
                         jumlahayda = Entity.Data.jumlahayda,
                         statusid = status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault(),
                         createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        createddated = DateTime.Now
+                        createddated = DateTime.Now,
+                        isactive=1
                     };
                     await ayda.AddAsync(Data);
                     await SaveChangesAsync();
+
+                    
                 }
               
                 wrap.Status = true;
@@ -396,6 +408,8 @@ namespace sky.recovery.Services
                 return (wrap.Status, wrap);
             }
         }
+
+        //GET DETAIL AYDA
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaMonitoring(string UserId)
         {
             var wrap = _DataResponses.Return();

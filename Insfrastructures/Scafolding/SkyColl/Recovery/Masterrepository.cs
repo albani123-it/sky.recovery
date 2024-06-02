@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 {
-    public partial class Masterrepository
+    public partial class masterrepository
     {
         public long Id { get; set; }
         public int? Userid { get; set; }
@@ -16,5 +16,6 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public int? Isactive { get; set; }
         public int? Fiturid { get; set; }
         public int? Requestid { get; set; }
+        public int? Doctype { get; set; }
     }
 }

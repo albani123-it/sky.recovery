@@ -59,6 +59,7 @@ namespace sky.recovery
             services.AddScoped<IAsuransiServices, AsuransiServices>();
             services.AddScoped<IExtRestruktureServices, ExtRestruktureServices>();
             services.AddScoped<IQuery, Query>();
+            services.AddScoped<IRepositoryServices, RepositoryServices>();
 
             services.AddSingleton<IGeneralParam, RestruktureRepoConfig>();
 

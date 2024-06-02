@@ -19,12 +19,15 @@ using sky.recovery.Entities;
 using sky.recovery.Insfrastructures;
 using Microsoft.EntityFrameworkCore;
 using sky.recovery.Helper;
+using sky.recovery.DTOs.RequestDTO.CommonDTO;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class DocumentServices: SkyCoreConfig , IDocServices
     {
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext  _RecoveryContext = new sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
         DocumentHelper _DocHelper = new DocumentHelper();
         private readonly IWebHostEnvironment _environment;
 
@@ -113,6 +116,75 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status,string Message)>RemoveDoc(int id)
+        {
+            try
+            {
+                var GetData =await masterrepository.Where(es=>es.id==id).FirstOrDefaultAsync();
+                GetData.isactive = 0;
+                Entry(GetData).State = EntityState.Modified;
+
+                await SaveChangesAsync();
+                return (true, "OK");
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+        public async Task<(bool Status, string Message)> UploadServices(RepoReqDTO Entity)
+        {
+            try
+            {
+                if (Entity == null)
+                {
+                    return (false, "Request Not Valid");
+                }
+
+                if (Entity.File.Length <0)
+                {
+                    return (false, "File Must Uploaded");
+                }
+
+
+                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                    var path = Path.Combine(_environment.WebRootPath, "File");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    string ext = Path.GetExtension(Entity.File.FileName);
+
+                    var nm = Path.Combine(path, Entity.File.FileName + ext);
+
+                    using (FileStream filestream = System.IO.File.Create(nm))
+                    {
+                        Entity.File.CopyTo(filestream);
+                        filestream.Flush();
+                        //  return "\\Upload\\" + objFile.files.FileName;
+                    }
+                    var Data = new Entities.RecoveryConfig.masterrepository()
+                    {
+                        fiturid = Entity.FiturId,
+                        userid = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        uploaddated = DateTime.Now,
+                        filename = Entity.File.FileName,
+                        fileurl = nm,
+                       requestid  = Entity.RequestId,
+                        isactive = 1,
+                        doctype = Entity.DocType
+                    };
+                  await   masterrepository.AddAsync(Data);
+                    await SaveChangesAsync();
+                
+                return (true, "OK");
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
                 public async Task<(bool? Status, GeneralResponsesV2DocExcel Returns)> ReadExcelByUpload(UploadExcelDTO Entity)
         {
             var wrap = _DataResponses.ExcelReturn();
@@ -150,7 +222,7 @@ namespace sky.recovery.Services
                     filestream.Flush();
                     //  return "\\Upload\\" + objFile.files.FileName;
                 }
-                var Data = new masterrepository()
+                var Data = new Entities.RecoveryConfig.masterrepository()
                 {
                     userid=getCallBy.Returns.Data.FirstOrDefault().iduser,
                      uploaddated=DateTime.Now,

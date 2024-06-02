@@ -13,25 +13,92 @@ using sky.recovery.DTOs.HelperDTO;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
+using sky.recovery.DTOs.RequestDTO.CommonDTO;
 
 namespace sky.recovery.Controllers
 {
-    [Route("skyrecovery/[controller]")]
+    [Route("api/skyrecovery/[controller]")]
 
     public class RepositoryController : ControllerBase
     {
         private readonly IWebHostEnvironment _environment;
-
+        private IRepositoryServices _RepositoryServices { get; set; }
         private IDocServices _documentservices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RepositoryController(IWebHostEnvironment environment, IDocServices docservice)
+        public RepositoryController(IRepositoryServices RepositoryServices, IWebHostEnvironment environment, IDocServices docservice)
         {
+
+            _RepositoryServices = RepositoryServices;
             _environment = environment;
 
             _documentservices = docservice;
         }
 
+
+        //V2
+        //tidak baca sheet
+        [HttpPost("V2/Upload")]
+        public async Task<ActionResult<GeneralResponses>> Upload([FromForm] RepoReqDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _RepositoryServices.UploadServices(Entity);
+                wrap.Message = GetData.Message;
+                wrap.Status = GetData.Status;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500,wrap);
+            }
+        }
+
+        //V2
+        //tidak baca sheet
+        [HttpGet("V2/RemoveDoc/{id:int}")]
+        public async Task<ActionResult<GeneralResponses>> RemoveDoc(int id)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _RepositoryServices.RemoveDoc(id);
+                wrap.Message = GetData.Message;
+                wrap.Status = GetData.Status;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
 
         //V2
         //tidak baca sheet
