@@ -419,7 +419,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(SubmitRestruktureDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(string userid,SubmitRestruktureDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();
@@ -427,7 +427,7 @@ namespace sky.recovery.Services
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.userid);
+                var getCallBy = await _User.GetDataUser(userid);
                 var getCallBySPV = await _User.GetDataUser(getCallBy.Returns.Data.FirstOrDefault().spvname);
 
 
@@ -503,14 +503,14 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //REMOVE DRAFT RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string userid, int? idloan,int? idrestrukture)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string user,string userid, int? idloan,int? idrestrukture)
         {
             var wrap = _DataResponses.Return();
 
             try
             {
 
-                 var getCallBy = await _User.GetDataUser(userid);
+                 var getCallBy = await _User.GetDataUser(user);
                 // pindah ke dinamis
 
               
@@ -546,14 +546,14 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //UploadDocRestrukture RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(string userid,UploadDocRestrukturDTO Entity)
         {
             var wrap = _DataResponses.GeneralResponseDocRestruktur();
 
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                var getCallBy = await _User.GetDataUser(userid);
                 // pindah ke dinamis
 
                 if(Entity==null)
@@ -713,14 +713,14 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //REMOVE PERMASALAHAN RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(string userid,CreatePermasalahanDTO Entity)
         {
             var wrap = _DataResponses.Return();
 
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.userid);
+                var getCallBy = await _User.GetDataUser(userid);
                 // pindah ke dinamis
                
                 if (Entity.idrestrukture == null)
@@ -754,14 +754,14 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //UPDATE PERMASALAHAN RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(UpdatePermasalahanDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(string userid,UpdatePermasalahanDTO Entity)
         {
             var wrap = _DataResponses.Return();
 
             try
             {
 
-                 var getCallBy = await _User.GetDataUser(Entity.userid);
+                 var getCallBy = await _User.GetDataUser(userid);
                 // pindah ke dinamis
                 if (Entity.idpermasalahan == null)
                 {
@@ -837,14 +837,14 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //TASKLIST RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(ApprovalActionDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(string userid,ApprovalActionDTO Entity)
         {
             var wrap = _DataResponses.Return();
 
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.UserId);
+                var getCallBy = await _User.GetDataUser(userid);
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
                 //    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
@@ -963,7 +963,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //CREATE DRAFT FOR RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(AddRestructureDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(string userid,AddRestructureDTO Entity)
         {
             var wrap = _DataResponses.Return();
 
@@ -983,7 +983,7 @@ namespace sky.recovery.Services
                    
                 }
 
-                 var getCallBy = await _User.GetDataUser(Entity.UserId);
+                 var getCallBy = await _User.GetDataUser(userid);
                 //if(getCallBy.Returns.Data.FirstOrDefault().role!=RestrukturRole.Operator.ToString())
                 //{
                 //    wrap.Status = false;

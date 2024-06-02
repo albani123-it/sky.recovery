@@ -19,19 +19,19 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> SearchingMonitoringRestruktur(SearchingRestrukturDTO Entity);
 
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(AddRestructureDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(string userid, AddRestructureDTO Entity);
         public Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigPolaRestrukture(AddPolaDTO Entity);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(SubmitRestruktureDTO Entity);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(ApprovalActionDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitRestrukture(string userid,SubmitRestruktureDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> ActionApprovalRestrukture(string userid,ApprovalActionDTO Entity);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> GetWorkflowHistory(int? idrequest);
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> RemovePermasalahanRestrukture(RemovePermasalahanDTO Entity);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(UpdatePermasalahanDTO Entity);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(CreatePermasalahanDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> UpdatePermasalahan(string userid,UpdatePermasalahanDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> CreatePermasalahan(string userid,CreatePermasalahanDTO Entity);
         public Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> GetMasterDocRule(GetDocumentRestruktureDTO Entity);
-        public Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(UploadDocRestrukturDTO Entity);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string userid, int? idloan, int? idrestrukture);
+        public Task<(bool? Status, GeneralResponsesDocRestrukturV2 Returns)> UploadDocRestrukture(string userid,UploadDocRestrukturDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> RemoveDraftRestukture(string user, string userid, int? idloan, int? idrestrukture);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity);
 
         public Task<(bool? Status, GeneralResponsesConfigV2 Returns)> ConfigPola(RequestPolaDTO Entity);

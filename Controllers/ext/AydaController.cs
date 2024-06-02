@@ -32,15 +32,16 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Monitoring/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> Monitoring(string userid)
+        [HttpGet("V2/Monitoring")]
+        public async Task<ActionResult<GeneralResponses>> Monitoring()
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _aydaservices.AydaMonitoring(userid);
+                var GetData = await _aydaservices.AydaMonitoring(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -246,15 +247,16 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Tasklist/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
+        [HttpGet("V2/Tasklist")]
+        public async Task<ActionResult<GeneralResponses>> TaskList()
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _aydaservices.AydaTaskList(userid);
+                var GetData = await _aydaservices.AydaTaskList(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

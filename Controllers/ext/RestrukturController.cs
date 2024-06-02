@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 using System;
 using sky.recovery.Interfaces.Ext;
 using sky.recovery.DTOs.RequestDTO.Restrukture;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
+using System.Linq;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -41,15 +44,16 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Monitoring/list/{UserId}")]
-        public async Task<ActionResult<GeneralResponses>> MonitoringRestrukturV2(string UserId)
+        [HttpGet("V2/Monitoring/list")]
+        public async Task<ActionResult<GeneralResponses>> MonitoringRestrukturV2()
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.MonitoringRestrukturV2(UserId);
+                var GetData = await _recoveryService.MonitoringRestrukturV2(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -199,10 +203,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.CreateDraftRestrukture(Entity);
+                var GetData = await _recoveryService.CreateDraftRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -223,15 +228,16 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
-        [HttpGet("V2/TaskList/list/{UserId}")]
-        public async Task<ActionResult<GeneralResponses>> TaskListRestrukturV2(string UserId)
+        [HttpGet("V2/TaskList/list")]
+        public async Task<ActionResult<GeneralResponses>> TaskListRestrukturV2()
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.TaskListRestrukturV2(UserId);
+                var GetData = await _recoveryService.TaskListRestrukturV2(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -288,10 +294,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.ActionApprovalRestrukture(Entity);
+                var GetData = await _recoveryService.ActionApprovalRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -378,10 +385,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.SubmitRestrukture(Entity);
+                var GetData = await _recoveryService.SubmitRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -517,10 +525,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.CreatePermasalahan(Entity);
+                var GetData = await _recoveryService.CreatePermasalahan(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -546,10 +555,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.UpdatePermasalahan(Entity);
+                var GetData = await _recoveryService.UpdatePermasalahan(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -670,10 +680,11 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
-                var GetData = await _recoveryService.UploadDocRestrukture(Entity);
+                var GetData = await _recoveryService.UploadDocRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -700,6 +711,7 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await GetUserAgents();
 
             try
             {
@@ -709,7 +721,7 @@ namespace sky.recovery.Controllers.ext
                     wrap.Status = false;
                     return BadRequest(wrap);
                 }
-                var GetData = await _recoveryService.RemoveDraftRestukture(Entity.userid,Entity.loanid,Entity.restruktureid);
+                var GetData = await _recoveryService.RemoveDraftRestukture(GetUserAgent.Message, Entity.userid,Entity.loanid,Entity.restruktureid);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

@@ -9,6 +9,8 @@ using sky.recovery.DTOs.RequestDTO;
 
 using sky.recovery.DTOs.ResponsesDTO;
 using sky.recovery.Services;
+using Microsoft.Extensions.Primitives;
+using System.Linq;
 
 namespace sky.recovery.Controllers
 {
@@ -28,7 +30,7 @@ namespace sky.recovery.Controllers
             //_auctionservice = auctionservice;
             //_recoveryService = recoveryService;
         }
-       
+
 
         ////API YANG DIPAKAI
         ////monitroing restruktur - list add restruktur
@@ -55,7 +57,7 @@ namespace sky.recovery.Controllers
 
         //        wrap.Message = ex.Message;
         //        wrap.Error = true;
-                   
+
         //        return BadRequest(wrap);
         //    }
         //}
@@ -88,6 +90,20 @@ namespace sky.recovery.Controllers
         //        return BadRequest(Return);
         //    }
         //}
+
+        public async Task<(bool Status, string Message)> GetUserAgents()
+        {
+            try
+            {
+                HttpContext.Request.Headers.TryGetValue("User-Agent", out StringValues authHeader);
+                string headerValue = authHeader.FirstOrDefault();
+                return (true, headerValue);
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
 
 
         [HttpGet("DummyTest/{Error}")]
