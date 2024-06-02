@@ -147,7 +147,7 @@ namespace sky.recovery.Services
                     GetData.perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
                     GetData.ppa = Entity.Data.ppa;
                     GetData.jumlahayda = Entity.Data.jumlahayda;
-                    GetData.statusid = status.Where(es => es.sts_name == "REQUESTED").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
                     GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.lastupdatedate = DateTime.Now;
 
@@ -173,7 +173,7 @@ namespace sky.recovery.Services
                         perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
                         ppa = Entity.Data.ppa,
                         jumlahayda = Entity.Data.jumlahayda,
-                        statusid = status.Where(es => es.sts_name == "REQUESTED").Select(es => es.sts_id).FirstOrDefault(),
+                        statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault(),
                         createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         createddated = DateTime.Now
                     };
@@ -358,7 +358,7 @@ namespace sky.recovery.Services
                     wrap.Message = "User Id Harus Diisi";
                 }
 
-                var getCallBy = await _User.GetDataUser(UserId);
+               // var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 //{

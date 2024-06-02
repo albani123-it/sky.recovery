@@ -13,12 +13,14 @@ using System.Collections.Generic;
 using Org.BouncyCastle.Asn1.Ocsp;
 using System.Numerics;
 using sky.recovery.DTOs.WorkflowDTO;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class WorkflowServices:SkyCoreConfig, IWorkflowServices
     {
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        skycollContext _RecoveryContext = new skycollContext();
         private IUserService _User { get; set; }
 
         public WorkflowServices(IOptions<DbContextSettings> appsetting, IUserService user) : base(appsetting)
@@ -183,9 +185,43 @@ namespace sky.recovery.Services
                    
                 }
 
+                //UPDATE MASTER REQUEST
+                if(Entity.fiturid==9)//restrukture
+                {
+                    var Data = await _RecoveryContext.Restruktures.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    Data.Statusid = Entity.status;
+                    Data.Lastupdatedate = DateTime.Now;
+                    
+                    Entry(Data).State = EntityState.Modified;
 
+                }
+                if (Entity.fiturid == 10)//AYDA
+                {
+                    var Data = await ayda.Where(es => es.id== Entity.idrequest).FirstOrDefaultAsync();
+                    Data.statusid = Entity.status;
+                    Data.lastupdatedate = DateTime.Now;
+                    
+                    Entry(Data).State = EntityState.Modified;
 
+                }
+                if (Entity.fiturid == 15)//auction
+                {
+                    var Data = await _RecoveryContext.Auctions.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    Data.Statusid = Entity.status;
+                    Data.Lastupdatedate = DateTime.Now;
 
+                    Entry(Data).State = EntityState.Modified;
+
+                }
+                if (Entity.fiturid == 16)//INSURANCE
+                {
+                    var Data = await _RecoveryContext.Insurances.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    Data.Statusid = Entity.status;
+                    Data.Lastupdateddated = DateTime.Now;
+
+                    Entry(Data).State = EntityState.Modified;
+
+                }
 
 
                 Entry(DataWorkflow).State = EntityState.Modified;
@@ -351,6 +387,7 @@ namespace sky.recovery.Services
 
 
 
+            //SERVICE YANG DIPAKAI
             //SERVICE YANG DIPAKAI
             //TASKLIST RESTRUKTUR V2
             public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitWorkflowStep(SubmitWorkflowDTO Entity)

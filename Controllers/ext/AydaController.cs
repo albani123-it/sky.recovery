@@ -85,7 +85,7 @@ namespace sky.recovery.Controllers.ext
             {
                 wrap.Message = ex.Message;
                 wrap.Status = false;
-                return BadRequest(wrap);
+                return StatusCode(500,wrap);
             }
         }
 
