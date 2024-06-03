@@ -49,18 +49,27 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(()=> GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.MonitoringRestrukturV2(GetUserAgent.Message);
-                if (GetData.Status == true)
+                if (GetUserAgent.code == 200)
                 {
-                    return Ok(GetData.Returns);
+                    var GetData = await _recoveryService.MonitoringRestrukturV2(GetUserAgent.UserAgent);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
                 }
                 else
                 {
-                    return BadRequest(GetData.Returns);
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -69,7 +78,7 @@ namespace sky.recovery.Controllers.ext
             {
                 wrap.Message = ex.Message;
                  wrap.Status  = false;
-                return BadRequest(wrap);
+                return StatusCode(500,wrap);
             }
         }
 
@@ -203,11 +212,14 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.CreateDraftRestrukture(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+
+                    var GetData = await _recoveryService.CreateDraftRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -215,6 +227,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -233,11 +252,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.TaskListRestrukturV2(GetUserAgent.Message);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.TaskListRestrukturV2(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -245,6 +266,14 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -294,11 +323,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.ActionApprovalRestrukture(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.ActionApprovalRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -307,7 +338,13 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);
                 }
-
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
             }
 
             catch (Exception ex)
@@ -385,11 +422,14 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
 
             try
             {
-                var GetData = await _recoveryService.SubmitRestrukture(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.SubmitRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -397,6 +437,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -525,11 +572,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.CreatePermasalahan(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.CreatePermasalahan(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -537,6 +586,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -555,11 +611,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.UpdatePermasalahan(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.UpdatePermasalahan(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -568,6 +626,14 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);     
                 }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
 
             }
 
@@ -680,11 +746,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.UploadDocRestrukture(GetUserAgent.Message, Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.UploadDocRestrukture(GetUserAgent.Message, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -692,6 +760,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -711,11 +786,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                if(Entity==null)
+                if (GetUserAgent.code == 200)
+                {
+                    if (Entity==null)
                 {
                     wrap.Message = "Request Not Valid";
                     wrap.Status = false;
@@ -729,6 +806,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }

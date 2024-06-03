@@ -15,8 +15,8 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoan();
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> AydaMonitoring(string UserId);
-        public Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(CreateAydaDTO Entity);
-        public  Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity);
+        public Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(string userid,CreateAydaDTO Entity);
+        public  Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(string userid,CreateAydaDTO Entity);
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> SetIsActive(int Id, int status);
         public  Task<(bool? Status, GeneralResponsesV2 Returns)> AydaTaskList(string UserId);

@@ -37,11 +37,14 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _aydaservices.AydaMonitoring(GetUserAgent.Message);
+                if (GetUserAgent.code == 200)
+                {
+
+                    var GetData = await _aydaservices.AydaMonitoring(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -50,6 +53,14 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);
                 }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
 
             }
 
@@ -100,10 +111,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _aydaservices.AydaDraft(Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _aydaservices.AydaDraft(GetUserAgent.UserAgent, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -112,6 +126,14 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);
                 }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
 
             }
 
@@ -129,10 +151,15 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _aydaservices.AydaSubmit(Entity);
+                if (GetUserAgent.code == 200)
+                {
+
+
+                    var GetData = await _aydaservices.AydaSubmit(GetUserAgent.UserAgent, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -140,6 +167,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -252,11 +286,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await GetUserAgents();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _aydaservices.AydaTaskList(GetUserAgent.Message);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _aydaservices.AydaTaskList(GetUserAgent.Message);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -264,6 +300,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }

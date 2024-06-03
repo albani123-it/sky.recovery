@@ -122,11 +122,11 @@ namespace sky.recovery.Services
                 return (ex.Message, false);
             }
         }
-                public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(CreateAydaDTO Entity)
+                public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaSubmit(string userid,CreateAydaDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();
-            var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+            var getCallBy = await _User.GetDataUser(userid);
 
             // var SkyCollConsString = GetSkyCollConsString();
 
@@ -212,11 +212,11 @@ namespace sky.recovery.Services
 
        
 
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(CreateAydaDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(string userid,CreateAydaDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();
-            var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+            var getCallBy = await _User.GetDataUser(userid);
 
             // var SkyCollConsString = GetSkyCollConsString();
 
