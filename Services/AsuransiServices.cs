@@ -16,6 +16,7 @@ using sky.recovery.DTOs.ResponsesDTO.Ayda;
 using sky.recovery.DTOs.RequestDTO.Insurance;
 using sky.recovery.DTOs.ResponsesDTO.Asuransi;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using sky.recovery.Entities;
 
 namespace sky.recovery.Services
 {
@@ -90,7 +91,7 @@ namespace sky.recovery.Services
                     Plafond = es.Plafond.ToString()
                 }).ToListAsync();
 
-                var DataAsuransi = await _skyRecovery.Insurances.Where(es => es.Asuransiid == Entity.AsuransiId).Select(es => new DetailAsuransi
+                var DataAsuransi = await _skyRecovery.Insurances.Where(es => es.Id == Entity.AsuransiId).Select(es => new DetailAsuransi
                 {
                     createddated=es.Createddated.ToString(),
                     nopk=es.Nopk,
@@ -121,7 +122,7 @@ namespace sky.recovery.Services
                 Collection["DataNasabah"] = new List<dynamic>();
                 Collection["DataFiles"] = new List<dynamic>();
                 Collection["DataLoan"] = new List<dynamic>();
-                Collection["DataCollateral"] = new List<dynamic>();
+                Collection["DataAsuransi"] = new List<dynamic>();
 
 
                 Collection["DataNasabah"].Add(Nasabah);
@@ -178,73 +179,75 @@ namespace sky.recovery.Services
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
                 if (Entity.Data.AsuransiId!= null)// update draft
                 {
-                    var GetData = await _skyRecovery.Insurances.Where(es => es.Id == Entity.Data.AsuransiId && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
-                    if (_aydahelper.IsDraft(GetData.Statusid) == true)
+                    var GetData = await insurance.Where(es => es.Id== Entity.Data.AsuransiId && es.loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsDraft(GetData.statusid) == true)
                     {
                         wrap.Status = false;
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
                     }
 
-                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
-                    GetData.Namapejabat = Entity.Data.namapejabat;
-                    GetData.Jabatan = Entity.Data.pejabat;
-                    GetData.Nosertifikat = Entity.Data.nosertifikat;
-                    GetData.Tglsertifikat = Entity.Data.tglsertifikat;
-                    GetData.Nopk = Entity.Data.nopk;
-                    GetData.Nopolis = Entity.Data.nopolis;
-                    GetData.Tglpolis = Entity.Data.tglpolis;
-                    GetData.Nilaiklaim = Entity.Data.nilaiklaim;
-                    GetData.Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar;
-                    GetData.Nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga;
-                    GetData.Nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok;
-                    GetData.Bakidebitklaim = Entity.Data.bakidebitklaim;
-                    GetData.Catatanklaim = Entity.Data.catatanklaim;
-                    GetData.Catatanpolis = Entity.Data.catatanpolis;
-                    GetData.Keterangan = Entity.Data.keterangan;
-                    GetData.Permasalahan = Entity.Data.permasalahan;
+                    GetData.loanid= Entity.DataNasabahLoan.loanid;
+                    GetData.namapejabat = Entity.Data.namapejabat;
+                    GetData.jabatan= Entity.Data.pejabat;
+                    GetData.nosertifikat= Entity.Data.nosertifikat;
+                    GetData.tglsertifikat = Entity.Data.tglsertifikat;
+                    GetData.nopk= Entity.Data.nopk;
+                    GetData.nopolis = Entity.Data.nopolis;
+                    GetData.tglpolis = Entity.Data.tglpolis;
+                    GetData.nilaiklaim = Entity.Data.nilaiklaim;
+                    GetData.nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar;
+                    GetData.nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga;
+                    GetData.nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok;
+                    GetData.bakidebitklaim = Entity.Data.bakidebitklaim;
+                    GetData.catatanklaim = Entity.Data.catatanklaim;
+                    GetData.catatanpolis = Entity.Data.catatanpolis;
+                    GetData.keterangan = Entity.Data.keterangan;
+                    GetData.permasalahan = Entity.Data.permasalahan;
 
-                    GetData.Statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
-                    GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                    GetData.Lastupdateddated = DateTime.Now;
-                    GetData.Isactive = 1;
+                    GetData.statusid= status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.lastupdateddated = DateTime.Now;
+                    GetData.isactive= 1;
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
 
 
 
-                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Insurance").Select(es => es.Id).FirstOrDefaultAsync();
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AsuransiId, GetIdAyda, userid);
 
                 }
                 else
                 {
 
-                    Insfrastructures.Scafolding.SkyColl.Recovery.Insurance Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
+                    insurance Data = new insurance()
                     {
 
 
-                        Loanid = Entity.DataNasabahLoan.loanid,
-                        Namapejabat = Entity.Data.namapejabat,
-                        Jabatan = Entity.Data.pejabat,
-                        Nosertifikat = Entity.Data.nosertifikat,
-                        Tglsertifikat = Entity.Data.tglsertifikat,
-                        Nopk = Entity.Data.nopk,
-                        Nopolis = Entity.Data.nopolis,
-                        Tglpolis = Entity.Data.tglpolis,
-                        Nilaiklaim = Entity.Data.nilaiklaim,
-                        Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
-                        Nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga,
-                        Nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok,
-                        Bakidebitklaim = Entity.Data.bakidebitklaim,
-                        Catatanklaim = Entity.Data.catatanklaim,
-                        Catatanpolis = Entity.Data.catatanpolis,
-                        Keterangan = Entity.Data.keterangan,
-                        Permasalahan = Entity.Data.permasalahan,
-                        Isactive = 1,
-                        Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        Createddated = DateTime.Now
+                        loanid = Entity.DataNasabahLoan.loanid,
+                        namapejabat = Entity.Data.namapejabat,
+                        jabatan = Entity.Data.pejabat,
+                        nosertifikat = Entity.Data.nosertifikat,
+                        tglsertifikat = Entity.Data.tglsertifikat,
+                        nopk = Entity.Data.nopk,
+                        nopolis = Entity.Data.nopolis,
+                        tglpolis = Entity.Data.tglpolis,
+                        nilaiklaim = Entity.Data.nilaiklaim,
+                        nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
+                        nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga,
+                        nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok,
+                        bakidebitklaim= Entity.Data.bakidebitklaim,
+                        catatanklaim = Entity.Data.catatanklaim,
+                        catatanpolis = Entity.Data.catatanpolis,
+                        keterangan = Entity.Data.keterangan,
+                        permasalahan = Entity.Data.permasalahan,
+                        isactive = 1,
+                        createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        createddated = DateTime.Now
                     };
-                    await _skyRecovery.Insurances.AddAsync(Data);
+                    await insurance.AddAsync(Data);
+
+                    await SaveChangesAsync();
 
                     await SaveChangesAsync();
 
@@ -319,32 +322,34 @@ namespace sky.recovery.Services
                 }
                 else
                 {
-                    Insfrastructures.Scafolding.SkyColl.Recovery.Insurance Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
+                    insurance Data = new insurance()
                     {
 
                    
-                        Loanid= Entity.DataNasabahLoan.loanid,
-                        Namapejabat = Entity.Data.namapejabat,
-                        Jabatan = Entity.Data.pejabat,
-                        Nosertifikat = Entity.Data.nosertifikat,
-                        Tglsertifikat = Entity.Data.tglsertifikat,
-                        Nopk = Entity.Data.nopk,
-                        Nopolis = Entity.Data.nopolis,
-                        Tglpolis = Entity.Data.tglpolis,
-                        Nilaiklaim = Entity.Data.nilaiklaim,
-                        Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
-                        Nilaitunggakanbunga= Entity.Data.nilaitunggakanbunga,
-                        Nilaitunggakanpokok= Entity.Data.nilaitunggakanpokok,
-                        Bakidebitklaim= Entity.Data.bakidebitklaim,
-                        Catatanklaim = Entity.Data.catatanklaim,
-                        Catatanpolis= Entity.Data.catatanpolis,
-                        Keterangan=Entity.Data.keterangan,
-                        Permasalahan=Entity.Data.permasalahan,
-                        Isactive=1,
-                        Createdby=getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        Createddated=DateTime.Now
-                    };
-                    await _skyRecovery.Insurances.AddAsync(Data);
+                        loanid= Entity.DataNasabahLoan.loanid,
+                        namapejabat = Entity.Data.namapejabat,
+                        jabatan = Entity.Data.pejabat,
+                        nosertifikat = Entity.Data.nosertifikat,
+                        tglsertifikat = Entity.Data.tglsertifikat,
+                        nopk = Entity.Data.nopk,
+                        nopolis = Entity.Data.nopolis,
+                        tglpolis = Entity.Data.tglpolis,
+                        nilaiklaim = Entity.Data.nilaiklaim,
+                        nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
+                        nilaitunggakanbunga= Entity.Data.nilaitunggakanbunga,
+                        nilaitunggakanpokok= Entity.Data.nilaitunggakanpokok,
+                        bakidebitklaim= Entity.Data.bakidebitklaim,
+                        catatanklaim = Entity.Data.catatanklaim,
+                        catatanpolis= Entity.Data.catatanpolis,
+                        keterangan=Entity.Data.keterangan,
+                        permasalahan=Entity.Data.permasalahan,
+                        isactive=1,
+                        createdby=getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        createddated=DateTime.Now,
+                        statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault()
+
+                };
+                    await insurance.AddAsync(Data);
 
                     await SaveChangesAsync();
 

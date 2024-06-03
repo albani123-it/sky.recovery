@@ -23,10 +23,10 @@ namespace sky.recovery.Entities
         public string namapejabat { get; set; }
         public string jabatan { get; set; }
         public string nosertifikat { get; set; }
-        public DateTime? tglsertifikat { get; set; }
+        public string tglsertifikat { get; set; }
         public int? asuransiid { get; set; }
         public string nopolis { get; set; }
-        public DateTime? tglpolis { get; set; }
+        public string tglpolis { get; set; }
         public string nopk { get; set; }
         public decimal? nilaitunggakanpokok { get; set; }
         public decimal? nilaitunggakanbunga {get;set;}
@@ -35,7 +35,7 @@ namespace sky.recovery.Entities
         public decimal? nilaiklaim { get; set; }
         public decimal? nilaiklaimdibayar { get; set; }
         public int? asuransisisaklaimid { get; set; }
-        public decimal? bakidebetklaim { get; set; }
+        public decimal? bakidebitklaim { get; set; }
         public string catatanklaim { get; set; }
         public string permasalahan { get; set; }
         public int? statusid { get; set; }

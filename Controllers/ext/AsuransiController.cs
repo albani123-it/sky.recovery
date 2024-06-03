@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System;
 using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.DTOs.RequestDTO.Insurance;
+using sky.recovery.DTOs.ResponsesDTO.Asuransi;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -33,6 +34,135 @@ namespace sky.recovery.Controllers.ext
         _documentservices = documentservices;
         _workflowService = workflowService;
     }
+
+
+        //V2
+        [HttpPost("V2/CreateDraft")]
+        public async Task<ActionResult<GeneralResponses>> AsuransiDraft([FromBody] CreateAsuransiDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _asuransiservices.AsuransiDraft(GetUserAgent.UserAgent, Entity);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
+
+
+
+        //V2
+        [HttpPost("V2/GetDetail")]
+        public async Task<ActionResult<GeneralResponses>> GetDetail([FromBody] GetDetailAsuransiDTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+
+
+                    var GetData = await _asuransiservices.GetDetailAsuransi(Entity);
+                    wrap.Data = GetData.DataNasabah;
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.Status;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        [HttpPost("V2/CreateSubmit")]
+        public async Task<ActionResult<GeneralResponses>> AsuransiSubmit([FromBody] CreateAsuransiDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+
+
+                    var GetData = await _asuransiservices.AsuransiSubmit(GetUserAgent.UserAgent, Entity);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
 
 
         //V2
@@ -75,37 +205,7 @@ namespace sky.recovery.Controllers.ext
         }
 
 
-        //V2
-        [HttpPost("V2/GetDetail")]
-        public async Task<ActionResult<GeneralResponsesDictionaryV2>> GetDetail([FromBody] GetDetailAsuransiDTO Entity)
-
-        {
-            var wrap = _DataResponses.ReturnDictionary();
-
-            try
-            {
-                var GetData = await _asuransiservices.GetDetailAsuransi(Entity);
-                wrap.Status = GetData.Status;
-                wrap.Message = GetData.message;
-                wrap.Data = GetData.DataNasabah;
-                if (GetData.Status == true)
-                {
-                    return Ok(wrap);
-                }
-                else
-                {
-                    return BadRequest(wrap);
-                }
-
-            }
-
-            catch (Exception ex)
-            {
-                wrap.Message = ex.Message;
-                wrap.Status = false;
-                return StatusCode(500, wrap);
-            }
-        }
+      
 
         //V2
         [HttpGet("V2/SetActive/{id:int}/{status:int}")]
