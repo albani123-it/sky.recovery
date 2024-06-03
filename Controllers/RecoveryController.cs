@@ -95,7 +95,8 @@ namespace sky.recovery.Controllers
         {
             try
             {
-                HttpContext.Request.Headers.TryGetValue("User-Agent", out StringValues authHeader);
+
+                HttpContext.Request.Headers.TryGetValue("UserAgent", out StringValues authHeader);
                 string headerValue = authHeader.FirstOrDefault();
                 return (true, headerValue);
             }

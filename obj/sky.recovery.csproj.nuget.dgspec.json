@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj": {}
+    "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj": {}
   },
   "projects": {
-    "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj": {
+    "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj",
+        "projectUniqueName": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj",
         "projectName": "sky.recovery",
-        "projectPath": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\sky.recovery.csproj",
-        "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "D:\\Project\\SKYPROJECT\\NEWRECOVERY\\sky.recovery\\obj\\",
+        "projectPath": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj",
+        "packagesPath": "C:\\Users\\syahm\\.nuget\\packages\\",
+        "outputPath": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\syahm\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,6 +34,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -128,7 +133,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204\\RuntimeIdentifierGraph.json"
         }
       }
     }
