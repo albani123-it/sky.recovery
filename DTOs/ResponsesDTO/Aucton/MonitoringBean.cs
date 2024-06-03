@@ -2,6 +2,8 @@
 {
     public class MonitoringBean
     {
+        public int? customerid { get; set; }
+        public int asuransiid { get; set; }
         public int loanid { get; set; }
         public string noaccount { get; set; }
         public string cif { get; set; }

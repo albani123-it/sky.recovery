@@ -1,5 +1,6 @@
 ﻿namespace sky.recovery.DTOs.RequestDTO.Ayda
 {
+    
     public class GetDetailAydaDTO
     {
         public int AydaId { get; set; }

@@ -164,7 +164,7 @@ namespace sky.recovery.Services
                    
                      
                     var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
-                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,GetIdAyda,Entity.User.UserId);
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,GetIdAyda,userid);
 
                 }
                 else
@@ -192,7 +192,7 @@ namespace sky.recovery.Services
                     await SaveChangesAsync();
 
                     var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
-                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid, Data.id, Entity.User.UserId);
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid, GetIdAyda, userid);
 
                 }
 

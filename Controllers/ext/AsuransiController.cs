@@ -4,6 +4,8 @@ using sky.recovery.Responses;
 using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.DTOs.RequestDTO.Ayda;
+using sky.recovery.DTOs.RequestDTO.Insurance;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -34,15 +36,18 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Monitoring/{userid}")]
+        [HttpGet("V2/Monitoring")]
         public async Task<ActionResult<GeneralResponses>> Monitoring(string userid)
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _asuransiservices.InsuranceMonitoring(userid);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _asuransiservices.InsuranceMonitoring(userid);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -50,6 +55,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }
@@ -59,6 +71,39 @@ namespace sky.recovery.Controllers.ext
                 wrap.Message = ex.Message;
                 wrap.Status = false;
                 return BadRequest(wrap);
+            }
+        }
+
+
+        //V2
+        [HttpPost("V2/GetDetail")]
+        public async Task<ActionResult<GeneralResponsesDictionaryV2>> GetDetail([FromBody] GetDetailAsuransiDTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+
+            try
+            {
+                var GetData = await _asuransiservices.GetDetailAsuransi(Entity);
+                wrap.Status = GetData.Status;
+                wrap.Message = GetData.message;
+                wrap.Data = GetData.DataNasabah;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
             }
         }
 
@@ -91,15 +136,17 @@ namespace sky.recovery.Controllers.ext
             }
         }
         //V2
-        [HttpGet("V2/TaskList/{userid}")]
+        [HttpGet("V2/TaskList")]
         public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
 
         {
             var wrap = _DataResponses.Return();
-
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
             try
             {
-                var GetData = await _asuransiservices.InsuranceTaskList(userid);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _asuransiservices.InsuranceTaskList(userid);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -107,6 +154,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }

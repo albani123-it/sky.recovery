@@ -10,11 +10,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using sky.recovery.DTOs.WorkflowDTO;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
+using sky.recovery.DTOs.RequestDTO.Ayda;
+using sky.recovery.DTOs.ResponsesDTO.Ayda;
+using sky.recovery.DTOs.RequestDTO.Insurance;
+using sky.recovery.DTOs.ResponsesDTO.Asuransi;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class AsuransiServices : SkyCoreConfig, IAsuransiServices
     {
+        Insfrastructures.Scafolding.SkyColl.Public.skycollContext _sky = new Insfrastructures.Scafolding.SkyColl.Public.skycollContext();
+        Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _skyRecovery = new Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
 
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
@@ -36,6 +44,105 @@ namespace sky.recovery.Services
 
         }
 
+        //GET DETAIL AYDA
+        public async Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAsuransi(GetDetailAsuransiDTO
+            Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var Nasabah = await _sky.MasterCustomers.Where(es => es.Id == Entity.CustomerId).Select(
+                   es => new NasabahAsuransiDTO
+                   {
+                       Nama = es.CuName,
+                       Address = es.CuAddress,
+                       KTP = es.CuIdnumber,
+                       CuCif = es.CuCif,
+                       BranchId = es.BranchId,
+                       Branch = _sky.Branches.Where(x => x.LbrcId == es.BranchId).Select(es => es.LbrcName).FirstOrDefault(),
+                       AccNo = _sky.MasterLoans.Where(es => es.Id == Entity.LoanId).Select(es => es.AccNo).FirstOrDefault()
+
+                   }
+                   ).ToListAsync();
+
+                var Files = await _skyRecovery.masterrepository.Where(es => es.Requestid == Entity.AsuransiId && es.Isactive == 1).Select(
+                   es => new RepoAsuransiDTO
+                   {
+                       Id = es.Id,
+                       url = es.Fileurl,
+                       urlname = es.Filename,
+                       uploaddated = es.Uploaddated.ToString(),
+                       doctype = es.Doctype
+
+                   }
+                   ).ToListAsync();
+
+                var DataLoan = await _sky.MasterLoans.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAsuransiDTO
+                {
+                    loanid = es.Id,
+                    Fasilitas = es.Fasilitas,
+                    Tenor = es.Tenor.ToString(),
+                    LoanType = _sky.Rfproducts.Where(x => x.PrdId == es.Product).Select(es => es.PrdDesc).FirstOrDefault(),
+                    Plafond = es.Plafond.ToString()
+                }).ToListAsync();
+
+                var DataAsuransi = await _skyRecovery.Insurances.Where(es => es.Asuransiid == Entity.AsuransiId).Select(es => new DetailAsuransi
+                {
+                    createddated=es.Createddated.ToString(),
+                    nopk=es.Nopk,
+                    nopolis=es.Nopolis,
+                    NamaPejabat=es.Namapejabat,
+                    Jabatan=es.Jabatan,
+                    NoSertifikat=es.Nosertifikat,
+                    TglSertifikat=es.Tglsertifikat,
+                    nilaiklaim=es.Nilaiklaim,
+                    nilaitunggakanbunga=es.Nilaitunggakanbunga,
+                    nilaiklaimdibayar=es.Nilaiklaimdibayar,
+                    nilaitunggakanpokok=es.Nilaitunggakanpokok,
+                    asuransisisaklaimid=es.Asuransisisaklaimid,
+                    bakidebitklaim=es.Bakidebitklaim,
+                    catatanklaim=es.Catatanklaim,
+                    permasalahan=es.Permasalahan,
+                    catatanpolis=es.Catatanpolis,
+                    keterangan=es.Keterangan,
+                    statusid=es.Statusid,
+                    tglpolis=es.Tglpolis,
+                    
+
+
+                }).ToListAsync();
+
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+                Collection["DataNasabah"] = new List<dynamic>();
+                Collection["DataFiles"] = new List<dynamic>();
+                Collection["DataLoan"] = new List<dynamic>();
+                Collection["DataCollateral"] = new List<dynamic>();
+
+
+                Collection["DataNasabah"].Add(Nasabah);
+                Collection["DataFiles"].Add(Files);
+                Collection["DataLoan"].Add(DataLoan);
+                Collection["DataAsuransi"].Add(DataAsuransi);
+
+
+
+                return (true, "OK", Collection);
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return (false, ex.Message, null);
+            }
+        }
+
+
         public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
         {
             try
@@ -54,6 +161,210 @@ namespace sky.recovery.Services
                 return (ex.Message, false);
             }
         }
+
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AsuransiSubmit(string userid, CreateAsuransiDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            var getCallBy = await _User.GetDataUser(userid);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+
+                //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
+                if (Entity.Data.AsuransiId!= null)// update draft
+                {
+                    var GetData = await _skyRecovery.Insurances.Where(es => es.Id == Entity.Data.AsuransiId && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsDraft(GetData.Statusid) == true)
+                    {
+                        wrap.Status = false;
+                        wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
+                    }
+
+                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
+                    GetData.Namapejabat = Entity.Data.namapejabat;
+                    GetData.Jabatan = Entity.Data.pejabat;
+                    GetData.Nosertifikat = Entity.Data.nosertifikat;
+                    GetData.Tglsertifikat = Entity.Data.tglsertifikat;
+                    GetData.Nopk = Entity.Data.nopk;
+                    GetData.Nopolis = Entity.Data.nopolis;
+                    GetData.Tglpolis = Entity.Data.tglpolis;
+                    GetData.Nilaiklaim = Entity.Data.nilaiklaim;
+                    GetData.Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar;
+                    GetData.Nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga;
+                    GetData.Nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok;
+                    GetData.Bakidebitklaim = Entity.Data.bakidebitklaim;
+                    GetData.Catatanklaim = Entity.Data.catatanklaim;
+                    GetData.Catatanpolis = Entity.Data.catatanpolis;
+                    GetData.Keterangan = Entity.Data.keterangan;
+                    GetData.Permasalahan = Entity.Data.permasalahan;
+
+                    GetData.Statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Lastupdateddated = DateTime.Now;
+                    GetData.Isactive = 1;
+                    Entry(GetData).State = EntityState.Modified;
+                    await SaveChangesAsync();
+
+
+
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AsuransiId, GetIdAyda, userid);
+
+                }
+                else
+                {
+
+                    Insfrastructures.Scafolding.SkyColl.Recovery.Insurance Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
+                    {
+
+
+                        Loanid = Entity.DataNasabahLoan.loanid,
+                        Namapejabat = Entity.Data.namapejabat,
+                        Jabatan = Entity.Data.pejabat,
+                        Nosertifikat = Entity.Data.nosertifikat,
+                        Tglsertifikat = Entity.Data.tglsertifikat,
+                        Nopk = Entity.Data.nopk,
+                        Nopolis = Entity.Data.nopolis,
+                        Tglpolis = Entity.Data.tglpolis,
+                        Nilaiklaim = Entity.Data.nilaiklaim,
+                        Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
+                        Nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga,
+                        Nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok,
+                        Bakidebitklaim = Entity.Data.bakidebitklaim,
+                        Catatanklaim = Entity.Data.catatanklaim,
+                        Catatanpolis = Entity.Data.catatanpolis,
+                        Keterangan = Entity.Data.keterangan,
+                        Permasalahan = Entity.Data.permasalahan,
+                        Isactive = 1,
+                        Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated = DateTime.Now
+                    };
+                    await _skyRecovery.Insurances.AddAsync(Data);
+
+                    await SaveChangesAsync();
+
+
+                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Insurance").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AsuransiId, GetIdAyda, userid);
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AsuransiDraft(string userid, CreateAsuransiDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            var getCallBy = await _User.GetDataUser(userid);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
+                if (Entity.Data.AsuransiId != null)// update draft
+                {
+                    var GetData = await _skyRecovery.Insurances.Where(es => es.Id == Entity.Data.AsuransiId &&
+                    es.Loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsRequested(GetData.Statusid) == true)
+                    {
+                        wrap.Status = false;
+                        wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
+                    }
+
+                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
+                        GetData.Namapejabat = Entity.Data.namapejabat;
+                    GetData.Jabatan = Entity.Data.pejabat;
+                    GetData.Nosertifikat = Entity.Data.nosertifikat;
+                    GetData.Tglsertifikat = Entity.Data.tglsertifikat;
+                    GetData.Nopk = Entity.Data.nopk;
+                    GetData.Nopolis = Entity.Data.nopolis;
+                    GetData.Tglpolis = Entity.Data.tglpolis;
+                    GetData.Nilaiklaim = Entity.Data.nilaiklaim;
+                    GetData.Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar;
+                    GetData.Nilaitunggakanbunga = Entity.Data.nilaitunggakanbunga;
+                    GetData.Nilaitunggakanpokok = Entity.Data.nilaitunggakanpokok;
+                    GetData.Bakidebitklaim = Entity.Data.bakidebitklaim;
+                    GetData.Catatanklaim = Entity.Data.catatanklaim;
+                    GetData.Catatanpolis = Entity.Data.catatanpolis;
+                    GetData.Keterangan = Entity.Data.keterangan;
+                    GetData.Permasalahan = Entity.Data.permasalahan;
+
+                    GetData.Statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Lastupdateddated = DateTime.Now;
+                    GetData.Isactive = 1;
+                    Entry(GetData).State = EntityState.Modified;
+                    await SaveChangesAsync();
+
+
+                }
+                else
+                {
+                    Insfrastructures.Scafolding.SkyColl.Recovery.Insurance Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
+                    {
+
+                   
+                        Loanid= Entity.DataNasabahLoan.loanid,
+                        Namapejabat = Entity.Data.namapejabat,
+                        Jabatan = Entity.Data.pejabat,
+                        Nosertifikat = Entity.Data.nosertifikat,
+                        Tglsertifikat = Entity.Data.tglsertifikat,
+                        Nopk = Entity.Data.nopk,
+                        Nopolis = Entity.Data.nopolis,
+                        Tglpolis = Entity.Data.tglpolis,
+                        Nilaiklaim = Entity.Data.nilaiklaim,
+                        Nilaiklaimdibayar = Entity.Data.nilaiklaimdibayar,
+                        Nilaitunggakanbunga= Entity.Data.nilaitunggakanbunga,
+                        Nilaitunggakanpokok= Entity.Data.nilaitunggakanpokok,
+                        Bakidebitklaim= Entity.Data.bakidebitklaim,
+                        Catatanklaim = Entity.Data.catatanklaim,
+                        Catatanpolis= Entity.Data.catatanpolis,
+                        Keterangan=Entity.Data.keterangan,
+                        Permasalahan=Entity.Data.permasalahan,
+                        Isactive=1,
+                        Createdby=getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated=DateTime.Now
+                    };
+                    await _skyRecovery.Insurances.AddAsync(Data);
+
+                    await SaveChangesAsync();
+
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsuranceTaskList(string UserId)
         {
@@ -80,6 +391,8 @@ namespace sky.recovery.Services
                 var ReturnData = await insurance.Include(i => i.master_loan).Where(es => es.statusid == 11).Select(
                     es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
                     {
+                        asuransiid=es.Id,
+                        customerid=es.master_loan.customer_id,
                         branch = es.master_loan.master_customer.branch.lbrc_name,
                         noaccount = es.master_loan.acc_no,
                         cif = es.master_loan.cu_cif,
@@ -130,6 +443,8 @@ namespace sky.recovery.Services
                 var ReturnData = await insurance.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
                     es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
                     {
+                        asuransiid=es.Id,
+                        customerid=es.master_loan.customer_id,
                         branch = es.master_loan.master_customer.branch.lbrc_name,
                         noaccount = es.master_loan.acc_no,
                         cif = es.master_loan.cu_cif,
