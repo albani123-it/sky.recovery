@@ -331,7 +331,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(ConfigAnalisaRestruktureDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigAnalisaRestrukture(string userid,ConfigAnalisaRestruktureDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();
@@ -339,7 +339,7 @@ namespace sky.recovery.Services
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.userid);
+                var getCallBy = await _User.GetDataUser(userid);
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 //{
@@ -380,11 +380,25 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status,string message, List<dynamic> Data)> GetMasterStatus()
+        {
+            var ListData = new List<dynamic>();
+            try
+            {
+                var Data = await _collContext.Statuses.ToListAsync();
+                ListData.Add(Data);
+                return (true, "OK", ListData);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message,null);
+            }
+        }
 
 
         //SERVICE YANG DIPAKAI
         //MONITORING RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigPolaRestrukture(AddPolaDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> ConfigPolaRestrukture(string userid,AddPolaDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var SkyCollConsString = GetSkyCollConsString();
@@ -392,7 +406,7 @@ namespace sky.recovery.Services
             try
             {
 
-                var getCallBy = await _User.GetDataUser(Entity.userid);
+                var getCallBy = await _User.GetDataUser(userid);
                
                
                     //insert

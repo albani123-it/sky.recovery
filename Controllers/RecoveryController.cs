@@ -29,11 +29,11 @@ namespace sky.recovery.Controllers
         private IRestrukturServices _recoveryService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RecoveryController()
+        public RecoveryController(IRestrukturServices recoveryService)
         {
             //_aydaservices = aydaservice;
             //_auctionservice = auctionservice;
-            //_recoveryService = recoveryService;
+            _recoveryService = recoveryService;
         }
 
 
@@ -184,6 +184,38 @@ namespace sky.recovery.Controllers
             }
         }
 
+
+        [HttpGet("GetMasterStatus")]
+        public async Task<ActionResult<GeneralResponses>> GetMasterStatus()
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.GetMasterStatus();
+                wrap.Message = GetData.message;
+                wrap.Status = GetData.Status;
+                wrap.Data = GetData.Data;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var Return = new GeneralResponses()
+                {
+                    Message = ex.Message,
+                    Error = true
+                };
+                return StatusCode(500,Return);
+            }
+        }
 
     }
 }

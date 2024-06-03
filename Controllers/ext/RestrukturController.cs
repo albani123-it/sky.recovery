@@ -28,7 +28,7 @@ namespace sky.recovery.Controllers.ext
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturController(IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base( )
+        public RestrukturController(IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
         {
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
@@ -392,10 +392,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.ConfigPolaRestrukture(Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.ConfigPolaRestrukture(GetUserAgent.UserAgent, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -404,6 +407,14 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);
                 }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
 
             }
 
@@ -463,10 +474,13 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.ConfigAnalisaRestrukture(Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _recoveryService.ConfigAnalisaRestrukture(GetUserAgent.UserAgent, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -474,6 +488,13 @@ namespace sky.recovery.Controllers.ext
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }

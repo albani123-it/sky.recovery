@@ -21,7 +21,7 @@ namespace sky.recovery.Controllers.ext
 
     ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-    public AuctionController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base()
+    public AuctionController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
     {
             _auctionservice = auctionservice;
         _recoveryService = recoveryService;
