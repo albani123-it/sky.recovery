@@ -19,6 +19,7 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> SearchingMonitoringRestruktur(SearchingRestrukturDTO Entity);
         public Task<(bool Status, string message, List<dynamic>Data)> GetMasterStatus();
+        public Task<(bool Status, string Message, List<dynamic> Data)> GetFiturId();
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> CreateDraftRestrukture(string userid, AddRestructureDTO Entity);
         public Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan);

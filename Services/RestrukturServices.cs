@@ -75,6 +75,20 @@ namespace sky.recovery.Services
         }
 
       
+        public async Task<(bool Status,string Message, List<dynamic>Data)> GetFiturId()
+        {
+            var ListData = new List<dynamic>();
+            try
+            {
+                var Data = await _recoveryContext.Generalparamdetails.Where(ES=>ES.Descriptions=="Fitur").ToListAsync();
+                ListData.Add(Data);
+                return (true, "OK", ListData);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
         public async Task<(bool Status,string Message, Dictionary<string,List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try

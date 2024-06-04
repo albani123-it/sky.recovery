@@ -16,6 +16,8 @@ using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Crypto.Parameters;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using sky.recovery.Model;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Controllers
 {
@@ -96,6 +98,36 @@ namespace sky.recovery.Controllers
         //    }
         //}
 
+
+        [HttpGet("GetFiturId")]
+        public async Task<ActionResult<GeneralResponses>> GetFiturId()
+        {
+            var wrap = _DataResponses.Return();
+            try
+            {
+                var Data = await _recoveryService.GetFiturId();
+                wrap.Data = Data.Data;
+                wrap.Message = Data.Message;
+                wrap.Status = Data.Status;
+                if(Data.Status==true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+            }
+            catch(Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
+
+
+        [HttpGet("GetUserAgent")]
         public async Task<(bool Status,int code, string Message,string UserAgent)> GetUserAgents()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
