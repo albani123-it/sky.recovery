@@ -19,13 +19,14 @@ using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 using sky.recovery.DTOs.RequestDTO.CommonDTO;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using System.Reflection.Metadata;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class AydaServices : SkyCoreConfig, IAydaServices
     {
-        skycollContext _sky = new skycollContext();
-        Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _skyRecovery = new Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext _sky = new Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _skyRecovery= new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
 
         private IDocServices _DocService { get; set; }
         private IUserService _User { get; set; }
@@ -60,7 +61,7 @@ namespace sky.recovery.Services
 
             try
             {
-                var getdata = await _sky.MasterLoans.AsNoTracking().Where(es => es.Dpd > 90).ToListAsync();
+                var getdata = await _sky.MasterLoan.AsNoTracking().Where(es => es.Dpd > 90).ToListAsync();
                 ListData.Add(getdata);
                 wrap.Status = true;
                 wrap.Message = "OK";
@@ -137,62 +138,62 @@ namespace sky.recovery.Services
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
                 if (Entity.Data.aydaid != null)// update draft
                 {
-                    var GetData = await ayda.Where(es => es.id == Entity.Data.aydaid && es.loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
-                    if(_aydahelper.IsDraft(GetData.statusid)==true )
+                    var GetData = await _skyRecovery.Ayda.Where(es => es.Id== Entity.Data.aydaid && es.Loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if(_aydahelper.IsDraft(GetData.Statusid)==true )
                     {
                         wrap.Status = false;
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
                     }
                     
-                    GetData.loanid = Entity.DataNasabahLoan.loanid;
-                    GetData.mstbranchid = Entity.DataNasabahLoan.BranchId;
-                    GetData.hubunganbankid = Entity.Data.bankid;
-                    GetData.tglambilalih = Entity.Data.tglambilalih;
-                    GetData.kualitas = Entity.Data.kualitas;
-                    GetData.nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok;
-                    GetData.nilaimargin = Entity.Data.nilaimargin;
-                    GetData.nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan;
-                    GetData.perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
-                    GetData.ppa = Entity.Data.ppa;
-                    GetData.jumlahayda = Entity.Data.jumlahayda;
-                    GetData.statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
-                    GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                    GetData.lastupdatedate = DateTime.Now;
-                    GetData.isactive = 1;
+                    GetData.Loanid= Entity.DataNasabahLoan.loanid;
+                    GetData.Mstbranchid = Entity.DataNasabahLoan.BranchId;
+                    GetData.Hubunganbankid = Entity.Data.bankid;
+                    GetData.Tglambilalih = Entity.Data.tglambilalih;
+                    GetData.Kualitas= Entity.Data.kualitas;
+                    GetData.Nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok;
+                    GetData.Nilaimargin= Entity.Data.nilaimargin;
+                    GetData.Nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan;
+                    GetData.Perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
+                    GetData.Ppa= Entity.Data.ppa;
+                    GetData.Jumlahayda = Entity.Data.jumlahayda;
+                    GetData.Statusid=_sky.Status.Where(es => es.StsName == "REVIEW").Select(es => es.StsId).FirstOrDefault();
+                    GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Lastupdatedate = DateTime.Now;
+                    GetData.Isactive= 1;
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
                    
                      
-                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
-                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,GetIdAyda,userid);
+                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,(int?)GetIdAyda,userid);
 
                 }
                 else
                 {
-                    var Data = new ayda()
+                    var Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Ayda()
                     {
-                        loanid = Entity.DataNasabahLoan.loanid,
-                        mstbranchid = Entity.DataNasabahLoan.BranchId,
-                        hubunganbankid = Entity.Data.bankid,
-                        tglambilalih = Entity.Data.tglambilalih,
-                        kualitas = Entity.Data.kualitas,
-                        nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok,
-                        nilaimargin = Entity.Data.nilaimargin,
-                        isactive = 1,
-                        nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan,
-                        perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
-                        ppa = Entity.Data.ppa,
-                        jumlahayda = Entity.Data.jumlahayda,
-                        statusid = status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault(),
-                        createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        createddated = DateTime.Now,
+                        Loanid = Entity.DataNasabahLoan.loanid,
+                        Mstbranchid = Entity.DataNasabahLoan.BranchId,
+                        Hubunganbankid = Entity.Data.bankid,
+                        Tglambilalih = Entity.Data.tglambilalih,
+                        Kualitas = Entity.Data.kualitas,
+                        Nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok,
+                        Nilaimargin = Entity.Data.nilaimargin,
+                        Isactive = 1,
+                        Nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan,
+                        Perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
+                        Ppa= Entity.Data.ppa,
+                        Jumlahayda = Entity.Data.jumlahayda,
+                        Statusid= _sky.Status.Where(es => es.StsName == "REVIEW").Select(es => es.StsId).FirstOrDefault(),
+                        Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated= DateTime.Now,
                         
                     };
-                    await ayda.AddAsync(Data);
+                    await _skyRecovery.Ayda.AddAsync(Data);
                     await SaveChangesAsync();
 
-                    var GetIdAyda = await generalparamdetail.Where(es => es.title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
-                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid, GetIdAyda, userid);
+                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,(int?) GetIdAyda, userid);
 
                 }
 
@@ -226,27 +227,27 @@ namespace sky.recovery.Services
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
                 if(Entity.Data.aydaid!=null)// update draft
                 {
-                    var GetData = await ayda.Where(es => es.id == Entity.Data.aydaid && es.loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
-                    if (_aydahelper.IsRequested(GetData.statusid)==true)
+                    var GetData = await _skyRecovery.Ayda.Where(es => es.Id == Entity.Data.aydaid && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsRequested(GetData.Statusid)==true)
                     {
                         wrap.Status = false;
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
                     }
-                    GetData.loanid = Entity.DataNasabahLoan.loanid;
-                    GetData.mstbranchid = Entity.DataNasabahLoan.BranchId;
-                    GetData.hubunganbankid = Entity.Data.bankid;
-                    GetData.tglambilalih = Entity.Data.tglambilalih;
-                    GetData.kualitas = Entity.Data.kualitas;
-                    GetData.nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok;
-                    GetData.nilaimargin = Entity.Data.nilaimargin;
-                    GetData.nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan;
-                    GetData.perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
-                    GetData.ppa = Entity.Data.ppa;
-                    GetData.jumlahayda = Entity.Data.jumlahayda;
-                    GetData.statusid = status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault();
-                    GetData.createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                    GetData.lastupdatedate = DateTime.Now;
-                    GetData.isactive = 1;
+                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
+                    GetData.Mstbranchid = Entity.DataNasabahLoan.BranchId;
+                    GetData.Hubunganbankid = Entity.Data.bankid;
+                    GetData.Tglambilalih= Entity.Data.tglambilalih;
+                    GetData.Kualitas= Entity.Data.kualitas;
+                    GetData.Nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok;
+                    GetData.Nilaimargin= Entity.Data.nilaimargin;
+                    GetData.Nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan;
+                    GetData.Perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
+                    GetData.Ppa= Entity.Data.ppa;
+                    GetData.Jumlahayda = Entity.Data.jumlahayda;
+                    GetData.Statusid= _sky.Status.Where(es => es.StsName== "DRAFT").Select(es => es.StsId).FirstOrDefault();
+                    GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Lastupdatedate = DateTime.Now;
+                    GetData.Isactive= 1;
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
 
@@ -254,25 +255,25 @@ namespace sky.recovery.Services
                 }
                 else
                 {
-                    var Data = new ayda()
+                    var Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Ayda()
                     {
-                        loanid = Entity.DataNasabahLoan.loanid,
-                        mstbranchid = Entity.DataNasabahLoan.BranchId,
-                        hubunganbankid = Entity.Data.bankid,
-                        tglambilalih = Entity.Data.tglambilalih,
-                        kualitas = Entity.Data.kualitas,
-                        nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok,
-                        nilaimargin = Entity.Data.nilaimargin,
-                        nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan,
-                        perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
-                        ppa = Entity.Data.ppa,
-                        jumlahayda = Entity.Data.jumlahayda,
-                        statusid = status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault(),
-                        createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                        createddated = DateTime.Now,
-                        isactive=1
+                        Loanid = Entity.DataNasabahLoan.loanid,
+                        Mstbranchid = Entity.DataNasabahLoan.BranchId,
+                        Hubunganbankid = Entity.Data.bankid,
+                        Tglambilalih = Entity.Data.tglambilalih,
+                        Kualitas= Entity.Data.kualitas,
+                        Nilaipembiayaanpokok = Entity.Data.nilaipembiayaanpokok,
+                        Nilaimargin= Entity.Data.nilaimargin,
+                        Nilaiperolehanagunan = Entity.Data.nilaiperolehanagunan,
+                        Perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
+                        Ppa= Entity.Data.ppa,
+                        Jumlahayda= Entity.Data.jumlahayda,
+                        Statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault(),
+                        Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated= DateTime.Now,
+                        Isactive=1
                     };
-                    await ayda.AddAsync(Data);
+                    await _skyRecovery.Ayda.AddAsync(Data);
                     await SaveChangesAsync();
 
                     
@@ -478,7 +479,7 @@ namespace sky.recovery.Services
             try
             {
 
-                var  Nasabah = await _sky.MasterCustomers.Where(es => es.Id == Entity.CustomerId).Select(
+                var  Nasabah = await _sky.MasterCustomer.Where(es => es.Id == Entity.CustomerId).Select(
                    es => new NasabahAydaDTO
                    {
                       Nama=es.CuName,
@@ -486,13 +487,13 @@ namespace sky.recovery.Services
                       KTP=es.CuIdnumber,
                       CuCif=es.CuCif,
                       BranchId=es.BranchId,
-                      Branch=_sky.Branches.Where(x=>x.LbrcId==es.BranchId).Select(es=>es.LbrcName).FirstOrDefault(),
-                      AccNo=_sky.MasterLoans.Where(es=>es.Id==Entity.LoanId).Select(es=>es.AccNo).FirstOrDefault()
+                      Branch=_sky.Branch.Where(x=>x.LbrcId==es.BranchId).Select(es=>es.LbrcName).FirstOrDefault(),
+                      AccNo=_sky.MasterLoan.Where(es=>es.Id==Entity.LoanId).Select(es=>es.AccNo).FirstOrDefault()
 
                    }
                    ).ToListAsync();
 
-                var Files = await _skyRecovery.masterrepository.Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
+                var Files = await _skyRecovery.Masterrepository.Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
                    es => new RepoAydaDTO
                    {
                       Id=es.Id,
@@ -504,12 +505,12 @@ namespace sky.recovery.Services
                    }
                    ).ToListAsync();
 
-                var DataLoan = await _sky.MasterLoans.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAydaDTO
+                var DataLoan = await _sky.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAydaDTO
                 {
                     loanid=es.Id,
                     Fasilitas=es.Fasilitas,
                     Tenor=es.Tenor.ToString(),
-                    LoanType=_sky.Rfproducts.Where(x=>x.PrdId==es.Product).Select(es=>es.PrdDesc).FirstOrDefault(),
+                    LoanType=_sky.Rfproduct.Where(x=>x.PrdId==es.Product).Select(es=>es.PrdDesc).FirstOrDefault(),
                     Plafond=es.Plafond.ToString()
                 }).ToListAsync();
 

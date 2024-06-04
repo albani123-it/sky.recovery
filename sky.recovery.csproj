@@ -36,6 +36,7 @@
   <ItemGroup>
     <Folder Include="dbReplace\" />
     <Folder Include="DTOs\RequestDTO\WriteOff\" />
+    <Folder Include="Insfrastructures\Scafolding\SkyColl\Rule\" />
     <Folder Include="Insfrastructures\Scafolding\SkyColl\Public\" />
     <Folder Include="Insfrastructures\Scafolding\SkyCore\Public\" />
     <Folder Include="wwwroot\Documents\" />

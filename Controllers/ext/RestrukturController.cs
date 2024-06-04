@@ -669,6 +669,39 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
+        [HttpGet("V2/RemoveDoc/{id:int}")]
+        public async Task<ActionResult<GeneralResponses>> RemoveDoc(int id)
+
+        {
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                var GetData = await _recoveryService.RemoveDocRestrukture(id);
+                wrap.Message = GetData.message;
+                wrap.Status = GetData.Status;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500,wrap);
+            }
+        }
+
+
+
+        //V2
         [HttpPost("V2/Detail/Documents")]
         public async Task<ActionResult<GeneralResponses>> DetailDocuments([FromBody] GetDocumentRestruktureDTO Entity)
 

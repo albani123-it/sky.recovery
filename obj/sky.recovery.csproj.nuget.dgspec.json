@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj": {}
+    "D:\\SKY.RECOVERY\\NEW.Sky.Recovery\\sky.recovery\\sky.recovery\\sky.recovery.csproj": {}
   },
   "projects": {
-    "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj": {
+    "D:\\SKY.RECOVERY\\NEW.Sky.Recovery\\sky.recovery\\sky.recovery\\sky.recovery.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj",
+        "projectUniqueName": "D:\\SKY.RECOVERY\\NEW.Sky.Recovery\\sky.recovery\\sky.recovery\\sky.recovery.csproj",
         "projectName": "sky.recovery",
-        "projectPath": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\sky.recovery.csproj",
+        "projectPath": "D:\\SKY.RECOVERY\\NEW.Sky.Recovery\\sky.recovery\\sky.recovery\\sky.recovery.csproj",
         "packagesPath": "C:\\Users\\syahm\\.nuget\\packages\\",
-        "outputPath": "D:\\SKY.RECOVERY\\Sky.Recovery\\sky.recovery\\obj\\",
+        "outputPath": "D:\\SKY.RECOVERY\\NEW.Sky.Recovery\\sky.recovery\\sky.recovery\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\syahm\\AppData\\Roaming\\NuGet\\NuGet.Config",

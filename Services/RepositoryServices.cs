@@ -8,12 +8,13 @@ using System.IO;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 
 namespace sky.recovery.Services
 {
     public class RepositoryServices : IRepositoryServices
     {
-        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _RecoveryContext = new sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _RecoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
         private readonly IWebHostEnvironment _environment;
 
         private IUserService _User { get; set; }
@@ -28,7 +29,7 @@ namespace sky.recovery.Services
         {
             try
             {
-                var GetData = await _RecoveryContext.masterrepository.Where(es => es.Id == id).FirstOrDefaultAsync();
+                var GetData = await _RecoveryContext.Masterrepository.Where(es => es.Id == id).FirstOrDefaultAsync();
                 GetData.Isactive = 0;
                 _RecoveryContext.Entry(GetData).State = EntityState.Modified;
 
@@ -72,7 +73,7 @@ namespace sky.recovery.Services
                     //  return "\\Upload\\" + objFile.files.FileName;
                 }
                
-                var Data = new  Insfrastructures.Scafolding.SkyColl.Recovery.masterrepository()
+                var Data = new  Masterrepository()
                 {
                     Fiturid = Entity.FiturId,
                     Userid = getCallBy.Returns.Data.FirstOrDefault().iduser,
@@ -83,7 +84,7 @@ namespace sky.recovery.Services
                     Isactive = 1,
                     Doctype = Entity.DocType
                 };
-                await _RecoveryContext.masterrepository.AddAsync(Data);
+                await _RecoveryContext.Masterrepository.AddAsync(Data);
                 await _RecoveryContext.SaveChangesAsync();
 
                 return (true, "OK");

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 {
-    public partial class ayda
+    public partial class Ayda
     {
         public long Id { get; set; }
         public int? Loanid { get; set; }

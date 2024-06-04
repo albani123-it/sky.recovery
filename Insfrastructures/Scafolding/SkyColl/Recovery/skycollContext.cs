@@ -30,7 +30,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public virtual DbSet<Masterdocumenttype> Masterdocumenttypes { get; set; }
         public virtual DbSet<Masterflow> Masterflows { get; set; }
         public virtual DbSet<Masterlayoutposition> Masterlayoutpositions { get; set; }
-        public virtual DbSet<masterrepository> masterrepository { get; set; }
+        public virtual DbSet<Masterrepository> Masterrepository { get; set; }
         public virtual DbSet<Mastertemplate> Mastertemplates { get; set; }
         public virtual DbSet<Masterworkflow> Masterworkflows { get; set; }
         public virtual DbSet<Masterworkflowrule> Masterworkflowrules { get; set; }
@@ -454,7 +454,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Description).HasColumnName("description");
             });
 
-            modelBuilder.Entity<masterrepository>(entity =>
+            modelBuilder.Entity<Masterrepository>(entity =>
             {
                 entity.ToTable("masterrepository", "RecoveryBusinessV2");
 

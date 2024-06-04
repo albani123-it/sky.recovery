@@ -34,7 +34,7 @@ namespace sky.recovery.Services
 {
     public class RestrukturServices : PostgreSetting, IRestrukturServices
     {
-        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext _recoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.skycollContext();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _recoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
 
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Public.skycollContext _collContext = new Insfrastructures.Scafolding.SkyColl.Public.skycollContext();
 
@@ -59,12 +59,29 @@ namespace sky.recovery.Services
 
         }
 
+        public async Task<(bool Status,string message)> RemoveDocRestrukture(int id)
+        {
+            try
+            {
+                var Data = await _recoveryContext.Restrukturedokumen.Where(es => es.Id == id).FirstOrDefaultAsync();
+                Data.Isdeleted = 1;
+                _recoveryContext.Entry(Data).State = EntityState.Modified;
+                await _recoveryContext.SaveChangesAsync();
+
+                return (false, "OK");
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
         public async Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId)
         {
             var ListData = new List<dynamic>();
             try
             {
-                var Data = await _recoveryContext.Restructurecashflows.Where(es => es.Restruktureid == RestruktureId).ToListAsync();
+                var Data = await _recoveryContext.Restructurecashflow.Where(es => es.Restruktureid == RestruktureId).ToListAsync();
                 ListData.Add(Data);
                 return (true, "OK", ListData);
             }
@@ -80,7 +97,7 @@ namespace sky.recovery.Services
             var ListData = new List<dynamic>();
             try
             {
-                var Data = await _recoveryContext.Generalparamdetails.Where(ES=>ES.Descriptions=="Fitur").ToListAsync();
+                var Data = await _recoveryContext.Generalparamdetail.Where(ES=>ES.Descriptions=="Fitur").ToListAsync();
                 ListData.Add(Data);
                 return (true, "OK", ListData);
             }
@@ -137,10 +154,10 @@ namespace sky.recovery.Services
 
                 }).ToListAsync();
 
-                var DataPermasalahan = await _recoveryContext.Permasalahanrestruktures.Where(es => es.Restruktureid == restruktureid).ToListAsync();
+                var DataPermasalahan = await _recoveryContext.Permasalahanrestrukture.Where(es => es.Restruktureid == restruktureid).ToListAsync();
                 var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid).ToListAsync();
-                var Analisa = await _recoveryContext.Restructurecashflows.Where(es => es.Restruktureid == restruktureid).ToListAsync();
-                var PolaRestruk = await _recoveryContext.Restruktures.Where(es => es.Id == restruktureid).
+                var Analisa = await _recoveryContext.Restructurecashflow.Where(es => es.Restruktureid == restruktureid).ToListAsync();
+                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).
                     Select(es => new DetailPolaRestruk
                     {
                         keterangan=es.Keterangan,
@@ -188,7 +205,7 @@ namespace sky.recovery.Services
             var ListData = new List<dynamic>();
             try
             {
-                var Data = await _recoveryContext.Restruktures. 
+                var Data = await _recoveryContext.Restrukture. 
                     Where(es => es.Id == RestruktureId)
                     .Select(es => new GetPolaRestrukDTO
                     {
@@ -217,8 +234,8 @@ namespace sky.recovery.Services
                     Wraps.jenispenguranganid = x.jenispenguranganid;
                     Wraps.graceperiode = x.graceperiode;
                     Wraps.cabang = await _collContext.Branches.Where(es => es.LbrcId == x.branchid).Select(es => es.LbrcName).FirstOrDefaultAsync();
-                    Wraps.jenispengurangan = await _recoveryContext.Generalparamdetails.Where(es => es.Id == x.jenispenguranganid).Select(es => es.Title).FirstOrDefaultAsync();
-                    Wraps.pola = await _recoveryContext.Generalparamdetails.Where(es => es.Id == x.polaid).Select(es => es.Title).FirstOrDefaultAsync();
+                    Wraps.jenispengurangan = await _recoveryContext.Generalparamdetail.Where(es => es.Id == x.jenispenguranganid).Select(es => es.Title).FirstOrDefaultAsync();
+                    Wraps.pola = await _recoveryContext.Generalparamdetail.Where(es => es.Id == x.polaid).Select(es => es.Title).FirstOrDefaultAsync();
 
                     ListData.Add(Wraps);
                 };
