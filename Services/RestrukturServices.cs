@@ -28,6 +28,7 @@ using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using static Dapper.SqlMapper;
 
 namespace sky.recovery.Services
 {
@@ -73,6 +74,7 @@ namespace sky.recovery.Services
             }
         }
 
+      
         public async Task<(bool Status,string Message, Dictionary<string,List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try
@@ -133,9 +135,12 @@ namespace sky.recovery.Services
                         graceperiod=es.Graceperiode,
                         polaid=es.Polarestrukturid
                     }).ToListAsync();
-                
-              
+
+
                 var Collection = new Dictionary<string, List<dynamic>>();
+
+             
+
 
                 Collection["DataNasabah"] = new List<dynamic>();
                 Collection["DataLoan"] = new List<dynamic>();

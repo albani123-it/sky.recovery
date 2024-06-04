@@ -14,7 +14,7 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using System.Numerics;
 using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
-
+using OfficeOpenXml.Drawing.Controls;
 namespace sky.recovery.Services
 {
     public class WorkflowServices:SkyCoreConfig, IWorkflowServices
@@ -385,12 +385,61 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status, string message, Dictionary<string, List<dynamic>> DataWorkflow)> GetDetailWorkflow(GetDetailWFDTO Entity)
+        {
+            var Collection = new Dictionary<string, List<dynamic>>();
+            Collection["DataWorkflow"] = new List<dynamic>();
+            Collection["DataWorkflowHistory"] = new List<dynamic>();
+            try
+            {
+                var CheckingWF = await _RecoveryContext.Workflows.Where(es => es.Requestid == Entity.RequestId && es.Fiturid == Entity.FiturId).ToListAsync();
+                var DataMaxId = CheckingWF.Max(es => es.Id);
 
+                var DataWorkflow = CheckingWF.Where(es=>es.Id==DataMaxId).Select(es=>new WorkflowDetailDTO
+                {
+                    statusid=es.Status,
+                    Status=status.Where(x=>x.sts_id==es.Status).Select(es=>es.sts_name).FirstOrDefault(),
+                    actor=es.Actor,
+                    CreatedDated=es.Submitdated.ToString(),
+                    fiturid=es.Fiturid,
+                    fitur=generalparamdetail.Where(es=>es.Id==Entity.FiturId).Select(es=>es.title).FirstOrDefault(),
+                    flowid=es.Flowid,
+                    Id=es.Id,
+                    requestid=es.Requestid
+                }).ToList();
+              
+                Collection["DataWorkflow"].Add(DataWorkflow);
+                foreach (var x in CheckingWF)
+                {
+                    var DataWorkflowHistory = await _RecoveryContext.Workflowhistories.Where(es => es.Workflowid == x.Id).ToListAsync();
+                    var GetDataWorkflowHistory = DataWorkflowHistory.Select(es => new WorkflowHistoryDTO
+                    {
+                        statusid = es.Status,
+                        status = status.Where(x => x.sts_id == es.Status).Select(es => es.sts_name).FirstOrDefault(),
+                        actor = es.Actor,
+                        dated = es.Dated,
 
-            //SERVICE YANG DIPAKAI
-            //SERVICE YANG DIPAKAI
-            //TASKLIST RESTRUKTUR V2
-            public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitWorkflowStep(SubmitWorkflowDTO Entity)
+                        ActoredBy = null,
+                        reason = es.Reason,
+                        workflowid = es.Workflowid,
+                        id = es.Id
+
+                    }).ToList();
+                    Collection["DataWorkflowHistory"].Add(GetDataWorkflowHistory);
+
+                };
+                return (true, "OK", Collection);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
+
+        //SERVICE YANG DIPAKAI
+        //SERVICE YANG DIPAKAI
+        //TASKLIST RESTRUKTUR V2
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitWorkflowStep(SubmitWorkflowDTO Entity)
         {
             var wrap = _DataResponses.Return();
 

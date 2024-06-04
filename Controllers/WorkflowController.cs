@@ -50,6 +50,38 @@ namespace sky.recovery.Controllers
             }
         }
 
+
+        //V2
+        [HttpPost("V2/GetDetailWorkflow")]
+        public async Task<ActionResult<GeneralResponsesDictionaryV2>> GetDetailWorkflow([FromBody] GetDetailWFDTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+
+            try
+            {
+                var GetData = await _workflowService.GetDetailWorkflow(Entity);
+                wrap.Data = GetData.DataWorkflow;
+                wrap.Status = GetData.Status;
+                wrap.Message = GetData.message;
+                if (GetData.Status == true)
+                {
+                    return Ok(wrap);
+                }
+                else
+                {
+                    return BadRequest(wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500,wrap);
+            }
+        }
         //V2
         [HttpPost("V2/CallbackApproval")]
         public async Task<ActionResult<GeneralResponses>> CallbackApproval([FromBody] CallbackApprovalDTO Entity)
