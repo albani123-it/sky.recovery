@@ -526,14 +526,44 @@ namespace sky.recovery.Services
                     ppa = es.ppa.ToString(),
                     tglambilalih = es.tglambilalih
                 }).ToListAsync();
-
                 var Collection = new Dictionary<string, List<dynamic>>();
+
+                var CheckingDataWorkflow = await _skyRecovery.Workflows.Where(es => es.Requestid == Entity.AydaId).AnyAsync();
+                if(CheckingDataWorkflow == true)
+                {
+                    var DataWorkflow = await _skyRecovery.Workflows.Where(es => es.Requestid == Entity.AydaId).
+                        Select(es=> new WorkflowDetailDTO
+                        {
+                            statusid=es.Status,
+                            actor=es.Actor,
+                            fiturid=es.Fiturid,
+                            Id=es.Id,
+                            flowid=es.Flowid,
+                            requestid=es.Requestid,
+                            Status=null
+                            
+                        })
+                        .ToListAsync();
+                    var GetMaxId= DataWorkflow.Max(es => es.Id);
+                    var GetDataWorkflow = DataWorkflow.Where(es => es.Id == GetMaxId).ToList();
+                    Collection["DataWorkflow"] = new List<dynamic>();
+                    Collection["DataWorkflowHistory"] = new List<dynamic>();
+
+                    Collection["DataWorkflow"].Add(GetDataWorkflow);
+                    foreach(var x in DataWorkflow)
+                    {
+                        var GetWorkflowHistory = await _skyRecovery.Workflowhistories.Where(es=>es.Workflowid==x.Id).ToListAsync();
+                        Collection["DataWorkflowHistory"].Add(GetWorkflowHistory);
+
+                    };
+                }
+
 
                 Collection["DataNasabah"] = new List<dynamic>();
                 Collection["DataFiles"] = new List<dynamic>();
                 Collection["DataLoan"] = new List<dynamic>();
                 Collection["DataCollateral"] = new List<dynamic>();
-
+              
 
                 Collection["DataNasabah"].Add(Nasabah);
                 Collection["DataFiles"].Add(Files);
