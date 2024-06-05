@@ -15,7 +15,7 @@ namespace sky.recovery.Responses
        public List<dynamic> Data { get; set; }
 
     }
-
+   
     public class GeneralResponsesDictionaryV2
     {
         public bool? Status { get; set; }
@@ -106,6 +106,7 @@ namespace sky.recovery.Responses
     }
     public class ModellingGeneralResponsesV2
     {
+        
         public GeneralResponsesV2 Return()
         {
             var Data = new GeneralResponsesV2()

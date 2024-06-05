@@ -11,6 +11,9 @@ using sky.recovery.DTOs.RequestDTO.Restrukture;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using System.Linq;
+using System.IO;
+using System.Net.Mime;
+using sky.recovery.DTOs.RepositoryDTO;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -666,7 +669,7 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
-
+        
 
         //V2
         [HttpGet("V2/RemoveDoc/{id:int}")]

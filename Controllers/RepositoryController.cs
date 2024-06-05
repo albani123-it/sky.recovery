@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 using sky.recovery.DTOs.RequestDTO.CommonDTO;
+using System.Net.Mime;
 
 namespace sky.recovery.Controllers
 {
@@ -35,6 +36,35 @@ namespace sky.recovery.Controllers
             _documentservices = docservice;
         }
 
+        [HttpPost("download")]
+        public IActionResult DownloadFile([FromBody] DownloadDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            try
+            {
+                //var filePath = Path.Combine(_filePath, fileName);
+                var filePath = Entity.url;
+
+                if (!System.IO.File.Exists(filePath))
+                {
+                    wrap.Message = "File Not Exist";
+                    wrap.Status = false;
+                    return StatusCode(404, "File Not Found");
+                }
+
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    stream.CopyTo(memory);
+                }
+                memory.Position = 0;
+                return File(memory, MediaTypeNames.Application.Octet, Entity.filename);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         //V2
         //tidak baca sheet
