@@ -1,6 +1,7 @@
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\sky.recovery.exe
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\css\site.css
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\IT Technical Test .pdf.pdf
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\Lettersx.pdf.pdf
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\MM DOC.xlsx.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
