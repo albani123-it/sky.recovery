@@ -151,6 +151,103 @@ namespace sky.recovery.Services
         }
 
 
+        //GET DETAIL AYDA
+        public async Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAuction(GetDetailAuctionDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                var Nasabah = await _collContext.MasterCustomer.Where(es => es.Id == Entity.CustomerId).Select(
+                   es => new NasabahAuctionDTO
+                   {
+                       Nama = es.CuName,
+                       Address = es.CuAddress,
+                       KTP = es.CuIdnumber,
+                       CuCif = es.CuCif,
+                       BranchId = es.BranchId,
+                       Branch = _collContext.Branch.Where(x => x.LbrcId == es.BranchId).Select(es => es.LbrcName).FirstOrDefault(),
+                       AccNo = _collContext.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => es.AccNo).FirstOrDefault()
+
+                   }
+                   ).ToListAsync();
+
+                var Files = await _recoveryContext.Masterrepository.Where(es => es.Requestid == Entity.AuctionId && es.Isactive == 1).Select(
+                   es => new RepoAydaDTO
+                   {
+                       Id = es.Id,
+                       url = es.Fileurl,
+                       urlname = es.Filename,
+                       uploaddated = es.Uploaddated.ToString(),
+                       doctype = es.Doctype
+
+                   }
+                   ).ToListAsync();
+
+                var DataLoan = await _collContext.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAuctionDTO
+                {
+                    loanid = es.Id,
+                    Fasilitas = es.Fasilitas,
+                    Tenor = es.Tenor.ToString(),
+                    LoanType = _collContext.Rfproduct.Where(x => x.PrdId == es.Product).Select(es => es.PrdDesc).FirstOrDefault(),
+                    Plafond = es.Plafond.ToString()
+                }).ToListAsync();
+
+                var DataAuction = await _recoveryContext.Auction.Where(es => es.Id == Entity.AuctionId).Select(es => new DataAuction
+                {
+                   alasanlelangid=es.Alasanlelangid,
+                   nopk=es.Nopk,
+                   nilailimitlelang=es.Nilailimitlelang,
+                   uangjaminan=es.Uangjaminan,
+                   objeklelang=es.Objeklelang,
+                   keterangan=es.Keterangan,
+                   balailelangid=es.Balailelangid,
+                   jenislelangid=es.Jenislelangid,
+                   tatacaralelang=es.Tatacaralelang,
+                   biayalelang=es.Biayalelang,
+                   catatanlelang=es.Catatanlelang,
+                   tglpenetapanlelang=es.Tglpenetapanlelang,
+                   norekening=es.Norekening,
+                   namarekening=es.Namarekening,
+                   status=_collContext.Status.Where(x=>x.StsId==es.Statusid).Select(es=>es.StsName).FirstOrDefault(),
+                   statusid=es.Statusid,
+                   createdby=es.Createdby,
+                   createddated=es.Createddated
+
+
+                }).ToListAsync();
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+
+
+
+                Collection["DataNasabah"] = new List<dynamic>();
+                Collection["DataFiles"] = new List<dynamic>();
+                Collection["DataLoan"] = new List<dynamic>();
+                Collection["DataAuction"] = new List<dynamic>();
+
+
+                Collection["DataNasabah"].Add(Nasabah);
+                Collection["DataFiles"].Add(Files);
+                Collection["DataLoan"].Add(DataLoan);
+                Collection["DataAuction"].Add(DataAuction);
+
+
+
+                return (true, "OK", Collection);
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return (false, ex.Message, null);
+            }
+        }
+
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionSubmit(CreateAuctionDTO Entity)
         {
             var wrap = _DataResponses.Return();

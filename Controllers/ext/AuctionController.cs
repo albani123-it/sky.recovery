@@ -4,6 +4,7 @@ using sky.recovery.Responses;
 using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
+using sky.recovery.DTOs.RequestDTO.Auction;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -32,15 +33,19 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Monitoring/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> Monitoring(string userid)
+        [HttpGet("V2/Monitoring")]
+        public async Task<ActionResult<GeneralResponses>> Monitoring()
 
         {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
             var wrap = _DataResponses.Return();
 
             try
             {
-                var GetData = await _auctionservice.AuctionMonitoring(userid);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.AuctionMonitoring(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -50,6 +55,14 @@ namespace sky.recovery.Controllers.ext
                     return BadRequest(GetData.Returns);
                 }
 
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
             }
 
             catch (Exception ex)
@@ -57,6 +70,51 @@ namespace sky.recovery.Controllers.ext
                 wrap.Message = ex.Message;
                 wrap.Status = false;
                 return BadRequest(wrap);
+            }
+        }
+
+
+        //V2
+        [HttpPost("V2/Detail")]
+        public async Task<ActionResult<GeneralResponsesDetailRestrukturV2>> Detail([FromBody] GetDetailAuctionDTO Entity)
+
+        {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            var wrap = _DataResponses.ReturnDictionary();
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.GetDetailAuction(Entity);
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.Status;
+                    wrap.Data = GetData.DataNasabah;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
             }
         }
 
@@ -89,15 +147,19 @@ namespace sky.recovery.Controllers.ext
             }
         }
         //V2
-        [HttpGet("V2/TaskList/{userid}")]
-        public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
+        [HttpGet("V2/TaskList")]
+        public async Task<ActionResult<GeneralResponses>> TaskList()
 
         {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
             var wrap = _DataResponses.Return();
 
             try
             {
-                var GetData = await _auctionservice.AuctionTaskList(userid);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.AuctionTaskList(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -106,6 +168,14 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(GetData.Returns);
                 }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
 
             }
 
