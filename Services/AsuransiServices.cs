@@ -180,7 +180,7 @@ namespace sky.recovery.Services
                 if (Entity.Data.AsuransiId!= null)// update draft
                 {
                     var GetData = await _skyRecovery.Insurance.Where(es => es.Id== Entity.Data.AsuransiId && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
-                    if (_aydahelper.IsDraft(GetData.Statusid) == true)
+                    if (_aydahelper.IsRequested(GetData.Statusid) == true)
                     {
                         wrap.Status = false;
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";

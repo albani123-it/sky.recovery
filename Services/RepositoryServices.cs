@@ -73,20 +73,36 @@ namespace sky.recovery.Services
                     filestream.Flush();
                     //  return "\\Upload\\" + objFile.files.FileName;
                 }
-               
-                var Data = new  Masterrepository()
+
+
+                var CheckExisting = await _RecoveryContext.Masterrepository.Where(es => es.Fiturid == Entity.FiturId
+                && es.Doctype == Entity.DocType && es.Requestid == Entity.RequestId).ToListAsync();
+                if (CheckExisting.Count < 0)
                 {
-                    Fiturid = Entity.FiturId,
-                    Userid = getCallBy.Returns.Data.FirstOrDefault().iduser,
-                    Uploaddated = DateTime.Now,
-                    Filename = Entity.File.FileName,
-                    Fileurl = nm,
-                    Requestid = Entity.RequestId,
-                    Isactive = 1,
-                    Doctype = Entity.DocType
-                };
-                await _RecoveryContext.Masterrepository.AddAsync(Data);
-                await _RecoveryContext.SaveChangesAsync();
+                    var Data = new Masterrepository()
+                    {
+                        Fiturid = Entity.FiturId,
+                        Userid = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Uploaddated = DateTime.Now,
+                        Filename = Entity.File.FileName,
+                        Fileurl = nm,
+                        Requestid = Entity.RequestId,
+                        Isactive = 1,
+                        Doctype = Entity.DocType
+                    };
+                    await _RecoveryContext.Masterrepository.AddAsync(Data);
+                    await _RecoveryContext.SaveChangesAsync();
+                }
+                else
+                {
+                    var Data = CheckExisting.FirstOrDefault();
+                    Data.Fiturid = Entity.FiturId;
+                    Data.Requestid = Entity.RequestId;
+                    Data.Fileurl = nm;
+                    Data.Filename = Entity.File.FileName;
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
+                    await _RecoveryContext.SaveChangesAsync();
+                }
 
                 return (true, "OK");
             }

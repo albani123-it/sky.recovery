@@ -47,6 +47,7 @@ namespace sky.recovery.Services
         }
 
 
+
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
@@ -69,7 +70,9 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await auction.Include(i => i.master_loan).Where(es => es.statusid==11).Select(
+                var ReturnData = await auction.Include(i => i.master_loan).Where(es => 
+               
+                es.statusid==11).Select(
                     es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
                     {
                         branch = es.master_loan.master_customer.branch.lbrc_name,
@@ -163,22 +166,35 @@ namespace sky.recovery.Services
                 if (Entity.Data != null)// update draft
                 {
                     var GetData = await _recoveryContext.Auction.Where(es => es.Id== Entity.Data.AuctionId && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
-                    if (_aydahelper.IsDraft(GetData.Statusid) == true)
+                    if (_aydahelper.IsRequested(GetData.Statusid) == true)
                     {
                         wrap.Status = false;
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
                     }
 
-                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
                     GetData.Mstbranchid = Entity.DataNasabahLoan.BranchId;
-                  
-                    GetData.Statusid=  _collContext.Status.Where(es => es.StsName == "REQUESTED").Select(es => es.StsId).FirstOrDefault();
+                    GetData.Alasanlelangid = Entity.Data.AlasanLelangId;
+                    GetData.Nopk = Entity.Data.nopk;
+                    GetData.Nilailimitlelang = Entity.Data.nilailimitlelang;
+                    GetData.Uangjaminan = Entity.Data.uangjaminan;
+                    GetData.Objeklelang = Entity.Data.objeklelang;
+                    GetData.Keterangan = Entity.Data.keterangan;
+                    GetData.Balailelangid = Entity.Data.balailelangid;
+                    GetData.Jenislelangid = Entity.Data.jenislelangid;
+                    GetData.Tatacaralelang = Entity.Data.tatacaralelang;
+                    GetData.Biayalelang = Entity.Data.biayalelang;
+                    GetData.Catatanlelang = Entity.Data.catatanlelang;
+                    GetData.Tglpenetapanlelang = Entity.Data.tglpenetapanlelang;
+                    GetData.Norekening = Entity.Data.norekening;
+                    GetData.Namarekening = Entity.Data.namarekening;
+
+                    GetData.Statusid=  _collContext.Status.Where(es => es.StsName == "REVIEW").Select(es => es.StsId).FirstOrDefault();
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
 
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
-                    var GetIdAyda = await _recoveryContext.Generalparamdetail.Where(es => es.Title== "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = await _recoveryContext.Generalparamdetail.Where(es => es.Title== "Auction").Select(es => es.Id).FirstOrDefaultAsync();
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, (int?)GetIdAyda, Entity.User.UserId);
 
                 }
@@ -188,7 +204,23 @@ namespace sky.recovery.Services
                     {
                         Loanid = Entity.DataNasabahLoan.loanid,
                         Mstbranchid = Entity.DataNasabahLoan.BranchId,
-                    
+
+                        Alasanlelangid = Entity.Data.AlasanLelangId,
+                        Nopk = Entity.Data.nopk,
+                        Nilailimitlelang = Entity.Data.nilailimitlelang,
+                        Uangjaminan = Entity.Data.uangjaminan,
+                        Objeklelang = Entity.Data.objeklelang,
+                        Keterangan = Entity.Data.keterangan,
+                        Balailelangid = Entity.Data.balailelangid,
+                        Jenislelangid = Entity.Data.jenislelangid,
+                        Tatacaralelang = Entity.Data.tatacaralelang,
+                        Biayalelang = Entity.Data.biayalelang,
+                        Catatanlelang = Entity.Data.catatanlelang,
+                        Tglpenetapanlelang = Entity.Data.tglpenetapanlelang,
+                        Norekening = Entity.Data.norekening,
+                        Namarekening = Entity.Data.namarekening,
+
+
                         Statusid =  _collContext.Status.Where(es => es.StsName== "REQUESTED").Select(es => es.StsId).FirstOrDefault(),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated = DateTime.Now
@@ -213,7 +245,7 @@ namespace sky.recovery.Services
                 return (wrap.Status, wrap);
             }
         }
-
+         
 
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionDraft(string userid,CreateAuctionDTO Entity)
@@ -237,12 +269,28 @@ namespace sky.recovery.Services
                         wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
                     }
 
-                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
                     GetData.Mstbranchid = Entity.DataNasabahLoan.BranchId;
+                    GetData.Alasanlelangid = Entity.Data.AlasanLelangId;
+                    GetData.Nopk = Entity.Data.nopk;
+                    GetData.Nilailimitlelang = Entity.Data.nilailimitlelang;
+                    GetData.Uangjaminan = Entity.Data.uangjaminan;
+                    GetData.Objeklelang = Entity.Data.objeklelang;
+                    GetData.Keterangan = Entity.Data.keterangan;
+                    GetData.Balailelangid = Entity.Data.balailelangid;
+                    GetData.Jenislelangid = Entity.Data.jenislelangid;
+                    GetData.Tatacaralelang = Entity.Data.tatacaralelang;
+                    GetData.Biayalelang = Entity.Data.biayalelang;
+                    GetData.Catatanlelang = Entity.Data.catatanlelang;
+                    GetData.Tglpenetapanlelang = Entity.Data.tglpenetapanlelang;
+                    GetData.Norekening = Entity.Data.norekening;
+                    GetData.Namarekening = Entity.Data.namarekening;
+                    
+
 
                     GetData.Statusid = _collContext.Status.Where(es => es.StsName == "REQUESTED").Select(es => es.StsId).FirstOrDefault();
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
+                    GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
 
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
@@ -256,6 +304,22 @@ namespace sky.recovery.Services
                     {
                         Loanid = Entity.DataNasabahLoan.loanid,
                         Mstbranchid = Entity.DataNasabahLoan.BranchId,
+
+                    Alasanlelangid = Entity.Data.AlasanLelangId,
+                    Nopk= Entity.Data.nopk,
+                        Nilailimitlelang = Entity.Data.nilailimitlelang,
+                        Uangjaminan = Entity.Data.uangjaminan,
+                        Objeklelang = Entity.Data.objeklelang,
+                        Keterangan = Entity.Data.keterangan,
+                        Balailelangid = Entity.Data.balailelangid,
+                        Jenislelangid = Entity.Data.jenislelangid,
+                        Tatacaralelang = Entity.Data.tatacaralelang,
+                        Biayalelang = Entity.Data.biayalelang,
+                        Catatanlelang = Entity.Data.catatanlelang,
+                        Tglpenetapanlelang = Entity.Data.tglpenetapanlelang,
+                        Norekening = Entity.Data.norekening,
+                        Namarekening = Entity.Data.namarekening,
+
 
                         Statusid = _collContext.Status.Where(es => es.StsName == "REQUESTED").Select(es => es.StsId).FirstOrDefault(),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,

@@ -6,11 +6,14 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\Pu
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\Documents\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\favicon.ico
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\arthagraha.png
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Ayda\DOCTemplateDUmmy.xlsx.xlsx.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\CATATAN KERJAAN SISI.txt.txt
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\DOCTemplateDUmmy.xlsx.xlsx
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Lettersx.pdf.pdf
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\logoalamat.png
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\masterloan.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\NOTE PROJECT SKY.txt.txt
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Restrukture\Lettersx.pdf.pdf
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\tesdummy.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\js\site.js
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
