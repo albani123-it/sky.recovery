@@ -40,6 +40,10 @@
     <Folder Include="Insfrastructures\Scafolding\SkyColl\Public\" />
     <Folder Include="Insfrastructures\Scafolding\SkyCore\Public\" />
     <Folder Include="wwwroot\Documents\" />
+    <Folder Include="wwwroot\File\Ayda\" />
+    <Folder Include="wwwroot\File\Insurance\" />
+    <Folder Include="wwwroot\File\Auction\" />
+    <Folder Include="wwwroot\File\Restruktures\" />
   </ItemGroup>
 
   <ItemGroup>

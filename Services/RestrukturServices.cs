@@ -627,7 +627,11 @@ namespace sky.recovery.Services
                     wrap.Message = "Id Loan, Jenis Doc dan Id Restrukture Harus Diisi";
                 }
                 //var path = "wwwroot/Documents";
-                var path = Path.Combine(_environment.WebRootPath, "File");
+                //var path = Path.Combine(_environment.WebRootPath, "File");
+                var GetNamingFolder = await _recoveryContext.Generalparamdetail.Where(es => es.Id == 9).Select(es => es.Title).FirstOrDefaultAsync();
+
+                var path = Path.Combine(_environment.WebRootPath, "File/"+GetNamingFolder);
+
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);

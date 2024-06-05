@@ -41,7 +41,7 @@ namespace sky.recovery.Services
                 return (false, ex.Message);
             }
         }
-        public async Task<(bool Status, string Message)> UploadServices(RepoReqDTO Entity)
+        public async Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity)
         {
             try
             {
@@ -56,8 +56,9 @@ namespace sky.recovery.Services
                 }
 
 
-                var getCallBy = await _User.GetDataUser(Entity.UserId);
-                var path = Path.Combine(_environment.WebRootPath, "File");
+                var getCallBy = await _User.GetDataUser(userid);
+                var GetNamingFolder = await _RecoveryContext.Generalparamdetail.Where(es => es.Id == Entity.FiturId).Select(es => es.Title).FirstOrDefaultAsync();
+                var path = Path.Combine(_environment.WebRootPath, "File/"+GetNamingFolder.Trim());
                 if (!Directory.Exists(path))
                 {
                     Directory.CreateDirectory(path);
