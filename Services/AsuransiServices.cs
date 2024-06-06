@@ -94,7 +94,8 @@ namespace sky.recovery.Services
                     Plafond = es.Plafond.ToString()
                 }).ToListAsync();
 
-                var DataAsuransi = await _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId).Select(es => new DetailAsuransi
+                var DataAsuransi = _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId).AsEnumerable()
+                    .Select(es => new DetailAsuransi
                 {
                     createddated=es.Createddated.ToString(),
                     nopk=es.Nopk,
@@ -117,11 +118,8 @@ namespace sky.recovery.Services
                     tglpolis=es.Tglpolis,
                     usercreated=es.Createdby,
                     createdby=_skyCoreContext.Users.Where(x=>x.UsrId==es.Createdby).Select(s=>s.UsrUserid).FirstOrDefault()
-                 
-                    
-
-
-                }).ToListAsync();
+                
+                }).ToList();
 
 
 

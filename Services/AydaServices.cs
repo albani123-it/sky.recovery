@@ -515,20 +515,21 @@ namespace sky.recovery.Services
                     Plafond=es.Plafond.ToString()
                 }).ToListAsync();
 
-                var DataCollateral = await ayda.Where(es => es.id == Entity.AydaId).Select(es => new JaminanAyda_2
+                var DataCollateral = _skyRecovery.Ayda.Where(es => es.Id== Entity.AydaId).AsEnumerable()
+                    .Select(es => new JaminanAyda_2
                 {
-                    bankid = es.hubunganbankid,
-                    status = _sky.Status.Where(x => x.StsId == es.statusid).Select(es => es.StsName).FirstOrDefault(),
-                    jumlahayda = es.jumlahayda.ToString(),
-                    kualitas = es.kualitas,
-                    nilaimargin = es.nilaimargin.ToString(),
-                    nilaipembiayaanpokok = es.nilaipembiayaanpokok.ToString(),
-                    nilaiperolehanagunan = es.nilaiperolehanagunan.ToString(),
-                    perkiraanbiayajual = es.perkiraanbiayajual.ToString(),
-                    ppa = es.ppa.ToString(),
-                    tglambilalih = es.tglambilalih
+                    bankid = es.Hubunganbankid,
+                    status = _sky.Status.Where(x => x.StsId == es.Statusid).Select(es => es.StsName).FirstOrDefault(),
+                    jumlahayda = es.Jumlahayda.ToString(),
+                    kualitas = es.Kualitas,
+                    nilaimargin = es.Nilaimargin.ToString(),
+                    nilaipembiayaanpokok = es.Nilaipembiayaanpokok.ToString(),
+                    nilaiperolehanagunan = es.Nilaiperolehanagunan.ToString(),
+                    perkiraanbiayajual = es.Perkiraanbiayajual.ToString(),
+                    ppa = es.Ppa.ToString(),
+                    tglambilalih = es.Tglambilalih
               
-                }).ToListAsync();
+                }).ToList();
 
                 var DataCreated = _skyRecovery.Ayda.Where(es => es.Id == Entity.AydaId).AsEnumerable()
                      .Select(es => new InformationRequest

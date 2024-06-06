@@ -198,7 +198,8 @@ namespace sky.recovery.Services
                     Plafond = es.Plafond.ToString()
                 }).ToListAsync();
 
-                var DataAuction = await _recoveryContext.Auction.Where(es => es.Id == Entity.AuctionId).Select(es => new DataAuction
+                var DataAuction =  _recoveryContext.Auction.Where(es => es.Id == Entity.AuctionId).AsEnumerable()
+                    .Select(es => new DataAuction
                 {
                    alasanlelangid=es.Alasanlelangid,
                    nopk=es.Nopk,
@@ -222,7 +223,7 @@ namespace sky.recovery.Services
                    createddated = es.Createddated
 
 
-                }).ToListAsync();
+                }).ToList();
 
                 var DataCreated = _recoveryContext.Auction.Where(es => es.Id == Entity.AuctionId).AsEnumerable()
                    .Select(es => new InformationRequest
