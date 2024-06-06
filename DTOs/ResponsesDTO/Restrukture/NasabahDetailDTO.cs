@@ -1,4 +1,6 @@
-﻿namespace sky.recovery.DTOs.ResponsesDTO.Restrukture
+﻿using System;
+
+namespace sky.recovery.DTOs.ResponsesDTO.Restrukture
 {
     public class NasabahDetailDTO
     {
@@ -53,6 +55,12 @@
         public string Deskripsi { get; set; }
     }
 
+    public class InformationRequest
+    {
+        public int? CreatedById { get; set; }
+        public string createdby { get; set; }
+        public DateTime? createddated { get; set; }
+    }
     public class DetailPolaRestruk
     {
         public string keterangan { get; set; }
@@ -62,6 +70,7 @@
         public int? polaid { get; set; }
         public string pola_desc { get; set; }
         public string jenis_desc { get; set; }
+     
     }
 
 }

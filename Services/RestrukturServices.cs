@@ -29,6 +29,7 @@ using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using static Dapper.SqlMapper;
+using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 
 namespace sky.recovery.Services
 {
@@ -38,6 +39,7 @@ namespace sky.recovery.Services
 
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Public.skycollContext _collContext = new Insfrastructures.Scafolding.SkyColl.Public.skycollContext();
 
+        skycoreContext _skyCoreContext = new skycoreContext();
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
         private readonly IWebHostEnvironment _environment;
@@ -164,10 +166,19 @@ namespace sky.recovery.Services
                         pengurangannilaimargin=es.Pengurangannilaimargin,
                         jenispengurangan=es.Jenispenguranganid,
                         graceperiod=es.Graceperiode,
-                        polaid=es.Polarestrukturid
+                        polaid=es.Polarestrukturid,
+
+
                     }).ToListAsync();
 
 
+                var DataCreated = _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).AsEnumerable()
+                    .Select(es => new InformationRequest
+                    {
+                        createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
+                        createddated = es.Createddated,
+                        CreatedById = es.Createdby
+                    }).ToList();
                 var Collection = new Dictionary<string, List<dynamic>>();
 
              
@@ -180,6 +191,7 @@ namespace sky.recovery.Services
                 Collection["Dokumen"] = new List<dynamic>();
                 Collection["Analisa"] = new List<dynamic>();
                 Collection["PolaRestrukturisasi"] = new List<dynamic>();
+                Collection["CreatedInformation"] = new List<dynamic>();
 
                 Collection["DataNasabah"].Add(DataNasabah);
                 Collection["DataLoan"].Add(DataLoan);
@@ -188,6 +200,7 @@ namespace sky.recovery.Services
                 Collection["Dokumen"].Add(Dokumen);
                 Collection["Analisa"].Add(Analisa);
                 Collection["PolaRestrukturisasi"].Add(PolaRestruk);
+                Collection["CreatedInformation"].Add(DataCreated);
 
                 return (true, "OK", Collection);
 

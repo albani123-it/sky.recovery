@@ -20,6 +20,7 @@ using sky.recovery.DTOs.RequestDTO.CommonDTO;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using System.Reflection.Metadata;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 
 namespace sky.recovery.Services
 {
@@ -27,7 +28,7 @@ namespace sky.recovery.Services
     {
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext _sky = new Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext();
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _skyRecovery= new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
-
+        skycoreContext _skyCoreContext = new skycoreContext();
         private IDocServices _DocService { get; set; }
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
@@ -517,7 +518,7 @@ namespace sky.recovery.Services
                 var DataCollateral = await ayda.Where(es => es.id == Entity.AydaId).Select(es => new JaminanAyda_2
                 {
                     bankid = es.hubunganbankid,
-                    //status = _sky.Statuses.Where(x => x.StsId == es.statusid).Select(es => es.StsName).FirstOrDefault(),
+                    status = _sky.Status.Where(x => x.StsId == es.statusid).Select(es => es.StsName).FirstOrDefault(),
                     jumlahayda = es.jumlahayda.ToString(),
                     kualitas = es.kualitas,
                     nilaimargin = es.nilaimargin.ToString(),
@@ -526,22 +527,31 @@ namespace sky.recovery.Services
                     perkiraanbiayajual = es.perkiraanbiayajual.ToString(),
                     ppa = es.ppa.ToString(),
                     tglambilalih = es.tglambilalih
+              
                 }).ToListAsync();
+
+                var DataCreated = _skyRecovery.Ayda.Where(es => es.Id == Entity.AydaId).AsEnumerable()
+                     .Select(es => new InformationRequest
+                     {
+                         createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
+                         createddated = es.Createddated,
+                         CreatedById = es.Createdby
+                     }).ToList();
+
                 var Collection = new Dictionary<string, List<dynamic>>();
-
-             
-
 
                 Collection["DataNasabah"] = new List<dynamic>();
                 Collection["DataFiles"] = new List<dynamic>();
                 Collection["DataLoan"] = new List<dynamic>();
                 Collection["DataCollateral"] = new List<dynamic>();
-              
+                Collection["CreatedInformation"] = new List<dynamic>();
+
 
                 Collection["DataNasabah"].Add(Nasabah);
                 Collection["DataFiles"].Add(Files);
                 Collection["DataLoan"].Add(DataLoan);
                 Collection["DataCollateral"].Add(DataCollateral);
+                Collection["CreatedInformation"].Add(DataCreated);
 
 
 

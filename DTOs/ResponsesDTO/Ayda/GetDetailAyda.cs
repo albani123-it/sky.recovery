@@ -58,6 +58,9 @@ namespace sky.recovery.DTOs.ResponsesDTO.Ayda
         public string jumlahayda { get; set; }
         public int? statusid { get; set; }
         public string status { get; set; }
+        public int? usercreated { get; set; }
+        public string createdby { get; set; }
+        public DateTime? createddated { get; set; }
        
     }
 }

@@ -17,6 +17,8 @@ using sky.recovery.DTOs.RequestDTO.Insurance;
 using sky.recovery.DTOs.ResponsesDTO.Asuransi;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Entities;
+using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
+using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 
 namespace sky.recovery.Services
 {
@@ -24,6 +26,7 @@ namespace sky.recovery.Services
     {
         Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext _sky = new Insfrastructures.Scafolding.SkyColl.Public.SkyCollPublicDBContext();
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _skyRecovery= new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
+        skycoreContext _skyCoreContext = new skycoreContext();
 
         private IUserService _User { get; set; }
         private IGeneralParam _GeneralParam { get; set; }
@@ -112,10 +115,23 @@ namespace sky.recovery.Services
                     keterangan=es.Keterangan,
                     statusid=es.Statusid,
                     tglpolis=es.Tglpolis,
+                    usercreated=es.Createdby,
+                    createdby=_skyCoreContext.Users.Where(x=>x.UsrId==es.Createdby).Select(s=>s.UsrUserid).FirstOrDefault()
+                 
                     
 
 
                 }).ToListAsync();
+
+
+
+                var DataCreated = _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId).AsEnumerable()
+                   .Select(es => new InformationRequest
+                   {
+                       createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
+                       createddated = es.Createddated,
+                       CreatedById = es.Createdby
+                   }).ToList();
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
@@ -123,12 +139,13 @@ namespace sky.recovery.Services
                 Collection["DataFiles"] = new List<dynamic>();
                 Collection["DataLoan"] = new List<dynamic>();
                 Collection["DataAsuransi"] = new List<dynamic>();
-
+                Collection["CreatedInformation"] = new List<dynamic>();
 
                 Collection["DataNasabah"].Add(Nasabah);
                 Collection["DataFiles"].Add(Files);
                 Collection["DataLoan"].Add(DataLoan);
                 Collection["DataAsuransi"].Add(DataAsuransi);
+                Collection["CreatedInformation"].Add(DataCreated);
 
 
 

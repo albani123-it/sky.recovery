@@ -1,4 +1,6 @@
-﻿namespace sky.recovery.DTOs.ResponsesDTO.Asuransi
+﻿using System;
+
+namespace sky.recovery.DTOs.ResponsesDTO.Asuransi
 {
     public class GetDetailAsuransi
     {
@@ -63,5 +65,7 @@
         public string permasalahan { get; set; }
         public int? statusid { get; set; }
         public string createddated { get; set; }
+        public int? usercreated { get; set; }
+        public string createdby { get; set; }
     }
 }
