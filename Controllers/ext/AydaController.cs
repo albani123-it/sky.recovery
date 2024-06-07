@@ -4,6 +4,7 @@ using sky.recovery.Responses;
 using System.Threading.Tasks;
 using System;
 using sky.recovery.DTOs.RequestDTO.Ayda;
+using Microsoft.Extensions.Configuration;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -20,9 +21,11 @@ namespace sky.recovery.Controllers.ext
         private IDocServices _documentservices { get; set; }
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        private readonly IConfiguration _configuration;
 
-        public AydaController(IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
+        public AydaController(IConfiguration configuration, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, configuration)
         {
+            _configuration = configuration;
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
             _aydaservices = aydaservices;

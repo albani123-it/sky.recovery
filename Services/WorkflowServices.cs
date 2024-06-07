@@ -32,10 +32,10 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //TASKLIST RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CallbackApproval_Dummy(CallbackApprovalDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> CallbackApproval_Dummy(string userid,CallbackApprovalDTO Entity)
         {
             var wrap = _DataResponses.Return();
-            var getCallBy = await _User.GetDataUser(Entity.userid);
+            var getCallBy = await _User.GetDataUser(userid);
             var DataHistoryWF = new workflowhistory();
             var DataHistoryWF2 = new workflowhistory();
 

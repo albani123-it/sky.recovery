@@ -19,13 +19,15 @@ using sky.recovery.Entities;
 using sky.recovery.Helper.Enum;
 using sky.recovery.DTOs.RequestDTO;
 using Microsoft.EntityFrameworkCore.Query.Internal;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using System.Linq;
 
 namespace sky.recovery.Services.DBConfig
 {
     public class RestruktureRepository : PostgreSetting, IRestruktureRepository
     {
         public BaseController bc = new BaseController();
-
+        SkyCollRecoveryDBContext _recoveryContext = new SkyCollRecoveryDBContext();
         public RestruktureRepository(IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
         }
@@ -319,7 +321,8 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
-                    command.Parameters.AddWithValue("@idfitur", 9);
+                    command.Parameters.AddWithValue("@idfitur", _recoveryContext.Generalparamdetail.Where(es=>
+                    es.Title== "Restrukture").Select(es=>es.Id).FirstOrDefault());
 
                     command.Parameters.AddWithValue("@requestorid", userid);
                     command.Parameters.AddWithValue("@approverid", approverid);

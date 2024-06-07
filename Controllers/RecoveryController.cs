@@ -18,6 +18,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using sky.recovery.Model;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using Microsoft.Extensions.Configuration;
 
 namespace sky.recovery.Controllers
 {
@@ -30,12 +31,14 @@ namespace sky.recovery.Controllers
 
         private IRestrukturServices _recoveryService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        private readonly IConfiguration _configuration;
 
-        public RecoveryController(IRestrukturServices recoveryService)
+        public RecoveryController(IRestrukturServices recoveryService, IConfiguration configuration)
         {
             //_aydaservices = aydaservice;
             //_auctionservice = auctionservice;
             _recoveryService = recoveryService;
+            _configuration = configuration;
         }
 
 
@@ -131,7 +134,7 @@ namespace sky.recovery.Controllers
         public async Task<(bool Status,int code, string Message,string UserAgent)> GetUserAgents()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var Key = "Skyworx C0n5ult1n9 2017";
+            var Key = _configuration.GetSection("TokenAuthentication:SecretKey").Value;
             var EncodingKey = Encoding.ASCII.GetBytes(Key);
 
             var validationParameters = new TokenValidationParameters

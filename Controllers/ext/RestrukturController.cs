@@ -14,6 +14,7 @@ using System.Linq;
 using System.IO;
 using System.Net.Mime;
 using sky.recovery.DTOs.RepositoryDTO;
+using Microsoft.Extensions.Configuration;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -30,9 +31,11 @@ namespace sky.recovery.Controllers.ext
 
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        private readonly IConfiguration _configuration;
 
-        public RestrukturController(IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService)
+        public RestrukturController(IConfiguration configuration, IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, configuration)
         {
+            _configuration = configuration;
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
             _aydaservices = aydaservices;
@@ -295,10 +298,14 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.ReturnDictionary();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _recoveryService.GetDetailRestruktureForApproval(Entity.Id,Entity.loanid,Entity.customerid);
+                if (GetUserAgent.code == 200)
+                {
+
+                    var GetData = await _recoveryService.GetDetailRestruktureForApproval( Entity.Id,Entity.loanid,Entity.customerid);
                 wrap.Status = GetData.Status;
                 wrap.Message = GetData.Message;
                 wrap.Data = GetData.DataNasabah;
@@ -310,7 +317,13 @@ namespace sky.recovery.Controllers.ext
                 {
                     return BadRequest(wrap);
                 }
-
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
             }
 
             catch (Exception ex)

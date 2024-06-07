@@ -5,6 +5,11 @@ using sky.recovery.Services;
 using System.Threading.Tasks;
 using System;
 using sky.recovery.DTOs.WorkflowDTO;
+using Microsoft.Extensions.Primitives;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Linq;
 
 namespace sky.recovery.Controllers
 {
@@ -20,7 +25,66 @@ namespace sky.recovery.Controllers
             _workflowService = workflowservice;
         }
 
+        [HttpGet("GetUserAgent")]
+        public async Task<(bool Status, int code, string Message, string UserAgent)> GetUserAgents()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var Key = "Skyworx C0n5ult1n9 2017";
+            var EncodingKey = Encoding.ASCII.GetBytes(Key);
 
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(EncodingKey)
+            };
+            try
+            {
+                if (Request.Headers.ContainsKey("Authorization"))
+                {
+                    var authToken = Request.Headers["Authorization"].ToString();
+                    if (authToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var token = authToken.Substring("Bearer ".Length).Trim();
+                        HttpContext.Request.Headers.TryGetValue("UserAgent", out StringValues authHeader);
+                        var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
+                        var jwtToken = (JwtSecurityToken)validatedToken;
+                        var userIdClaim = jwtToken.Claims.First(x => x.Type == "sub");
+
+
+                        string UserAgentToken = authHeader.FirstOrDefault();
+                        if (userIdClaim.Value == UserAgentToken)
+                        {
+                            return (true, 200, "Authorized", UserAgentToken);
+
+                        }
+                        else
+                        {
+                            return (true, 401, "Invalid User", null);
+
+                        }
+
+                    }
+                    else
+                    {
+                        // return Unauthorized();
+                        return (false, 401, "Not Authorize", null);
+                    }
+                }
+                else
+                {
+                    return (false, 401, "Invalid Token", null);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                return (false, 500, ex.Message, null);
+            }
+        }
         //V2
         [HttpPost("V2/WorkflowSubmit")]
         public async Task<ActionResult<GeneralResponses>> WorkflowSubmit([FromBody] SubmitWorkflowDTO Entity)
@@ -88,10 +152,13 @@ namespace sky.recovery.Controllers
 
         {
             var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
             {
-                var GetData = await _workflowService.CallbackApproval_Dummy(Entity);
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.CallbackApproval_Dummy(GetUserAgent.UserAgent, Entity);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -99,6 +166,13 @@ namespace sky.recovery.Controllers
                 else
                 {
                     return BadRequest(GetData.Returns);
+                }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
                 }
 
             }

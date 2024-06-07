@@ -6,6 +6,6 @@
         public int? idrestrukture { get; set; }
         public string actionreason { get; set; }
         public int? workflowid { get; set; }
-        public string actions { get; set; }
+        public int actions { get; set; }
     }
 }
