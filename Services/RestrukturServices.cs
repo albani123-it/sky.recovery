@@ -80,12 +80,11 @@ namespace sky.recovery.Services
 
         public async Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId)
         {
-            var ListData = new List<dynamic>();
             try
             {
-                var Data = await _recoveryContext.Restructurecashflow.Where(es => es.Restruktureid == RestruktureId).ToListAsync();
-                ListData.Add(Data);
-                return (true, "OK", ListData);
+                var Data = await _recoveryContext.Restructurecashflow.Where(es => es.Restruktureid == RestruktureId)
+                    .ToListAsync<dynamic>();
+                return (true, "OK", Data);
             }
             catch(Exception ex)
             {
