@@ -108,23 +108,23 @@ namespace sky.recovery.Services
                 return (false, ex.Message, null);
             }
         }
-        public async Task<(bool Status,string Message, 
-            List<NasabahDetailDTO> Nasabah,
-            List<DataLoan> DataLoan,
-            List<DataFasilitasLain> DataFasilitas,
-            List<Permasalahanrestrukture> Permasalahan,
-            List<Restrukturedokumen> Dokumen,
-            List<Restructurecashflow> Analisa,
-            List<DetailPolaRestruk> PolaRestruk,
-            List<InformationRequest> DataCreated
-            
+        public async Task<(bool Status,string Message,
+            List<dynamic> Nasabah,
+            List<dynamic> DataLoan,
+            List<dynamic> DataFasilitas,
+            List<dynamic> Permasalahan,
+            List<dynamic> Dokumen,
+            List<dynamic> Analisa,
+            List<dynamic> PolaRestruk,
+            List<dynamic> DataCreated
+
             )>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try
             {
 
-                var DataNasabah = _collContext.MasterCustomers.Where(es => es.Id == CustomerId).AsEnumerable()
-                    .Select(es => new NasabahDetailDTO
+                var DataNasabah = await _collContext.MasterCustomers.Where(es => es.Id == CustomerId)
+                    .Select(es => new 
                     {
                         Nama = es.CuName,
                         NoKTP = es.CuIdnumber,
@@ -133,9 +133,9 @@ namespace sky.recovery.Services
                         pekerjaan = es.Pekerjaan,
                         tanggallahir = es.CuBorndate.ToString(),
                         TglCore = es.StgDate.ToString()
-                    }).ToList();
+                    }).ToListAsync<dynamic>();
 
-                var DataLoan =  _collContext.MasterLoans.Where(es => es.Id == loanid).AsEnumerable()
+                var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
                     .Select(es => new DataLoan
                 {
                     SegmentId=es.PrdSegmentId,
@@ -154,10 +154,10 @@ namespace sky.recovery.Services
                     TunggakanDenda=es.TunggakanDenda.ToString(),
                     TotalTunggakan=es.TunggakanTotal.ToString(),
                     TotalKewajiban=es.KewajibanTotal.ToString()
-                }).ToList();
+                }).ToListAsync<dynamic>();
 
-                var DataFasilitas =  _collContext.MasterLoans
-                    .Where(es => es.CustomerId == CustomerId).AsEnumerable().Select(es => new DataFasilitasLain
+                var DataFasilitas =  await _collContext.MasterLoans
+                    .Where(es => es.CustomerId == CustomerId).Select(es => new DataFasilitasLain
                 {
                     productid=es.Product,
                     segmentid=es.PrdSegmentId,
@@ -169,20 +169,19 @@ namespace sky.recovery.Services
                     Outstanding=es.Outstanding.ToString()
 
 
-                }).ToList();
+                }).ToListAsync<dynamic>();
 
-                var DataPermasalahan =  _recoveryContext.Permasalahanrestrukture
-                    .Where(es => es.Restruktureid == restruktureid).AsEnumerable().ToList();
+                var DataPermasalahan =  await _recoveryContext.Permasalahanrestrukture
+                    .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
-                var Dokumen =  _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
-                    .AsEnumerable()
-                    .ToList();
+                var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
+                   .ToListAsync<dynamic>();
 
-                var Analisa = _recoveryContext.Restructurecashflow
-                    .Where(es => es.Restruktureid == restruktureid).AsEnumerable().ToList();
+                var Analisa = await _recoveryContext.Restructurecashflow
+                    .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
-                var PolaRestruk = _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).AsEnumerable()
-                    .Select(es => new DetailPolaRestruk
+                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
+                    .Select(es => new 
                     {
                         keterangan=es.Keterangan,
                         pengurangannilaimargin=es.Pengurangannilaimargin,
@@ -191,25 +190,28 @@ namespace sky.recovery.Services
                         polaid=es.Polarestrukturid,
 
 
-                    }).ToList();
+                    }).ToListAsync<dynamic>();
 
 
-                var DataCreated = _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).AsEnumerable()
-                    .Select(es => new InformationRequest
+                var DataCreated =  _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
+                    .AsEnumerable()
+                    .Select(es => new 
                     {
                         createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
                         createddated = es.Createddated,
                         CreatedById = es.Createdby
-                    }).ToList();
-             
+                    }).ToList<dynamic>();
 
+               
+
+                
                 return (true, "OK", DataNasabah,DataLoan,DataFasilitas,DataPermasalahan,Dokumen,Analisa,PolaRestruk,DataCreated);
 
             }
 
 
             catch(Exception ex)
-            {
+            { 
                 return (false, ex.Message,null,null,null,null,null,null,null,null);
             }
         }

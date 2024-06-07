@@ -308,11 +308,11 @@ namespace sky.recovery.Controllers.ext
                     var GetData = await _recoveryService.GetDetailRestruktureForApproval( Entity.Id,Entity.loanid,Entity.customerid);
                 wrap.Status = GetData.Status;
                 wrap.Message = GetData.Message;
-                wrap.Data.Nasabah = GetData.Nasabah;
+                    wrap.Data.Nasabah = GetData.Nasabah;
                     wrap.Data.DataLoan = GetData.DataLoan;
                     wrap.Data.DataCreated = GetData.DataCreated;
                     wrap.Data.DataFasilitas = GetData.DataFasilitas;
-                    wrap.Data.Permasalahan= GetData.Permasalahan;
+                    wrap.Data.Permasalahan = GetData.Permasalahan;
                     wrap.Data.Analisa = GetData.Analisa;
                     wrap.Data.PolaRestruk = GetData.PolaRestruk;
                     wrap.Data.Dokumen = GetData.Dokumen;

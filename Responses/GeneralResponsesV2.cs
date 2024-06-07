@@ -36,14 +36,14 @@ namespace sky.recovery.Responses
     }
     public class ListDetailRestruktures
     {
-       public List<NasabahDetailDTO> Nasabah { get; set; }
-        public List<DataLoan> DataLoan { get; set; }
-        public List<DataFasilitasLain> DataFasilitas { get; set; }
-        public List<Permasalahanrestrukture> Permasalahan { get; set; }
-        public List<Restrukturedokumen> Dokumen { get; set; }
-        public List<Restructurecashflow> Analisa { get; set; }
-        public List<DetailPolaRestruk> PolaRestruk { get; set; }
-        public List<InformationRequest> DataCreated { get; set; }
+       public List<dynamic> Nasabah { get; set; }
+        public List<dynamic> DataLoan { get; set; }
+        public List<dynamic> DataFasilitas { get; set; }
+        public List<dynamic> Permasalahan { get; set; }
+        public List<dynamic> Dokumen { get; set; }
+        public List<dynamic> Analisa { get; set; }
+        public List<dynamic> PolaRestruk { get; set; }
+        public List<dynamic> DataCreated { get; set; }
 
     }
     public class ListWorkflows
