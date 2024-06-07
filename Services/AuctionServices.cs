@@ -53,16 +53,11 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
-                if (String.IsNullOrEmpty(UserId))
-                {
-                    wrap.Status = false;
-                    wrap.Message = "User Id Harus Diisi";
-                }
+                
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
@@ -75,7 +70,7 @@ namespace sky.recovery.Services
                 var ReturnData = await auction.Include(i => i.master_loan).Where(es => 
                
                 es.statusid==11).Select(
-                    es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
+                    es => new 
                     {
                         branch = es.master_loan.master_customer.branch.lbrc_name,
                         noaccount = es.master_loan.acc_no,
@@ -85,11 +80,10 @@ namespace sky.recovery.Services
                         status = es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }
@@ -105,16 +99,11 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionMonitoring(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
-                if (String.IsNullOrEmpty(UserId))
-                {
-                    wrap.Status = false;
-                    wrap.Message = "User Id Harus Diisi";
-                }
+                
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
@@ -125,7 +114,7 @@ namespace sky.recovery.Services
                 //    return ( wrap.Status , wrap);
                 //}
                 var ReturnData = await auction.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
-                    es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
+                    es => new 
                     {
                          branch = es.master_loan.master_customer.branch.lbrc_name,
                         noaccount = es.master_loan.acc_no,
@@ -135,11 +124,10 @@ namespace sky.recovery.Services
                         status = es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }

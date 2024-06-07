@@ -388,16 +388,11 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsuranceTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
-                if (String.IsNullOrEmpty(UserId))
-                {
-                    wrap.Status = false;
-                    wrap.Message = "User Id Harus Diisi";
-                }
+               
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
@@ -407,8 +402,9 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await  insurance.Include(i => i.master_loan).Where(es => es.statusid == 11).Select(
-                    es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
+                var ReturnData = await  insurance.Include(i => i.master_loan).
+                    Where(es => es.statusid == 11).Select(
+                    es => new 
                     {
                         asuransiid=es.Id,
                         customerid=es.master_loan.customer_id,
@@ -420,11 +416,10 @@ namespace sky.recovery.Services
                         status = es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }
@@ -440,16 +435,11 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsuranceMonitoring(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
-                if (String.IsNullOrEmpty(UserId))
-                {
-                    wrap.Status = false;
-                    wrap.Message = "User Id Harus Diisi";
-                }
+                
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
@@ -460,7 +450,7 @@ namespace sky.recovery.Services
                 //    return ( wrap.Status , wrap);
                 //}
                 var ReturnData = await insurance.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
-                    es => new DTOs.ResponsesDTO.Aucton.MonitoringBean
+                    es => new 
                     {
                         asuransiid=es.Id,
                         customerid=es.master_loan.customer_id,
@@ -472,11 +462,10 @@ namespace sky.recovery.Services
                         status = es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }

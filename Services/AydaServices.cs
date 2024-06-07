@@ -384,8 +384,8 @@ namespace sky.recovery.Services
                 //    return ( wrap.Status , wrap);
                 //}
                 var ReturnData = await ayda.Include(i => i.master_loan).Where(es => es.statusid==11).Select(
-                    es => new MonitoringBean
-                    {
+                    es => new 
+                    { 
                         LoanId=es.loanid,
                         customerid=es.master_loan.customer_id,
                         cabang = es.master_loan.master_customer.branch.lbrc_name,
@@ -438,8 +438,8 @@ namespace sky.recovery.Services
                 //}
                 var ReturnData =await ayda.Include(i => i.master_loan).Where(es => es.createdby ==id )
                     .Select(
-                    es => new MonitoringBean
-                    {
+                    es => new 
+                    { 
                         LoanId = es.loanid,
                         customerid = es.master_loan.customer_id,
                         cabang =es.master_loan.master_customer.branch.lbrc_name,
