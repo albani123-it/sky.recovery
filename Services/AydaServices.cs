@@ -365,7 +365,6 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
@@ -398,11 +397,10 @@ namespace sky.recovery.Services
                         status = es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }
@@ -419,7 +417,6 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaMonitoring(string UserId)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
            // var SkyCollConsString = GetSkyCollConsString();
 
             try
@@ -431,6 +428,7 @@ namespace sky.recovery.Services
                 }
 
                 var getCallBy = await _User.GetDataUser(UserId);
+                var id = getCallBy.Returns.Data.FirstOrDefault().iduser;
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 //{
@@ -438,7 +436,8 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData =await  ayda.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
+                var ReturnData =await ayda.Include(i => i.master_loan).Where(es => es.createdby ==id )
+                    .Select(
                     es => new MonitoringBean
                     {
                         LoanId = es.loanid,
@@ -452,11 +451,10 @@ namespace sky.recovery.Services
                         status=es.status.sts_name
 
                     }
-                    ).ToListAsync();
+                    ).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                ListData.Add(ReturnData);
-                wrap.Data = ListData;
+                wrap.Data = ReturnData;
                 return (wrap.Status, wrap);
 
             }

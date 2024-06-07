@@ -47,7 +47,7 @@ namespace sky.recovery.Controllers.ext
                 if (GetUserAgent.code == 200)
                 {
 
-                    var GetData = await _aydaservices.AydaMonitoring(GetUserAgent.Message);
+                    var GetData = await _aydaservices.AydaMonitoring(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
@@ -295,7 +295,7 @@ namespace sky.recovery.Controllers.ext
             {
                 if (GetUserAgent.code == 200)
                 {
-                    var GetData = await _aydaservices.AydaTaskList(GetUserAgent.Message);
+                    var GetData = await _aydaservices.AydaTaskList(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
