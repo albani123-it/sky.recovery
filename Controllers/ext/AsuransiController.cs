@@ -170,7 +170,7 @@ namespace sky.recovery.Controllers.ext
 
         //V2
         [HttpGet("V2/Monitoring")]
-        public async Task<ActionResult<GeneralResponses>> Monitoring(string userid)
+        public async Task<ActionResult<GeneralResponses>> Monitoring()
 
         {
             var wrap = _DataResponses.Return();
@@ -180,7 +180,7 @@ namespace sky.recovery.Controllers.ext
             {
                 if (GetUserAgent.code == 200)
                 {
-                    var GetData = await _asuransiservices.InsuranceMonitoring(userid);
+                    var GetData = await _asuransiservices.InsuranceMonitoring(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
