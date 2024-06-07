@@ -108,17 +108,7 @@ namespace sky.recovery.Services
                 return (false, ex.Message, null);
             }
         }
-        public async Task<(bool Status,string Message,
-            List<dynamic> Nasabah,
-            List<dynamic> DataLoan,
-            List<dynamic> DataFasilitas,
-            List<dynamic> Permasalahan,
-            List<dynamic> Dokumen,
-            List<dynamic> Analisa,
-            List<dynamic> PolaRestruk,
-            List<dynamic> DataCreated
-
-            )>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
+        public async Task<(bool Status,string Message, Dictionary<string, List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try
             {
@@ -202,17 +192,25 @@ namespace sky.recovery.Services
                         CreatedById = es.Createdby
                     }).ToList<dynamic>();
 
-               
+                var Collection = new Dictionary<string, List<dynamic>>();
 
-                
-                return (true, "OK", DataNasabah,DataLoan,DataFasilitas,DataPermasalahan,Dokumen,Analisa,PolaRestruk,DataCreated);
+                Collection["nasabah"] = DataNasabah;
+                Collection["DataLoan"] = DataLoan;
+                Collection["DataFasilitas"] = DataFasilitas;
+                Collection["Permasalahan"] = DataPermasalahan;
+                Collection["Dokumen"] = Dokumen;
+                Collection["Analisa"] = Analisa;
+                Collection["PolaRestruk"] = PolaRestruk;
+                Collection["DataCreated"] = DataCreated;
+
+                return (true, "OK", Collection);
 
             }
 
 
             catch(Exception ex)
             { 
-                return (false, ex.Message,null,null,null,null,null,null,null,null);
+                return (false, ex.Message,null);
             }
         }
 
@@ -878,6 +876,7 @@ namespace sky.recovery.Services
             {
 
                 var getCallBy = await _User.GetDataUser(UserId);
+               
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
                 //    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()

@@ -14,17 +14,9 @@ namespace sky.recovery.Interfaces
 
 
 
-        public Task<(bool Status, string Message,
-                  List<dynamic> Nasabah,
-                  List<dynamic> DataLoan,
-                  List<dynamic> DataFasilitas,
-                  List<dynamic> Permasalahan,
-                  List<dynamic> Dokumen,
-                  List<dynamic> Analisa,
-                  List<dynamic> PolaRestruk,
-                  List<dynamic> DataCreated
+        public Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)>
+            GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId);
 
-                  )> GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId);
         public Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId);
         public Task<(bool Status, string Message, List<dynamic> Data)> GetPolaRestrukture(int RestruktureId);
 

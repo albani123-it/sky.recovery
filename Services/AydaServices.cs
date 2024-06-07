@@ -479,7 +479,7 @@ namespace sky.recovery.Services
             {
 
                 var  Nasabah = await _sky.MasterCustomer.Where(es => es.Id == Entity.CustomerId).Select(
-                   es => new NasabahAydaDTO
+                   es => new 
                    {
                       Nama=es.CuName,
                       Address=es.CuAddress,
@@ -490,10 +490,10 @@ namespace sky.recovery.Services
                       AccNo=_sky.MasterLoan.Where(es=>es.Id==Entity.LoanId).Select(es=>es.AccNo).FirstOrDefault()
 
                    }
-                   ).ToListAsync();
+                   ).ToListAsync<dynamic>();
 
                 var Files = await _skyRecovery.Masterrepository.Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
-                   es => new RepoAydaDTO
+                   es => new 
                    {
                       Id=es.Id,
                       url=es.Fileurl,
@@ -502,19 +502,20 @@ namespace sky.recovery.Services
                       doctype=es.Doctype
 
                    }
-                   ).ToListAsync();
+                   ).ToListAsync<dynamic>();
 
-                var DataLoan = await _sky.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAydaDTO
+                var DataLoan = await _sky.MasterLoan.Where(es => es.Id == Entity.LoanId).
+                    Select(es => new 
                 {
                     loanid=es.Id,
                     Fasilitas=es.Fasilitas,
                     Tenor=es.Tenor.ToString(),
                     LoanType=_sky.Rfproduct.Where(x=>x.PrdId==es.Product).Select(es=>es.PrdDesc).FirstOrDefault(),
                     Plafond=es.Plafond.ToString()
-                }).ToListAsync();
+                }).ToListAsync<dynamic>();
 
                 var DataCollateral = _skyRecovery.Ayda.Where(es => es.Id== Entity.AydaId).AsEnumerable()
-                    .Select(es => new JaminanAyda_2
+                    .Select(es => new 
                 {
                     bankid = es.Hubunganbankid,
                     status = _sky.Status.Where(x => x.StsId == es.Statusid).Select(es => es.StsName).FirstOrDefault(),
@@ -527,31 +528,26 @@ namespace sky.recovery.Services
                     ppa = es.Ppa.ToString(),
                     tglambilalih = es.Tglambilalih
               
-                }).ToList();
+                }).ToList<dynamic>();
 
                 var DataCreated = _skyRecovery.Ayda.Where(es => es.Id == Entity.AydaId).AsEnumerable()
-                     .Select(es => new InformationRequest
+                     .Select(es => new 
                      {
                          createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
                          createddated = es.Createddated,
                          CreatedById = es.Createdby
-                     }).ToList();
+                     }).ToList<dynamic>();
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
-                Collection["DataNasabah"] = new List<dynamic>();
-                Collection["DataFiles"] = new List<dynamic>();
-                Collection["DataLoan"] = new List<dynamic>();
-                Collection["DataCollateral"] = new List<dynamic>();
-                Collection["CreatedInformation"] = new List<dynamic>();
+                Collection["DataNasabah"] = Nasabah;
+                Collection["DataFiles"] = Files;
+                Collection["DataLoan"] = DataLoan;
+                Collection["DataCollateral"] = DataCollateral;
+                Collection["CreatedInformation"] = DataCreated;
 
 
-                Collection["DataNasabah"].Add(Nasabah);
-                Collection["DataFiles"].Add(Files);
-                Collection["DataLoan"].Add(DataLoan);
-                Collection["DataCollateral"].Add(DataCollateral);
-                Collection["CreatedInformation"].Add(DataCreated);
-
+               
 
 
                 return (true,"OK", Collection);
