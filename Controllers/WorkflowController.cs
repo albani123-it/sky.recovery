@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace sky.recovery.Controllers
 {
@@ -19,17 +20,19 @@ namespace sky.recovery.Controllers
     {
         private IWorkflowServices _workflowService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
+        private readonly IConfiguration _configuration;
 
-        public WorkflowController(IWorkflowServices workflowservice)
+        public WorkflowController(IConfiguration configuration, IWorkflowServices workflowservice)
         {
             _workflowService = workflowservice;
+            _configuration = configuration;
         }
 
         [HttpGet("GetUserAgent")]
         public async Task<(bool Status, int code, string Message, string UserAgent)> GetUserAgents()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var Key = "Skyworx C0n5ult1n9 2017";
+            var Key = _configuration.GetSection("TokenAuthentication:SecretKey").Value;
             var EncodingKey = Encoding.ASCII.GetBytes(Key);
 
             var validationParameters = new TokenValidationParameters
