@@ -1,5 +1,7 @@
 ﻿using sky.recovery.DTOs.RequestDTO;
 using sky.recovery.DTOs.ResponsesDTO;
+using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Responses;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,8 +12,17 @@ namespace sky.recovery.Interfaces
     {
         public Task<(bool Status, string message)> RemoveDocRestrukture(int id);
 
-        public Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId);
+        public  Task<(bool Status, string Message,
+                  List<NasabahDetailDTO> Nasabah,
+                  List<DataLoan> DataLoan,
+                  List<DataFasilitasLain> DataFasilitas,
+                  List<Permasalahanrestrukture> Permasalahan,
+                  List<Restrukturedokumen> Dokumen,
+                  List<Restructurecashflow> Analisa,
+                  List<DetailPolaRestruk> PolaRestruk,
+                  List<InformationRequest> DataCreated
 
+                  )> GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId);
         public Task<(bool Status, string Message, List<dynamic> Data)> GetAnalisaRestrukture(int RestruktureId);
         public Task<(bool Status, string Message, List<dynamic> Data)> GetPolaRestrukture(int RestruktureId);
 

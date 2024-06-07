@@ -120,15 +120,16 @@ namespace sky.recovery.Controllers
 
         //V2
         [HttpPost("V2/GetDetailWorkflow")]
-        public async Task<ActionResult<GeneralResponsesDictionaryV2>> GetDetailWorkflow([FromBody] GetDetailWFDTO Entity)
+        public async Task<ActionResult<ListWorkflow>> GetDetailWorkflow([FromBody] GetDetailWFDTO Entity)
 
         {
-            var wrap = _DataResponses.ReturnDictionary();
+            var wrap = _DataResponses.ReturnListWorkflows();
 
             try
             {
                 var GetData = await _workflowService.GetDetailWorkflow(Entity);
-                wrap.Data = GetData.DataWorkflow;
+                wrap.Data.WorkflowDetail = GetData.WorkflowDetail;
+                wrap.Data.WorkflowHistory= GetData.WorkflowHistory;
                 wrap.Status = GetData.Status;
                 wrap.Message = GetData.message;
                 if (GetData.Status == true)

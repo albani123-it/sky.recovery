@@ -1,7 +1,10 @@
 ﻿using OfficeOpenXml;
 using Org.BouncyCastle.Pkcs;
 using sky.recovery.DTOs.HelperDTO;
+using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Entities.RecoveryConfig;
+using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using System.Collections.Generic;
 using System.IO;
 
@@ -24,6 +27,38 @@ namespace sky.recovery.Responses
         public Dictionary<string,List<dynamic>> Data { get; set; }
 
     }
+    public class GeneralResponsesDetailRestrukturesV3
+    {
+        public bool? Status { get; set; }
+        public string Message { get; set; }
+
+        public ListDetailRestruktures Data {get;set;}
+    }
+    public class ListDetailRestruktures
+    {
+       public List<NasabahDetailDTO> Nasabah { get; set; }
+        public List<DataLoan> DataLoan { get; set; }
+        public List<DataFasilitasLain> DataFasilitas { get; set; }
+        public List<Permasalahanrestrukture> Permasalahan { get; set; }
+        public List<Restrukturedokumen> Dokumen { get; set; }
+        public List<Restructurecashflow> Analisa { get; set; }
+        public List<DetailPolaRestruk> PolaRestruk { get; set; }
+        public List<InformationRequest> DataCreated { get; set; }
+
+    }
+    public class ListWorkflows
+    {
+        public bool? Status { get; set; }
+        public string Message { get; set; }
+        public ListWorkflow Data { get; set; }
+
+    }
+    public class ListWorkflow
+    {
+        public List<WorkflowDetailDTO> WorkflowDetail { get; set; }
+        public List<WorkflowHistoryDTO> WorkflowHistory { get; set; }
+    }
+     
     public class GeneralResponsesPDFV2
     {
         public bool Status { get; set; }
@@ -118,7 +153,42 @@ namespace sky.recovery.Responses
             return Data;
         }
 
-        
+        public ListWorkflows ReturnListWorkflows()
+        {
+            var Data = new ListWorkflows()
+            {
+                Status = false,
+                Message = "",
+                Data =new ListWorkflow()
+                {
+                    WorkflowDetail = null,
+                    WorkflowHistory = null
+                }
+            };
+            return Data;
+        }
+
+        public GeneralResponsesDetailRestrukturesV3 ReturnDetailRestruktures()
+        {
+            var Data = new GeneralResponsesDetailRestrukturesV3()
+            {
+                Status = false,
+                Message = "",
+                Data = new ListDetailRestruktures()
+                {
+                    Nasabah=null,
+                    DataLoan=null,
+                    Permasalahan=null,
+                    PolaRestruk=null,
+                    Analisa=null,
+                    DataCreated=null,
+                    DataFasilitas=null,
+                    Dokumen=null
+                }
+            };
+            return Data;
+        }
+
         public GeneralResponsesDictionaryV2 ReturnDictionary()
         {
             var Data = new GeneralResponsesDictionaryV2()

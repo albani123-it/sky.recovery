@@ -294,10 +294,10 @@ namespace sky.recovery.Controllers.ext
 
         //V2
         [HttpPost("V2/DetailRestruktureForApprover")]
-        public async Task<ActionResult<GeneralResponsesDictionaryV2>> DetailRestruktureForApprover([FromBody] GetDetailForApprover Entity)
+        public async Task<ActionResult<GeneralResponsesDetailRestrukturesV3>> DetailRestruktureForApprover([FromBody] GetDetailForApprover Entity)
 
         {
-            var wrap = _DataResponses.ReturnDictionary();
+            var wrap = _DataResponses.ReturnDetailRestruktures();
             var GetUserAgent = await Task.Run(() => GetUserAgents());
 
             try
@@ -308,8 +308,16 @@ namespace sky.recovery.Controllers.ext
                     var GetData = await _recoveryService.GetDetailRestruktureForApproval( Entity.Id,Entity.loanid,Entity.customerid);
                 wrap.Status = GetData.Status;
                 wrap.Message = GetData.Message;
-                wrap.Data = GetData.DataNasabah;
-                if (GetData.Status == true)
+                wrap.Data.Nasabah = GetData.Nasabah;
+                    wrap.Data.DataLoan = GetData.DataLoan;
+                    wrap.Data.DataCreated = GetData.DataCreated;
+                    wrap.Data.DataFasilitas = GetData.DataFasilitas;
+                    wrap.Data.Permasalahan= GetData.Permasalahan;
+                    wrap.Data.Analisa = GetData.Analisa;
+                    wrap.Data.PolaRestruk = GetData.PolaRestruk;
+                    wrap.Data.Dokumen = GetData.Dokumen;
+
+                    if (GetData.Status == true)
                 {
                     return Ok(wrap);
                 }

@@ -108,22 +108,35 @@ namespace sky.recovery.Services
                 return (false, ex.Message, null);
             }
         }
-        public async Task<(bool Status,string Message, Dictionary<string,List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
+        public async Task<(bool Status,string Message, 
+            List<NasabahDetailDTO> Nasabah,
+            List<DataLoan> DataLoan,
+            List<DataFasilitasLain> DataFasilitas,
+            List<Permasalahanrestrukture> Permasalahan,
+            List<Restrukturedokumen> Dokumen,
+            List<Restructurecashflow> Analisa,
+            List<DetailPolaRestruk> PolaRestruk,
+            List<InformationRequest> DataCreated
+            
+            )>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try
             {
 
-                var DataNasabah =await _collContext.MasterCustomers.Where(es => es.Id == CustomerId).Select(es => new NasabahDetailDTO
-                {
-                    Nama=es.CuName,
-                    NoKTP=es.CuIdnumber,
-                    alamat=es.CuAddress,
-                    nohp=es.CuHmphone,
-                    pekerjaan=es.Pekerjaan,
-                    tanggallahir=es.CuBorndate.ToString(),
-                    TglCore=es.StgDate.ToString()
-                }).ToListAsync();
-                var DataLoan = await _collContext.MasterLoans.Where(es => es.Id == loanid).Select(es => new DataLoan
+                var DataNasabah = _collContext.MasterCustomers.Where(es => es.Id == CustomerId).AsEnumerable()
+                    .Select(es => new NasabahDetailDTO
+                    {
+                        Nama = es.CuName,
+                        NoKTP = es.CuIdnumber,
+                        alamat = es.CuAddress,
+                        nohp = es.CuHmphone,
+                        pekerjaan = es.Pekerjaan,
+                        tanggallahir = es.CuBorndate.ToString(),
+                        TglCore = es.StgDate.ToString()
+                    }).ToList();
+
+                var DataLoan =  _collContext.MasterLoans.Where(es => es.Id == loanid).AsEnumerable()
+                    .Select(es => new DataLoan
                 {
                     SegmentId=es.PrdSegmentId,
                     ProductId=es.Product,
@@ -141,8 +154,10 @@ namespace sky.recovery.Services
                     TunggakanDenda=es.TunggakanDenda.ToString(),
                     TotalTunggakan=es.TunggakanTotal.ToString(),
                     TotalKewajiban=es.KewajibanTotal.ToString()
-                }).ToListAsync();
-                var DataFasilitas = await _collContext.MasterLoans.Where(es => es.CustomerId == CustomerId).Select(es => new DataFasilitasLain
+                }).ToList();
+
+                var DataFasilitas =  _collContext.MasterLoans
+                    .Where(es => es.CustomerId == CustomerId).AsEnumerable().Select(es => new DataFasilitasLain
                 {
                     productid=es.Product,
                     segmentid=es.PrdSegmentId,
@@ -154,13 +169,20 @@ namespace sky.recovery.Services
                     Outstanding=es.Outstanding.ToString()
 
 
-                }).ToListAsync();
+                }).ToList();
 
-                var DataPermasalahan = await _recoveryContext.Permasalahanrestrukture.Where(es => es.Restruktureid == restruktureid).ToListAsync();
-                var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid).ToListAsync();
-                var Analisa = await _recoveryContext.Restructurecashflow.Where(es => es.Restruktureid == restruktureid).ToListAsync();
-                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).
-                    Select(es => new DetailPolaRestruk
+                var DataPermasalahan =  _recoveryContext.Permasalahanrestrukture
+                    .Where(es => es.Restruktureid == restruktureid).AsEnumerable().ToList();
+
+                var Dokumen =  _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
+                    .AsEnumerable()
+                    .ToList();
+
+                var Analisa = _recoveryContext.Restructurecashflow
+                    .Where(es => es.Restruktureid == restruktureid).AsEnumerable().ToList();
+
+                var PolaRestruk = _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).AsEnumerable()
+                    .Select(es => new DetailPolaRestruk
                     {
                         keterangan=es.Keterangan,
                         pengurangannilaimargin=es.Pengurangannilaimargin,
@@ -169,7 +191,7 @@ namespace sky.recovery.Services
                         polaid=es.Polarestrukturid,
 
 
-                    }).ToListAsync();
+                    }).ToList();
 
 
                 var DataCreated = _recoveryContext.Restrukture.Where(es => es.Id == restruktureid).AsEnumerable()
@@ -179,37 +201,16 @@ namespace sky.recovery.Services
                         createddated = es.Createddated,
                         CreatedById = es.Createdby
                     }).ToList();
-                var Collection = new Dictionary<string, List<dynamic>>();
-
              
 
-
-                Collection["DataNasabah"] = new List<dynamic>();
-                Collection["DataLoan"] = new List<dynamic>();
-                Collection["FasilitasLainnya"] = new List<dynamic>();
-                Collection["Permasalahan"] = new List<dynamic>();
-                Collection["Dokumen"] = new List<dynamic>();
-                Collection["Analisa"] = new List<dynamic>();
-                Collection["PolaRestrukturisasi"] = new List<dynamic>();
-                Collection["CreatedInformation"] = new List<dynamic>();
-
-                Collection["DataNasabah"].Add(DataNasabah);
-                Collection["DataLoan"].Add(DataLoan);
-                Collection["FasilitasLainnya"].Add(DataFasilitas);
-                Collection["Permasalahan"].Add(DataPermasalahan);
-                Collection["Dokumen"].Add(Dokumen);
-                Collection["Analisa"].Add(Analisa);
-                Collection["PolaRestrukturisasi"].Add(PolaRestruk);
-                Collection["CreatedInformation"].Add(DataCreated);
-
-                return (true, "OK", Collection);
+                return (true, "OK", DataNasabah,DataLoan,DataFasilitas,DataPermasalahan,Dokumen,Analisa,PolaRestruk,DataCreated);
 
             }
 
 
             catch(Exception ex)
             {
-                return (false, ex.Message,null);
+                return (false, ex.Message,null,null,null,null,null,null,null,null);
             }
         }
 

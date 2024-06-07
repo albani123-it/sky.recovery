@@ -385,11 +385,13 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool Status, string message, Dictionary<string, List<dynamic>> DataWorkflow)> GetDetailWorkflow(GetDetailWFDTO Entity)
+        public async Task<(bool Status, string message,  
+            List<WorkflowDetailDTO> WorkflowDetail,
+            List<WorkflowHistoryDTO> WorkflowHistory)> 
+            GetDetailWorkflow(GetDetailWFDTO Entity)
         {
-            var Collection = new Dictionary<string, List<dynamic>>();
-            Collection["DataWorkflow"] = new List<dynamic>();
-            Collection["DataWorkflowHistory"] = new List<dynamic>();
+            var DataWorkflowHistorys = new List<WorkflowHistoryDTO>();
+      
             try
             {
                 var CheckingWF = await _RecoveryContext.Workflows.Where(es => es.Requestid == Entity.RequestId && es.Fiturid == Entity.FiturId).ToListAsync();
@@ -408,11 +410,10 @@ namespace sky.recovery.Services
                     requestid=es.Requestid
                 }).ToList();
               
-                Collection["DataWorkflow"].Add(DataWorkflow);
                 foreach (var x in CheckingWF)
                 {
                     var DataWorkflowHistory = await _RecoveryContext.Workflowhistories.Where(es => es.Workflowid == x.Id).ToListAsync();
-                    var GetDataWorkflowHistory = DataWorkflowHistory.Select(es => new WorkflowHistoryDTO
+                    DataWorkflowHistorys = DataWorkflowHistory.Select(es => new WorkflowHistoryDTO
                     {
                         statusid = es.Status,
                         status = status.Where(x => x.sts_id == es.Status).Select(es => es.sts_name).FirstOrDefault(),
@@ -425,14 +426,13 @@ namespace sky.recovery.Services
                         id = es.Id
 
                     }).ToList();
-                    Collection["DataWorkflowHistory"].Add(GetDataWorkflowHistory);
 
                 };
-                return (true, "OK", Collection);
+                return (true, "OK", DataWorkflow,DataWorkflowHistorys);
             }
             catch(Exception ex)
             {
-                return (false, ex.Message, null);
+                return (false, ex.Message, null,null);
             }
         }
 

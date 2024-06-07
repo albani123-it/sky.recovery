@@ -10,7 +10,10 @@ namespace sky.recovery.Interfaces
         public Task<(bool? Status, GeneralResponsesV2 Returns)> SubmitWorkflowStep(SubmitWorkflowDTO Entity);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> CallbackApproval(CallbackApprovalDTO Entity);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> CallbackApproval_Dummy(string userid,CallbackApprovalDTO Entity);
-        public Task<(bool Status, string message, Dictionary<string, List<dynamic>> DataWorkflow)> GetDetailWorkflow(GetDetailWFDTO Entity);
 
+        public Task<(bool Status, string message,
+           List<WorkflowDetailDTO> WorkflowDetail,
+           List<WorkflowHistoryDTO> WorkflowHistory)>
+           GetDetailWorkflow(GetDetailWFDTO Entity);
     }
 }
