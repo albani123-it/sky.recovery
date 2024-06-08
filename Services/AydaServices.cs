@@ -365,6 +365,7 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
+            var ListDynamic = new List<dynamic?>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
@@ -375,7 +376,7 @@ namespace sky.recovery.Services
                     wrap.Message = "User Id Harus Diisi";
                 }
 
-               // var getCallBy = await _User.GetDataUser(UserId);
+                var getCallBy = await _User.GetDataUser(UserId);
                 // pindah ke dinamis
                 //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
                 //{
@@ -383,24 +384,37 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await ayda.Include(i => i.master_loan).Where(es => es.statusid==11).Select(
-                    es => new 
-                    { 
-                        LoanId=es.loanid,
-                        customerid=es.master_loan.customer_id,
-                        cabang = es.master_loan.master_customer.branch.lbrc_name,
-                        noloan = es.master_loan.acc_no,
-                        namanasabah = es.master_loan.master_customer.cu_name,
-                        totaltunggakan = es.master_loan.tunggakan_total,
-                        jenisjaminan = es.master_loan.master_collateral.col_type,
-                        alamatjaminan = es.master_loan.master_collateral.col_address,
-                        status = es.status.sts_name
 
-                    }
-                    ).ToListAsync<dynamic>();
+                var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
+                es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                && es.Status == 11).Select(es => es.Requestid).ToListAsync();
+
+
+                foreach (var x in MonitoringData)
+                {
+                    ListDynamic= await ayda.Include(i => i.master_loan).Where(es => es.id == x).Select(
+                        es => new
+                        {
+                            Id = es.id,
+                            LoanId = es.loanid,
+                            customerid = es.master_loan.customer_id,
+                            cabang = es.master_loan.master_customer.branch.lbrc_name,
+                            noloan = es.master_loan.acc_no,
+                            namanasabah = es.master_loan.master_customer.cu_name,
+                            totaltunggakan = es.master_loan.tunggakan_total,
+                            jenisjaminan = es.master_loan.master_collateral.col_type,
+                            alamatjaminan = es.master_loan.master_collateral.col_address,
+                            status = es.status.sts_name,
+                            createddated=es.createddated,
+                            createdby=es.createdby
+
+                        }
+                        ).ToListAsync<dynamic?>();
+                }
+
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                wrap.Data = ListDynamic;
                 return (wrap.Status, wrap);
 
             }
@@ -448,7 +462,9 @@ namespace sky.recovery.Services
                         totaltunggakan=es.master_loan.tunggakan_total,
                         jenisjaminan=es.master_loan.master_collateral.col_type,
                         alamatjaminan=es.master_loan.master_collateral.col_address,
-                        status=es.status.sts_name
+                        status = es.status.sts_name,
+                        createddated = es.createddated,
+                        createdby = es.createdby
 
                     }
                     ).ToListAsync<dynamic>();
@@ -492,7 +508,8 @@ namespace sky.recovery.Services
                    }
                    ).ToListAsync<dynamic>();
 
-                var Files = await _skyRecovery.Masterrepository.Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
+                var Files = await _skyRecovery.Masterrepository
+                    .Where(es => es.Requestid == Entity.AydaId && es.Isactive==1).Select(
                    es => new 
                    {
                       Id=es.Id,
@@ -518,7 +535,6 @@ namespace sky.recovery.Services
                     .Select(es => new 
                 {
                     bankid = es.Hubunganbankid,
-                    status = _sky.Status.Where(x => x.StsId == es.Statusid).Select(es => es.StsName).FirstOrDefault(),
                     jumlahayda = es.Jumlahayda.ToString(),
                     kualitas = es.Kualitas,
                     nilaimargin = es.Nilaimargin.ToString(),
@@ -527,27 +543,21 @@ namespace sky.recovery.Services
                     perkiraanbiayajual = es.Perkiraanbiayajual.ToString(),
                     ppa = es.Ppa.ToString(),
                     tglambilalih = es.Tglambilalih
-              
-                }).ToList<dynamic>();
+                 
 
-                var DataCreated = _skyRecovery.Ayda.Where(es => es.Id == Entity.AydaId).AsEnumerable()
-                     .Select(es => new 
-                     {
-                         createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
-                         createddated = es.Createddated,
-                         CreatedById = es.Createdby
-                     }).ToList<dynamic>();
+                    }).ToList<dynamic>();
+
+             
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
                 Collection["DataNasabah"] = Nasabah;
                 Collection["DataFiles"] = Files;
                 Collection["DataLoan"] = DataLoan;
-                Collection["DataCollateral"] = DataCollateral;
-                Collection["CreatedInformation"] = DataCreated;
+                Collection["DataAyda"] = DataCollateral;
 
 
-               
+
 
 
                 return (true,"OK", Collection);

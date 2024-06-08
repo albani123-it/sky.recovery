@@ -240,7 +240,7 @@ namespace sky.recovery.Controllers.ext
         }
         //V2
         [HttpGet("V2/TaskList")]
-        public async Task<ActionResult<GeneralResponses>> TaskList(string userid)
+        public async Task<ActionResult<GeneralResponses>> TaskList()
 
         {
             var wrap = _DataResponses.Return();
@@ -249,7 +249,7 @@ namespace sky.recovery.Controllers.ext
             {
                 if (GetUserAgent.code == 200)
                 {
-                    var GetData = await _asuransiservices.InsuranceTaskList(userid);
+                    var GetData = await _asuransiservices.InsuranceTaskList(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);

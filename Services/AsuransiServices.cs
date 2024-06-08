@@ -53,14 +53,13 @@ namespace sky.recovery.Services
             Entity)
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
 
                 var Nasabah = await _sky.MasterCustomer.Where(es => es.Id == Entity.CustomerId).Select(
-                   es => new NasabahAsuransiDTO
+                   es => new 
                    {
                        Nama = es.CuName,
                        Address = es.CuAddress,
@@ -71,10 +70,11 @@ namespace sky.recovery.Services
                        AccNo = _sky.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => es.AccNo).FirstOrDefault()
 
                    }
-                   ).ToListAsync();
+                   ).ToListAsync<dynamic>();
 
-                var Files = await _skyRecovery.Masterrepository.Where(es => es.Requestid == Entity.AsuransiId && es.Isactive == 1).Select(
-                   es => new RepoAsuransiDTO
+                var Files = await _skyRecovery.Masterrepository.
+                    Where(es => es.Requestid == Entity.AsuransiId && es.Isactive == 1).Select(
+                   es => new 
                    {
                        Id = es.Id,
                        url = es.Fileurl,
@@ -83,19 +83,20 @@ namespace sky.recovery.Services
                        doctype = es.Doctype
 
                    }
-                   ).ToListAsync();
+                   ).ToListAsync<dynamic>();
 
-                var DataLoan = await _sky.MasterLoan.Where(es => es.Id == Entity.LoanId).Select(es => new LoanAsuransiDTO
+                var DataLoan = await _sky.MasterLoan.Where(es => es.Id == Entity.LoanId)
+                    .Select(es => new 
                 {
                     loanid = es.Id,
                     Fasilitas = es.Fasilitas,
                     Tenor = es.Tenor.ToString(),
                     LoanType = _sky.Rfproduct.Where(x => x.PrdId == es.Product).Select(es => es.PrdDesc).FirstOrDefault(),
                     Plafond = es.Plafond.ToString()
-                }).ToListAsync();
+                }).ToListAsync<dynamic>();
 
-                var DataAsuransi = _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId).AsEnumerable()
-                    .Select(es => new DetailAsuransi
+                var DataAsuransi =await  _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId)
+                    .Select(es => new 
                 {
                     createddated=es.Createddated.ToString(),
                     nopk=es.Nopk,
@@ -114,39 +115,21 @@ namespace sky.recovery.Services
                     permasalahan=es.Permasalahan,
                     catatanpolis=es.Catatanpolis,
                     keterangan=es.Keterangan,
-                    statusid=es.Statusid,
-                    tglpolis=es.Tglpolis,
-                    usercreated=es.Createdby,
-                    createdby=_skyCoreContext.Users.Where(x=>x.UsrId==es.Createdby).Select(s=>s.UsrUserid).FirstOrDefault()
+                    tglpolis=es.Tglpolis
                 
-                }).ToList();
+                }).ToListAsync<dynamic>();
 
 
 
-                var DataCreated = _skyRecovery.Insurance.Where(es => es.Id == Entity.AsuransiId).AsEnumerable()
-                   .Select(es => new InformationRequest
-                   {
-                       createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
-                       createddated = es.Createddated,
-                       CreatedById = es.Createdby
-                   }).ToList();
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
-                Collection["DataNasabah"] = new List<dynamic>();
-                Collection["DataFiles"] = new List<dynamic>();
-                Collection["DataLoan"] = new List<dynamic>();
-                Collection["DataAsuransi"] = new List<dynamic>();
-                Collection["CreatedInformation"] = new List<dynamic>();
+                Collection["DataNasabah"] = Nasabah;
+                Collection["DataFiles"] = Files;
+                Collection["DataLoan"] = DataLoan;
+                Collection["DataAsuransi"] = DataAsuransi;
 
-                Collection["DataNasabah"].Add(Nasabah);
-                Collection["DataFiles"].Add(Files);
-                Collection["DataLoan"].Add(DataLoan);
-                Collection["DataAsuransi"].Add(DataAsuransi);
-                Collection["CreatedInformation"].Add(DataCreated);
-
-
-
+ 
                 return (true, "OK", Collection);
 
             }
@@ -388,6 +371,7 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> InsuranceTaskList(string UserId)
         {
             var wrap = _DataResponses.Return();
+            var ReturnData = new List<dynamic?>();
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
@@ -395,28 +379,32 @@ namespace sky.recovery.Services
                
 
                 var getCallBy = await _User.GetDataUser(UserId);
-                // pindah ke dinamis
-                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
-                //{
-                //     wrap.Status  = false;
-                //    wrap.Message = "Not Authorize";
-                //    return ( wrap.Status , wrap);
-                //}
-                var ReturnData = await  insurance.Include(i => i.master_loan).
-                    Where(es => es.statusid == 11).Select(
-                    es => new 
+                
+
+                var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid == 16 &&
+ es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+ && es.Status == 11).Select(es => es.Requestid).ToListAsync();
+
+                foreach (var x in MonitoringData)
+                {
+
+                     ReturnData = await insurance.Include(i => i.master_loan).
+                    Where(es => es.Id==x).Select(
+                    es => new
                     {
-                        asuransiid=es.Id,
-                        customerid=es.master_loan.customer_id,
+                        asuransiid = es.Id,
+                        customerid = es.master_loan.customer_id,
                         branch = es.master_loan.master_customer.branch.lbrc_name,
                         noaccount = es.master_loan.acc_no,
                         cif = es.master_loan.cu_cif,
                         nama = es.master_loan.master_customer.cu_name,
                         loanid = es.master_loan.id,
-                        status = es.status.sts_name
-
+                        status = es.status.sts_name,
+                        createddated = es.createddated,
+                        createdby = es.createdby
                     }
                     ).ToListAsync<dynamic>();
+                };
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
@@ -438,7 +426,7 @@ namespace sky.recovery.Services
             // var SkyCollConsString = GetSkyCollConsString();
 
             try
-            {
+            {  
                 
 
                 var getCallBy = await _User.GetDataUser(UserId);
@@ -449,7 +437,9 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
-                var ReturnData = await insurance.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
+                var ReturnData = await insurance.Include(i => i.master_loan)
+                    .Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser)
+                    .Select(
                     es => new 
                     {
                         asuransiid=es.Id,
@@ -459,7 +449,9 @@ namespace sky.recovery.Services
                         cif = es.master_loan.cu_cif,
                         nama = es.master_loan.master_customer.cu_name,
                         loanid = es.master_loan.id,
-                        status = es.status.sts_name
+                        status = es.status.sts_name,
+                        createddated = es.createddated,
+                        createdby = es.createdby
 
                     }
                     ).ToListAsync<dynamic>();

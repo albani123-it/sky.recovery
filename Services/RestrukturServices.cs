@@ -125,7 +125,7 @@ namespace sky.recovery.Services
                     }).ToListAsync<dynamic>();
 
                 var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
-                    .Select(es => new DataLoan
+                    .Select(es => new 
                 {
                     SegmentId=es.PrdSegmentId,
                     ProductId=es.Product,
@@ -146,7 +146,7 @@ namespace sky.recovery.Services
                 }).ToListAsync<dynamic>();
 
                 var DataFasilitas =  await _collContext.MasterLoans
-                    .Where(es => es.CustomerId == CustomerId).Select(es => new DataFasilitasLain
+                    .Where(es => es.CustomerId == CustomerId).Select(es => new 
                 {
                     productid=es.Product,
                     segmentid=es.PrdSegmentId,
@@ -186,6 +186,7 @@ namespace sky.recovery.Services
                     .AsEnumerable()
                     .Select(es => new 
                     {
+                        fiturid =_recoveryContext.Generalparamdetail.Where(es=>es.Title== "Restrukture").Select(es=>es.Id).FirstOrDefault(),
                         createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
                         createddated = es.Createddated,
                         CreatedById = es.Createdby
@@ -300,7 +301,7 @@ namespace sky.recovery.Services
                 var ReturnData = await _postgreRepository.GetRestukture(1, "\""+RecoverySchema.RecoveryBusinessV2.ToString()+"\"."+RecoveryFunctionName.getrestrukture.ToString() + "", Convert.ToInt32(getCallBy.Returns.Data.FirstOrDefault().acceslevel), getCallBy.Returns.Data.FirstOrDefault().iduser);
                  wrap.Status  = true;
                 wrap.Message = "OK";
-              
+
                 wrap.Data = ReturnData;
                 return ( wrap.Status , wrap);
 
@@ -463,7 +464,7 @@ namespace sky.recovery.Services
                     wrap.Status = true;
                     wrap.Message = "OK";
 
-                    wrap.Data = null;
+                wrap.Data = null;
                 
 
 
@@ -511,6 +512,7 @@ namespace sky.recovery.Services
                     wrap.Status = false;
                     wrap.Message = "Data Belum Sepenuhnya Lengkap, Proses Submit Approval Belum Dapat Dilakukan";
                     wrap.Data = null;
+
                 }
                 return (wrap.Status, wrap);
 
@@ -539,18 +541,21 @@ namespace sky.recovery.Services
                 {
                     wrap.Status = false;
                     wrap.Message = "Anda Harus Memilih Permasalahan yang akan di Remove";
+
                     return (wrap.Status, wrap);
                 }
                 if (Entity.idrestrukture == null)
                 {
                     wrap.Status = false;
                     wrap.Message = "Anda Harus Memilih Restrukture Permasalahan yang akan di Remove";
+
                     return (wrap.Status, wrap);
                 }
                 var ReturnData = await _postgreRepository.RemovePermasalahan("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.removepermasalahanrestrukture.ToString() + "", Entity);
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
+
                 return (wrap.Status, wrap);
 
             }
@@ -865,6 +870,13 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status, string Message, long Id)> GetMyFitur()
+        {
+            var Data = await _recoveryContext.Generalparamdetail.Where(es => es.Title == "Restrukture").Select(es => es.Id).FirstOrDefaultAsync();
+            return (true, "OK", Data);
+        
+        }
+
         //SERVICE YANG DIPAKAI
         //TASKLIST RESTRUKTUR V2
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> TaskListRestrukturV2(string UserId)
@@ -885,6 +897,8 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //    return ( wrap.Status , wrap);
                 //}
+
+               
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", Convert.ToInt32(getCallBy.Returns.Data.FirstOrDefault().acceslevel), getCallBy.Returns.Data.FirstOrDefault().iduser);
                  wrap.Status  = true;
                 wrap.Message = "OK";
