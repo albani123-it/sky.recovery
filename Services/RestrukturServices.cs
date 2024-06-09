@@ -169,28 +169,20 @@ namespace sky.recovery.Services
                 var Analisa = await _recoveryContext.Restructurecashflow
                     .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
-                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
+                var PolaRestruk =await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
                     .Select(es => new 
                     {
                         keterangan=es.Keterangan,
                         pengurangannilaimargin=es.Pengurangannilaimargin,
                         jenispengurangan=es.Jenispenguranganid,
                         graceperiod=es.Graceperiode,
-                        polaid=es.Polarestrukturid,
-
+                        polaid=es.Polarestrukturid
+                       
 
                     }).ToListAsync<dynamic>();
 
 
-                var DataCreated =  _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
-                    .AsEnumerable()
-                    .Select(es => new 
-                    {
-                        fiturid =_recoveryContext.Generalparamdetail.Where(es=>es.Title== "Restrukture").Select(es=>es.Id).FirstOrDefault(),
-                        createdby = _skyCoreContext.Users.Where(x => x.UsrId == es.Createdby).Select(es => es.UsrUserid).FirstOrDefault(),
-                        createddated = es.Createddated,
-                        CreatedById = es.Createdby
-                    }).ToList<dynamic>();
+             
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
@@ -201,7 +193,6 @@ namespace sky.recovery.Services
                 Collection["Dokumen"] = Dokumen;
                 Collection["Analisa"] = Analisa;
                 Collection["PolaRestruk"] = PolaRestruk;
-                Collection["DataCreated"] = DataCreated;
 
                 return (true, "OK", Collection);
 
