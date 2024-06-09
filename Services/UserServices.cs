@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using sky.recovery.DTOs.ResponsesDTO;
 using sky.recovery.Helper.Config;
 using sky.recovery.Insfrastructures;
+using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using sky.recovery.Interfaces;
 using sky.recovery.Libs;
 using sky.recovery.Responses;
@@ -15,6 +16,7 @@ namespace sky.recovery.Services
 {
     public class UserServices : SkyCollConfig, IUserService
     {
+        skycoreContext _skyCoreContext = new skycoreContext();
         public UserServices(IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
 
@@ -29,38 +31,38 @@ namespace sky.recovery.Services
             };
             try
             {
-                var Data = await users.AsQueryable().
+                var Data =  _skyCoreContext.Users.Where(es => es.UsrUserid== userid).AsEnumerable().
                     Select(es=>new UserDetailDTO
                     {
-                        iduser=es.usr_id,
-                        branch=es.usr_branch,
+                        iduser=es.UsrId,
+                        branch=es.UsrBranch,
                         
-                        acceslevel=es.usr_access_level,
-                        email=es.usr_email,
-                        userid=es.usr_userid,
-                        spvname=es.usr_supervisor
+                        acceslevel=es.UsrAccessLevel,
+                        email=es.UsrEmail,
+                        userid=es.UsrUserid,
+                        spvname=es.UsrSupervisor,
+                        role= role.Where(x=>x.rl_id== Convert.ToInt32(es.UsrAccessLevel)).AsEnumerable().Select(es=>es.rl_name).FirstOrDefault(),
+                        RoleId= role.Where(x => x.rl_id == Convert.ToInt32(es.UsrAccessLevel)).AsEnumerable().Select(es => es.rl_id).FirstOrDefault()
 
-                    }).
-                    Where(es => es.userid== userid).
-                    ToListAsync();
+                    }).ToList();
 
-                var ListData = new List<UserDetailDTO>();
-                var CheckDataRole = await GetRoles(Convert.ToInt32(Data.FirstOrDefault().acceslevel));
-                foreach(var x in Data)
-                {
-                    x.iduser = x.iduser;
-                    x.branch = x.branch;
-                    x.acceslevel = x.acceslevel;
-                    x.email = x.email;
-                    x.userid = x.userid;
-                    x.role = CheckDataRole.Returns.Data.FirstOrDefault().RoleName;
-                    x.RoleId = CheckDataRole.Returns.Data.FirstOrDefault().RoleId;
+                //var ListData = new List<UserDetailDTO>();
+                //var CheckDataRole = await GetRoles(Convert.ToInt32(Data.FirstOrDefault().acceslevel));
+                //foreach(var x in Data)
+                //{
+                //    x.iduser = x.iduser;
+                //    x.branch = x.branch;
+                //    x.acceslevel = x.acceslevel;
+                //    x.email = x.email;
+                //    x.userid = x.userid;
+                //    x.role = CheckDataRole.Returns.Data.FirstOrDefault().RoleName;
+                //    x.RoleId = CheckDataRole.Returns.Data.FirstOrDefault().RoleId;
 
-                    ListData.Add(x);
-                }
+                //    ListData.Add(x);
+                //}
                 wrap.Status = false;
                 wrap.Message = "OK";
-                wrap.Data = ListData;
+                wrap.Data = Data;
               
                 return (wrap.Status, wrap);
             }
@@ -81,7 +83,7 @@ namespace sky.recovery.Services
             };
             try
             {
-                var Data = await role.AsQueryable().
+                var Data = await role.
                     Select(es => new RoleDTO
                     {
                         RoleId = es.rl_id,
