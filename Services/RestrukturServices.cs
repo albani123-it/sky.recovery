@@ -200,10 +200,24 @@ namespace sky.recovery.Services
 
 
                 var DataPermasalahan = await _recoveryContext.Permasalahanrestrukture
-                    .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
+              
+                    .Where(es => es.Restruktureid == restruktureid).Select(es => new 
+                      {
+                    Descriptions = es.Descriptions
+                }).ToListAsync<dynamic>();
 
                 var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
-                   .ToListAsync<dynamic>();
+                   .Select(es=> new
+                   {
+                       JenisDokumen = es.Doctypedesc,
+                       Url = es.Filepath,
+                       FileName = es.Fileurl,
+                       UploadDated = es.Uploaddated
+                   }
+                   
+                   )
+                    
+                    .ToListAsync<dynamic>();
 
                 var DataRestruk = from rs in _recoveryContext.Restrukture
                                   join ra in _recoveryContext.Restructurecashflow on rs.Id equals ra.Restruktureid
