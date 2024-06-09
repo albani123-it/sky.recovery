@@ -385,11 +385,10 @@ namespace sky.recovery.Services
  es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
  && es.Status == 11).Select(es => es.Requestid).ToListAsync();
 
-                foreach (var x in MonitoringData)
-                {
+               
 
                      ReturnData = await insurance.Include(i => i.master_loan).
-                    Where(es => es.Id==x).Select(
+                    Where(es => MonitoringData.Contains(es.Id)).Select(
                     es => new
                     {
                         asuransiid = es.Id,
@@ -401,10 +400,11 @@ namespace sky.recovery.Services
                         loanid = es.master_loan.id,
                         status = es.status.sts_name,
                         createddated = es.createddated,
-                        createdby = es.createdby
+                        createdby = es.createdby,
+                        FiturId=16
                     }
                     ).ToListAsync<dynamic>();
-                };
+                
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;

@@ -15,7 +15,6 @@ namespace sky.recovery.Responses
         public bool Status { get; set; }
         public string Message { get; set; }
 
-        public long FiturId { get; set; }
        public List<dynamic> Data { get; set; }
 
     }

@@ -385,14 +385,16 @@ namespace sky.recovery.Services
                 //    return ( wrap.Status , wrap);
                 //}
 
+              
+
+
                 var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
                 es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
                 && es.Status == 11).Select(es => es.Requestid).ToListAsync();
 
 
-                foreach (var x in MonitoringData)
-                {
-                    ListDynamic= await ayda.Include(i => i.master_loan).Where(es => es.id == x).Select(
+                
+                    ListDynamic= await ayda.Include(i => i.master_loan).Where(es => MonitoringData.Contains(es.id)).Select(
                         es => new
                         {
                             Id = es.id,
@@ -406,11 +408,12 @@ namespace sky.recovery.Services
                             alamatjaminan = es.master_loan.master_collateral.col_address,
                             status = es.status.sts_name,
                             createddated=es.createddated,
-                            createdby=es.createdby
+                            createdby=es.createdby,
+                            FiturId=10
 
                         }
                         ).ToListAsync<dynamic?>();
-                }
+                
 
                 wrap.Status = true;
                 wrap.Message = "OK";

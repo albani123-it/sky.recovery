@@ -65,12 +65,11 @@ namespace sky.recovery.Services
  es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
  && es.Status == 11).Select(es => es.Requestid).ToListAsync();
 
-                foreach (var x in MonitoringData)
-                {
+               
 
                     ReturnData = await auction.Include(i => i.master_loan).Where(es =>
 
-                es.id==x).Select(
+                MonitoringData.Contains(es.id)).Select(
                     es => new
                     {
                         branch = es.master_loan.master_customer.branch.lbrc_name,
@@ -80,10 +79,11 @@ namespace sky.recovery.Services
                         loanid = es.master_loan.id,
                         status = es.status.sts_name,
                           createddated = es.createddated,
-                        createdby = es.createdby
+                        createdby = es.createdby,
+                        FiturId=15
                     }
                     ).ToListAsync<dynamic>();
-                };
+                
                 wrap.Status = true;
                 wrap.Message = "OK";
                 wrap.Data = ReturnData;
