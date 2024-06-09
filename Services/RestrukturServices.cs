@@ -120,8 +120,8 @@ namespace sky.recovery.Services
                         alamat = es.CuAddress,
                         nohp = es.CuHmphone,
                         pekerjaan = es.Pekerjaan,
-                        tanggallahir = es.CuBorndate.ToString(),
-                        TglCore = es.StgDate.ToString()
+                        tanggallahir = es.CuBorndate,
+                        TglCore = es.StgDate
                     }).ToListAsync<dynamic>();
 
                 var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
@@ -129,20 +129,20 @@ namespace sky.recovery.Services
                 {
                     SegmentId=es.PrdSegmentId,
                     ProductId=es.Product,
-                    JumlahAngsuran=es.Installment.ToString(),
-                    TanggalMulai=es.StartDate.ToString(),
-                    TanggalJatuhTempo=es.MaturityDate.ToString(),
-                    Tenor=es.Tenor.ToString(),
-                    Plafond=es.Plafond.ToString(),
-                    OutStanding=es.Outstanding.ToString(),
-                    Kolektabilitas=es.Kolektibilitas.ToString(),
-                    DPD=es.Dpd.ToString(),
-                    TglBayarTerakhir=es.LastPayDate.ToString(),
-                    TunggakanPokok=es.TunggakanPokok.ToString(),
-                    TunggakanBunga=es.TunggakanBunga.ToString(),
-                    TunggakanDenda=es.TunggakanDenda.ToString(),
-                    TotalTunggakan=es.TunggakanTotal.ToString(),
-                    TotalKewajiban=es.KewajibanTotal.ToString()
+                    JumlahAngsuran=es.Installment,
+                    TanggalMulai=es.StartDate,
+                    TanggalJatuhTempo=es.MaturityDate,
+                    Tenor=es.Tenor,
+                    Plafond=es.Plafond,
+                    OutStanding=es.Outstanding,
+                    Kolektabilitas=es.Kolektibilitas,
+                    DPD=es.Dpd,
+                    TglBayarTerakhir=es.LastPayDate,
+                    TunggakanPokok=es.TunggakanPokok,
+                    TunggakanBunga=es.TunggakanBunga,
+                    TunggakanDenda=es.TunggakanDenda,
+                    TotalTunggakan=es.TunggakanTotal,
+                    TotalKewajiban=es.KewajibanTotal
                 }).ToListAsync<dynamic>();
 
                 var DataFasilitas =  await _collContext.MasterLoans
@@ -150,17 +150,17 @@ namespace sky.recovery.Services
                 {
                     productid=es.Product,
                     segmentid=es.PrdSegmentId,
-                    JumlahAngsuran=es.Installment.ToString(),
-                    TanggalMulai=es.StartDate.ToString(),
-                    TanggalJatuhTempo=es.MaturityDate.ToString(),
-                    Tenor=es.Tenor.ToString(),
-                    JumlahPinjaman=es.KewajibanTotal.ToString(),
-                    Outstanding=es.Outstanding.ToString()
+                    JumlahAngsuran=es.Installment,
+                    TanggalMulai=es.StartDate,
+                    TanggalJatuhTempo=es.MaturityDate,
+                    Tenor=es.Tenor,
+                    JumlahPinjaman=es.KewajibanTotal,
+                    Outstanding=es.Outstanding
 
 
                 }).ToListAsync<dynamic>();
 
-                var DataPermasalahan =  await _recoveryContext.Permasalahanrestrukture
+                var DataPermasalahan = await  _recoveryContext.Permasalahanrestrukture
                     .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
                 var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
@@ -169,7 +169,7 @@ namespace sky.recovery.Services
                 var Analisa = await _recoveryContext.Restructurecashflow
                     .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
-                var PolaRestruk =await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
+                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
                     .Select(es => new 
                     {
                         keterangan=es.Keterangan,
@@ -182,11 +182,11 @@ namespace sky.recovery.Services
                     }).ToListAsync<dynamic>();
 
 
-             
+
 
                 var Collection = new Dictionary<string, List<dynamic>>();
 
-                Collection["nasabah"] = DataNasabah;
+                Collection["nasabah"] =  DataNasabah;
                 Collection["DataLoan"] = DataLoan;
                 Collection["DataFasilitas"] = DataFasilitas;
                 Collection["Permasalahan"] = DataPermasalahan;
@@ -882,15 +882,7 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
                
-                // pindah ke dinamis
-                //if (getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVC.ToString()
-                //    || getCallBy.Returns.Data.FirstOrDefault().acceslevel != ConfigSPVNumber.SPVG.ToString()
-                //    )
-                //{
-                //     wrap.Status  = false;
-                //    wrap.Message = "Not Authorize";
-                //    return ( wrap.Status , wrap);
-                //}
+               
 
                
                 var ReturnData = await _postgreRepository.GetRestukture(2, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.tasklistrestrukture.ToString() + "", Convert.ToInt32(getCallBy.Returns.Data.FirstOrDefault().acceslevel), getCallBy.Returns.Data.FirstOrDefault().iduser);
