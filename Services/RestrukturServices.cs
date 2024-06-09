@@ -308,9 +308,9 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //Get Pola Metode RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesConfigV2 Returns)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
+        public async Task<(bool? Status, Dictionary<string, List<dynamic>> DataNasabah)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
         {
-            var wrap = _DataResponses.GeneralResponsesConfigData();
+            var wrap = _DataResponses.ReturnDictionary();
             var SkyCollConsString = GetSkyCollConsString();
 
             try
@@ -322,19 +322,22 @@ namespace sky.recovery.Services
 
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.MetodeRestruktur = GetMetodeRestruktur.DataDetail;
-                wrap.JenisPengurangan = GetJenisPengurangan.DataDetail;
-                wrap.DataRestrukture = GetDetailPolaRestrukture;
-                wrap.BranchList = GetBranchList;
+                var Collection = new Dictionary<string, List<dynamic>>();
+                Collection["MetodeRestruktur"] = GetMetodeRestruktur.DataDetail.ToList<dynamic>();
+                Collection["JenisPengurangan"] = GetJenisPengurangan.DataDetail.ToList<dynamic>();
+                Collection["DataRestrukture"] = GetDetailPolaRestrukture;
+                Collection["BranchList"] = GetBranchList;
 
-                return (wrap.Status, wrap);
+              
+
+                return (wrap.Status, Collection);
             }
             catch (Exception ex)
             {
                 wrap.Status = false;
                 wrap.Message = ex.Message;
 
-                return (wrap.Status, wrap);
+                return (wrap.Status, null);
             }
         }
 

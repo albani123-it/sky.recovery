@@ -532,7 +532,7 @@ namespace sky.recovery.Controllers.ext
         public async Task<ActionResult<GeneralResponses>> PolaMetodeRestrukture([FromBody] GetPolaDTO Entity)
 
         {
-            var wrap = _DataResponses.Return();
+            var wrap = _DataResponses.ReturnDictionary();
 
             try
             {
@@ -556,13 +556,16 @@ namespace sky.recovery.Controllers.ext
                 }
 
                 var GetData = await _recoveryService.GetPolaMetodeRestrukture(Entity.idrestrukture,Entity.idloan);
+                wrap.Message = "OK";
+                wrap.Status = GetData.Status;
+                wrap.Data = GetData.DataNasabah;
                 if (GetData.Status == true)
                 {
-                    return Ok(GetData.Returns);
+                    return Ok(wrap);
                 }
                 else
                 {
-                    return BadRequest(GetData.Returns);
+                    return BadRequest(wrap);
                 }
 
             }
@@ -571,7 +574,7 @@ namespace sky.recovery.Controllers.ext
             {
                 wrap.Message = ex.Message;
                 wrap.Status = false;
-                return BadRequest(wrap);
+                return StatusCode(500,wrap);
             }
         }
 
