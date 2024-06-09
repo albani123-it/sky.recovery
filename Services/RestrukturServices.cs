@@ -112,38 +112,76 @@ namespace sky.recovery.Services
             try
             {
 
-                var DataNasabah = await _collContext.MasterCustomers.Where(es => es.Id == CustomerId)
-                    .Select(es => new 
-                    {
-                        Nama = es.CuName,
-                        NoKTP = es.CuIdnumber,
-                        alamat = es.CuAddress,
-                        nohp = es.CuHmphone,
-                        pekerjaan = es.Pekerjaan,
-                        tanggallahir = es.CuBorndate,
-                        TglCore = es.StgDate
-                    }).ToListAsync<dynamic>();
+                
 
-                var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
-                    .Select(es => new 
-                {
-                    SegmentId=es.PrdSegmentId,
-                    ProductId=es.Product,
-                    JumlahAngsuran=es.Installment,
-                    TanggalMulai=es.StartDate,
-                    TanggalJatuhTempo=es.MaturityDate,
-                    Tenor=es.Tenor,
-                    Plafond=es.Plafond,
-                    OutStanding=es.Outstanding,
-                    Kolektabilitas=es.Kolektibilitas,
-                    DPD=es.Dpd,
-                    TglBayarTerakhir=es.LastPayDate,
-                    TunggakanPokok=es.TunggakanPokok,
-                    TunggakanBunga=es.TunggakanBunga,
-                    TunggakanDenda=es.TunggakanDenda,
-                    TotalTunggakan=es.TunggakanTotal,
-                    TotalKewajiban=es.KewajibanTotal
-                }).ToListAsync<dynamic>();
+                //var DataNasabah = await _collContext.MasterCustomers.Where(es => es.Id == CustomerId)
+                //    .Select(es => new 
+                //    {
+                //        Nama = es.CuName,
+                //        NoKTP = es.CuIdnumber,
+                //        alamat = es.CuAddress,
+                //        nohp = es.CuHmphone,
+                //        pekerjaan = es.Pekerjaan,
+                //        tanggallahir = es.CuBorndate,
+                //        TglCore = es.StgDate
+                //    }).ToListAsync<dynamic>();
+
+                //var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
+                //    .Select(es => new 
+                //{
+                //    SegmentId=es.PrdSegmentId,
+                //    ProductId=es.Product,
+                //    JumlahAngsuran=es.Installment,
+                //    TanggalMulai=es.StartDate,
+                //    TanggalJatuhTempo=es.MaturityDate,
+                //    Tenor=es.Tenor,
+                //    Plafond=es.Plafond,
+                //    OutStanding=es.Outstanding,
+                //    Kolektabilitas=es.Kolektibilitas,
+                //    DPD=es.Dpd,
+                //    TglBayarTerakhir=es.LastPayDate,
+                //    TunggakanPokok=es.TunggakanPokok,
+                //    TunggakanBunga=es.TunggakanBunga,
+                //    TunggakanDenda=es.TunggakanDenda,
+                //    TotalTunggakan=es.TunggakanTotal,
+                //    TotalKewajiban=es.KewajibanTotal
+                //}).ToListAsync<dynamic>();
+
+
+
+                var Data = from mc in _collContext.MasterCustomers
+                           join ml in _collContext.MasterLoans on mc.Id equals ml.CustomerId
+                           where ml.Id == loanid 
+                           select new
+                           {
+                               Nama = mc.CuName,
+                               NoKTP = mc.CuIdnumber,
+                               alamat = mc.CuAddress,
+                               nohp = mc.CuHmphone,
+                               pekerjaan = mc.Pekerjaan,
+                               tanggallahir = mc.CuBorndate,
+                               TglCore = mc.StgDate,
+                               DataLoan = new
+                               {
+                                   SegmentId = ml.PrdSegmentId,
+                                   ProductId = ml.Product,
+                                   JumlahAngsuran = ml.Installment,
+                                   TanggalMulai = ml.StartDate,
+                                   TanggalJatuhTempo = ml.MaturityDate,
+                                   Tenor = ml.Tenor,
+                                   Plafond = ml.Plafond,
+                                   OutStanding = ml.Outstanding,
+                                   Kolektabilitas = ml.Kolektibilitas,
+                                   DPD = ml.Dpd,
+                                   TglBayarTerakhir = ml.LastPayDate,
+                                   TunggakanPokok = ml.TunggakanPokok,
+                                   TunggakanBunga = ml.TunggakanBunga,
+                                   TunggakanDenda = ml.TunggakanDenda,
+                                   TotalTunggakan = ml.TunggakanTotal,
+                                   TotalKewajiban = ml.KewajibanTotal
+                               }
+                           };
+                var DataNasabah = await Data.ToListAsync<dynamic>();
 
                 var DataFasilitas =  await _collContext.MasterLoans
                     .Where(es => es.CustomerId == CustomerId).Select(es => new 
@@ -160,26 +198,50 @@ namespace sky.recovery.Services
 
                 }).ToListAsync<dynamic>();
 
-                var DataPermasalahan = await  _recoveryContext.Permasalahanrestrukture
+
+                var DataPermasalahan = await _recoveryContext.Permasalahanrestrukture
                     .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
 
                 var Dokumen = await _recoveryContext.Restrukturedokumen.Where(es => es.Restruktureid == restruktureid)
                    .ToListAsync<dynamic>();
 
-                var Analisa = await _recoveryContext.Restructurecashflow
-                    .Where(es => es.Restruktureid == restruktureid).ToListAsync<dynamic>();
+                var DataRestruk = from rs in _recoveryContext.Restrukture
+                                  join ra in _recoveryContext.Restructurecashflow on rs.Id equals ra.Restruktureid
+                                  where rs.Id == restruktureid
+                                  select new
+                                  {
+                                      Analisa = new
+                                      {
+                                          Id=ra.Id,
+                                          PenghasilanNasabah=ra.Penghasilanbersih,
+                                          PenghasilanPasangan=ra.Penghasilanpasangan,
+                                          PenghasilanLainnya=ra.Penghasilanlainnya,
+                                          TotalPenghasilan=ra.Totalpenghasilan,
+                                          BiayaPendidikan=ra.Biayapendidikan,
+                                          BiayaListrikAirTelp = ra.Biayalistrkairtelp,
+                                          BiayaBelanja=ra.Biayabelanja,
+                                          BiayaTransportasi=ra.Biayatransportasi,
+                                          BiayaLainnya = ra.Biayalainnya,
+                                          PengeluaranTotal=ra.Pengeluarantotal,
+                                          HutangdiBank = ra.Hutangdibank,
+                                          CicilanLainnya = ra.Cicilanlainnya,
+                                          TotalKewajiban = ra.Totalkewajiban,
+                                          PenghasilanBersih = ra.Penghasilanbersih,
+                                          RPC70Persen = ra.Rpc70persen
 
-                var PolaRestruk = await _recoveryContext.Restrukture.Where(es => es.Id == restruktureid)
-                    .Select(es => new 
-                    {
-                        keterangan=es.Keterangan,
-                        pengurangannilaimargin=es.Pengurangannilaimargin,
-                        jenispengurangan=es.Jenispenguranganid,
-                        graceperiod=es.Graceperiode,
-                        polaid=es.Polarestrukturid
-                       
+                                      },
+                                      PolaRestruk = new
+                                      {
+                                          keterangan =rs.Keterangan,
+                                          pengurangannilaimargin = rs.Pengurangannilaimargin,
+                                          jenispengurangan = rs.Jenispenguranganid,
+                                          graceperiod = rs.Graceperiode,
+                                          polaid = rs.Polarestrukturid
+                                      }
+                                  };
+                var DataRestrukList = await DataRestruk.ToListAsync<dynamic>();
 
-                    }).ToListAsync<dynamic>();
+             
 
 
 
@@ -187,12 +249,13 @@ namespace sky.recovery.Services
                 var Collection = new Dictionary<string, List<dynamic>>();
 
                 Collection["nasabah"] =  DataNasabah;
-                Collection["DataLoan"] = DataLoan;
+                //Collection["DataLoan"] = DataLoan;
                 Collection["DataFasilitas"] = DataFasilitas;
                 Collection["Permasalahan"] = DataPermasalahan;
                 Collection["Dokumen"] = Dokumen;
-                Collection["Analisa"] = Analisa;
-                Collection["PolaRestruk"] = PolaRestruk;
+                //Collection["Analisa"] = Analisa;
+                //Collection["PolaRestruk"] = PolaRestruk;
+                Collection["DataRestruk"] = DataRestrukList;
 
                 return (true, "OK", Collection);
 

@@ -23,7 +23,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public int? Totalkewajiban { get; set; }
         public int? Penghasilanbersih { get; set; }
         public int? Rpc70persen { get; set; }
-        public int? Restruktureid { get; set; }
+        public long? Restruktureid { get; set; }
         public int? Createdby { get; set; }
         public DateTime? Createddated { get; set; }
     }

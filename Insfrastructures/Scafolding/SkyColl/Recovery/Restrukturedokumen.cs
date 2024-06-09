@@ -17,7 +17,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public DateTime? Modifydated { get; set; }
         public int? Modifiedby { get; set; }
         public int? Loanid { get; set; }
-        public int? Restruktureid { get; set; }
+        public long? Restruktureid { get; set; }
         public int? Isdeleted { get; set; }
     }
 }
