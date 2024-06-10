@@ -31,35 +31,24 @@ namespace sky.recovery.Services
             };
             try
             {
-                var Data =  _skyCoreContext.Users.Where(es => es.UsrUserid== userid).AsEnumerable().
-                    Select(es=>new UserDetailDTO
-                    {
-                        iduser=es.UsrId,
-                        branch=es.UsrBranch,
-                        
-                        acceslevel=es.UsrAccessLevel,
-                        email=es.UsrEmail,
-                        userid=es.UsrUserid,
-                        spvname=es.UsrSupervisor,
-                        role= role.Where(x=>x.rl_id== Convert.ToInt32(es.UsrAccessLevel)).AsEnumerable().Select(es=>es.rl_name).FirstOrDefault(),
-                        RoleId= role.Where(x => x.rl_id == Convert.ToInt32(es.UsrAccessLevel)).AsEnumerable().Select(es => es.rl_id).FirstOrDefault()
+                var Datas = from u in _skyCoreContext.Users
+                            join r in _skyCoreContext.Roles on Convert.ToInt32(u.UsrAccessLevel) equals r.RlId
+                            where u.UsrUserid==userid
+                            select new UserDetailDTO
+                            {
+                                iduser = u.UsrId,
+                                branch = u.UsrBranch,
 
-                    }).ToList();
+                                acceslevel = u.UsrAccessLevel,
+                                email = u.UsrEmail,
+                                userid = u.UsrUserid,
+                                spvname = u.UsrSupervisor,
+                                role = r.RlName,
+                                RoleId =r.RlId 
 
-                //var ListData = new List<UserDetailDTO>();
-                //var CheckDataRole = await GetRoles(Convert.ToInt32(Data.FirstOrDefault().acceslevel));
-                //foreach(var x in Data)
-                //{
-                //    x.iduser = x.iduser;
-                //    x.branch = x.branch;
-                //    x.acceslevel = x.acceslevel;
-                //    x.email = x.email;
-                //    x.userid = x.userid;
-                //    x.role = CheckDataRole.Returns.Data.FirstOrDefault().RoleName;
-                //    x.RoleId = CheckDataRole.Returns.Data.FirstOrDefault().RoleId;
-
-                //    ListData.Add(x);
-                //}
+                            };
+                var Data = Datas.ToList();
+              
                 wrap.Status = false;
                 wrap.Message = "OK";
                 wrap.Data = Data;
