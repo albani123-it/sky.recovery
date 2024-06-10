@@ -9,7 +9,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
     {
         public long Id { get; set; }
         public int? Fiturid { get; set; }
-        public int? Requestid { get; set; }
+        public long? Requestid { get; set; }
         public int? Flowid { get; set; }
         public int? Actor { get; set; }
         public int? Status { get; set; }

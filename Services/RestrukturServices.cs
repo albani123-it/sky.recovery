@@ -151,6 +151,8 @@ namespace sky.recovery.Services
 
                 var Data = from mc in _collContext.MasterCustomers
                            join ml in _collContext.MasterLoans on mc.Id equals ml.CustomerId
+                           join pd in _collContext.Rfproducts on ml.Product equals pd.PrdId
+                           join ps in _collContext.RfproductSegments on ml.PrdSegmentId equals ps.PrdSgmId
                            where ml.Id == loanid 
                            select new
                            {
@@ -164,7 +166,9 @@ namespace sky.recovery.Services
                                DataLoan = new
                                {
                                    SegmentId = ml.PrdSegmentId,
+                                   Segment = ps.PrdSgmDesc,
                                    ProductId = ml.Product,
+                                   Product = pd.PrdDesc,
                                    JumlahAngsuran = ml.Installment,
                                    TanggalMulai = ml.StartDate,
                                    TanggalJatuhTempo = ml.MaturityDate,

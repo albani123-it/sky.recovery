@@ -7,7 +7,7 @@
         public string Status { get; set; }
         
         public string fitur { get; set; }
-        public int? requestid { get; set; }
+        public long? requestid { get; set; }
         public int? flowid { get; set; }
         public int? actor { get; set; }
         public int? statusid { get; set; }

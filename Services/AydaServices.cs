@@ -21,6 +21,7 @@ using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using System.Reflection.Metadata;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
+using static Dapper.SqlMapper;
 
 namespace sky.recovery.Services
 {
@@ -385,39 +386,66 @@ namespace sky.recovery.Services
                 //    return ( wrap.Status , wrap);
                 //}
 
-              
 
 
-                var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
-                es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                && es.Status == 11).Select(es => es.Requestid).ToListAsync();
+
+                //var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
+                //es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                //&& es.Status == 11).Select(es => es.Requestid).ToListAsync();
+                var CheckingWF = await _skyRecovery.Workflow.
+                    Where(es => es.Fiturid == 10 && es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                    && es.Status == 11)
+                    .Select(es => es.Id)
+                    .ToListAsync();
+
+                var MaxId = CheckingWF.Max(es => es);
+
+                var Data = from ad in _skyRecovery.Ayda
+                           join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
+                           where wf.Id==MaxId
+                           select new
+                           {
+                                Id = wf.Requestid,
+                               LoanId = ad.Loanid,
+                               statusid = ad.Statusid,
+                               createddated = ad.Createddated,
+                               createdby = ad.Createdby,
+                               FiturId = 10
+
+                           };
+                var DataAYDA = Data.AsEnumerable();
+
+                var JoinData = from ad in DataAYDA
+                            join ml in _sky.MasterLoan on ad.LoanId equals ml.Id
+                           join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
+                           join mt in _sky.MasterCollateral on ml.Id equals mt.LoanId
+                           join br in _sky.Branch on mc.BranchId equals br.LbrcId
+                           join st in _sky.Status on ad.statusid equals st.StsId
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   LoanId = ad.Id,
+                                   customerid = mc.Id,
+                                   cabang = br.LbrcName,
+                                   noloan = ml.AccNo,
+                                   namanasabah = mc.CuName,
+                                   totaltunggakan = ml.TunggakanTotal,
+                                   jenisjaminan = mt.ColType,
+                                   alamatjaminan = mt.ColAddress,
+                                   status = st.StsName,
+                                   createddated = ad.createddated,
+                                   createdby = ad.createdby,
+                                   FiturId = 10
+
+                               };
 
 
-                
-                    ListDynamic= await ayda.Include(i => i.master_loan).Where(es => MonitoringData.Contains(es.id)).Select(
-                        es => new
-                        {
-                            Id = es.id,
-                            LoanId = es.loanid,
-                            customerid = es.master_loan.customer_id,
-                            cabang = es.master_loan.master_customer.branch.lbrc_name,
-                            noloan = es.master_loan.acc_no,
-                            namanasabah = es.master_loan.master_customer.cu_name,
-                            totaltunggakan = es.master_loan.tunggakan_total,
-                            jenisjaminan = es.master_loan.master_collateral.col_type,
-                            alamatjaminan = es.master_loan.master_collateral.col_address,
-                            status = es.status.sts_name,
-                            createddated=es.createddated,
-                            createdby=es.createdby,
-                            FiturId=10
-
-                        }
-                        ).ToListAsync<dynamic?>();
+                var Datas = JoinData.ToList<dynamic>();
                 
 
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ListDynamic;
+                wrap.Data = Datas;
                 return (wrap.Status, wrap);
 
             }

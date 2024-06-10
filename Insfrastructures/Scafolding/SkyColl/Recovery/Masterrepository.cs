@@ -15,7 +15,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public DateTime? Modifydated { get; set; }
         public int? Isactive { get; set; }
         public int? Fiturid { get; set; }
-        public int? Requestid { get; set; }
+        public long? Requestid { get; set; }
         public int? Doctype { get; set; }
     }
 }
