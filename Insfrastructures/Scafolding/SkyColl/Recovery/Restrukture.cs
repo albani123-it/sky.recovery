@@ -30,9 +30,9 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public decimal? Margin { get; set; }
         public decimal? Denda { get; set; }
         public decimal? Totaldiskonmargin { get; set; }
-        public int? Polarestrukturid { get; set; }
+        public long? Polarestrukturid { get; set; }
         public int? Pembayarangpid { get; set; }
-        public int? Jenispenguranganid { get; set; }
+        public long? Jenispenguranganid { get; set; }
         public string Permasalahan { get; set; }
         public int? Createdby { get; set; }
         public DateTime? Createddated { get; set; }

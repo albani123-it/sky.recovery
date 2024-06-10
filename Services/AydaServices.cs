@@ -392,39 +392,37 @@ namespace sky.recovery.Services
                 //var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
                 //es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
                 //&& es.Status == 11).Select(es => es.Requestid).ToListAsync();
-                var CheckingWF = await _skyRecovery.Workflow.
-                    Where(es => es.Fiturid == 10 && es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                    && es.Status == 11)
-                    .Select(es => es.Id)
-                    .ToListAsync();
 
-                var MaxId = CheckingWF.Max(es => es);
 
-                var Data = from ad in _skyRecovery.Ayda
-                           join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
-                           where wf.Id==MaxId
-                           select new
-                           {
-                                Id = wf.Requestid,
-                               LoanId = ad.Loanid,
-                               statusid = ad.Statusid,
-                               createddated = ad.Createddated,
-                               createdby = ad.Createdby,
-                               FiturId = 10
 
-                           };
-                var DataAYDA = Data.AsEnumerable();
-
-                var JoinData = from ad in DataAYDA
-                            join ml in _sky.MasterLoan on ad.LoanId equals ml.Id
-                           join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
-                           join mt in _sky.MasterCollateral on ml.Id equals mt.LoanId
-                           join br in _sky.Branch on mc.BranchId equals br.LbrcId
-                           join st in _sky.Status on ad.statusid equals st.StsId
+                var DataAyda = from ad in _skyRecovery.Ayda
+                               join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
+                               where wf.Fiturid == 10 && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                               && wf.Status == 11
                                select new
                                {
                                    Id = ad.Id,
-                                   LoanId = ad.Id,
+                                   WorkflowId = wf.Id,
+                                   StatusId = ad.Statusid,
+                                   LoanId = ad.Loanid,
+                                   createddated = ad.Createddated,
+                                   createdby = ad.Createdby,
+                                   FiturId = wf.Fiturid
+                               };
+                
+
+                var JoinData = from ad in DataAyda.AsEnumerable()
+                               join ml in _sky.MasterLoan on ad.LoanId equals ml.Id
+                           join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
+                           join mt in _sky.MasterCollateral on ml.Id equals mt.LoanId
+                           join br in _sky.Branch on mc.BranchId equals br.LbrcId
+                           join st in _sky.Status on ad.StatusId equals st.StsId
+                            
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   WorkflowId=ad.WorkflowId,
+                                   LoanId = ad.LoanId,
                                    customerid = mc.Id,
                                    cabang = br.LbrcName,
                                    noloan = ml.AccNo,

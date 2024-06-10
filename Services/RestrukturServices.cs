@@ -187,20 +187,29 @@ namespace sky.recovery.Services
                            };
                 var DataNasabah = await Data.ToListAsync<dynamic>();
 
-                var DataFasilitas =  await _collContext.MasterLoans
-                    .Where(es => es.CustomerId == CustomerId).Select(es => new 
-                {
-                    productid=es.Product,
-                    segmentid=es.PrdSegmentId,
-                    JumlahAngsuran=es.Installment,
-                    TanggalMulai=es.StartDate,
-                    TanggalJatuhTempo=es.MaturityDate,
-                    Tenor=es.Tenor,
-                    JumlahPinjaman=es.KewajibanTotal,
-                    Outstanding=es.Outstanding
+                var DatasFasilitas = from mc in _collContext.MasterCustomers
+                                     join ml in _collContext.MasterLoans on mc.Id equals ml.CustomerId
+                                     join pd in _collContext.Rfproducts on ml.Product equals pd.PrdId
+                                     join ps in _collContext.RfproductSegments on ml.PrdSegmentId equals ps.PrdSgmId
+                                     where mc.Id==CustomerId
+                                     select new
+                                     {
+                                         CuCif = ml.CuCif,
+                                         AccNo = ml.AccNo,
+                                         productid = ml.Product,
+                                         Product = pd.PrdDesc,
+                                         segmentid = ml.PrdSegmentId,
+                                         Segment = ps.PrdSgmDesc,
+                                         JumlahAngsuran = ml.Installment,
+                                         TanggalMulai = ml.StartDate,
+                                         TanggalJatuhTempo = ml.MaturityDate,
+                                         Tenor = ml.Tenor,
+                                         JumlahPinjaman = ml.KewajibanTotal,
+                                         Outstanding = ml.Outstanding
+                                     };
 
 
-                }).ToListAsync<dynamic>();
+               
 
 
                 var DataPermasalahan = await _recoveryContext.Permasalahanrestrukture
@@ -225,6 +234,9 @@ namespace sky.recovery.Services
 
                 var DataRestruk = from rs in _recoveryContext.Restrukture
                                   join ra in _recoveryContext.Restructurecashflow on rs.Id equals ra.Restruktureid
+                                 join gd in _recoveryContext.Generalparamdetail on rs.Polarestrukturid equals gd.Id
+                                  join gde in _recoveryContext.Generalparamdetail on rs.Jenispenguranganid equals gde.Id
+
                                   where rs.Id == restruktureid
                                   select new
                                   {
@@ -251,8 +263,10 @@ namespace sky.recovery.Services
                                       PolaRestruk = new
                                       {
                                           keterangan =rs.Keterangan,
+                                          poladesc = gd.Title,
                                           pengurangannilaimargin = rs.Pengurangannilaimargin,
                                           jenispengurangan = rs.Jenispenguranganid,
+                                          jenispengurangandesc = gde.Title,
                                           graceperiod = rs.Graceperiode,
                                           polaid = rs.Polarestrukturid
                                       }
@@ -268,7 +282,7 @@ namespace sky.recovery.Services
 
                 Collection["nasabah"] =  DataNasabah;
                 //Collection["DataLoan"] = DataLoan;
-                Collection["DataFasilitas"] = DataFasilitas;
+                Collection["DataFasilitas"] = await DatasFasilitas.ToListAsync<dynamic>();
                 Collection["Permasalahan"] = DataPermasalahan;
                 Collection["Dokumen"] = Dokumen;
                 //Collection["Analisa"] = Analisa;
