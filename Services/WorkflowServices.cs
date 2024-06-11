@@ -20,7 +20,7 @@ namespace sky.recovery.Services
     public class WorkflowServices:SkyCoreConfig, IWorkflowServices
     {
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
-        SkyCollRecoveryDBContext _RecoveryContext = new SkyCollRecoveryDBContext();
+        sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _RecoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
         private IUserService _User { get; set; }
 
         public WorkflowServices(IOptions<DbContextSettings> appsetting, IUserService user) : base(appsetting)
@@ -36,99 +36,99 @@ namespace sky.recovery.Services
         {
             var wrap = _DataResponses.Return();
             var getCallBy = await _User.GetDataUser(userid);
-            var DataHistoryWF = new workflowhistory();
-            var DataHistoryWF2 = new workflowhistory();
+            var DataHistoryWF = new Workflowhistory();
+            var DataHistoryWF2 = new Workflowhistory();
 
             //get spv by role
             try
             {
-                var DataWorkflow = workflow.Where(es => es.Id == Entity.workflowid).FirstOrDefault();
+                var DataWorkflow = _RecoveryContext.Workflow.Where(es => es.Id == Entity.workflowid).FirstOrDefault();
                 //update status requestheader
-                var OrdersAdd = DataWorkflow.orders + 1;
-                var DataNext = masterflow.Where(es => es.fiturid == Entity.fiturid && es.orders == OrdersAdd && es.roleid != null).FirstOrDefault();
+                var OrdersAdd = DataWorkflow.Orders + 1;
+                var DataNext = _RecoveryContext.Masterflow.Where(es => es.Fiturid== Entity.fiturid && es.Orders== OrdersAdd && es.Roleid!= null).FirstOrDefault();
                 if (DataNext != null)
                 {
                     if (Entity.status == 4)//APPROVE
                     {
                         //simpan history approval pertama
-                        DataHistoryWF.status = 4;
-                        DataHistoryWF.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF.workflowid = Entity.workflowid;
-                        DataHistoryWF.dated = DateTime.Now;
-                        DataHistoryWF.reason = Entity.reason;
-                        DataHistoryWF2.status = 11;
+                        DataHistoryWF.Status = 4;
+                        DataHistoryWF.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF.Workflowid = Entity.workflowid;
+                        DataHistoryWF.Dated = DateTime.Now;
+                        DataHistoryWF.Reason = Entity.reason;
+                        DataHistoryWF2.Status = 11;
                         //get user by role default approval
-                        DataHistoryWF2.actor = null;
-                        DataHistoryWF2.workflowid = Entity.workflowid;
-                        DataHistoryWF2.dated = DateTime.Now;
+                        DataHistoryWF2.Actor = null;
+                        DataHistoryWF2.Workflowid = Entity.workflowid;
+                        DataHistoryWF2.Dated = DateTime.Now;
 
-                        DataWorkflow.status = 11;
-                        DataWorkflow.actor = null;
-                        DataWorkflow.orders = OrdersAdd;
-                        DataWorkflow.flowid = DataNext.id;
-                        DataWorkflow.modifydated = DateTime.Now;
-                        workflowhistory.Add(DataHistoryWF);
-                        workflowhistory.Add(DataHistoryWF2);
+                        DataWorkflow.Status = 11;
+                        DataWorkflow.Actor = null;
+                        DataWorkflow.Orders = OrdersAdd;
+                        DataWorkflow.Flowid = (int)DataNext.Id;
+                        DataWorkflow.Modifydated = DateTime.Now;
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
 
                     }
                     if (Entity.status == 5)//REJECT
                     {
                         //simpan history approval pertama
-                        DataHistoryWF.status = 5;
-                        DataHistoryWF.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF.workflowid = Entity.workflowid;
-                        DataHistoryWF.dated = DateTime.Now;
-                        DataHistoryWF.reason = Entity.reason;
+                        DataHistoryWF.Status = 5;
+                        DataHistoryWF.Actor= getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF.Workflowid = Entity.workflowid;
+                        DataHistoryWF.Dated = DateTime.Now;
+                        DataHistoryWF.Reason = Entity.reason;
 
-                        DataHistoryWF2.status = 12;
-                        DataHistoryWF2.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF2.workflowid = Entity.workflowid;
-                        DataHistoryWF2.dated = DateTime.Now;
-                        workflowhistory.Add(DataHistoryWF2);
-                        workflowhistory.Add(DataHistoryWF);
+                        DataHistoryWF2.Status = 12;
+                        DataHistoryWF2.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF2.Workflowid = Entity.workflowid;
+                        DataHistoryWF2.Dated = DateTime.Now;
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
 
 
-                        DataWorkflow.status = 12;
-                        DataWorkflow.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataWorkflow.modifydated = DateTime.Now;
-                        DataWorkflow.reason = Entity.reason;
+                        DataWorkflow.Status = 12;
+                        DataWorkflow.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataWorkflow.Modifydated = DateTime.Now;
+                        DataWorkflow.Reason = Entity.reason;
                         //get user by role default approval
 
                     }
                     if (Entity.status == 13)//CANCEL
                     {
-                        DataWorkflow.status = 13;
-                        DataHistoryWF.status = 13;
-                        DataHistoryWF.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF.workflowid = Entity.workflowid;
-                        DataHistoryWF.dated = DateTime.Now;
-                        DataHistoryWF.reason = Entity.reason;
+                        DataWorkflow.Status = 13;
+                        DataHistoryWF.Status = 13;
+                        DataHistoryWF.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF.Workflowid = Entity.workflowid;
+                        DataHistoryWF.Dated= DateTime.Now;
+                        DataHistoryWF.Reason = Entity.reason;
 
-                        DataHistoryWF2.status = 12;
-                        DataHistoryWF2.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF2.workflowid = Entity.workflowid;
-                        DataHistoryWF2.dated = DateTime.Now;
-                        workflowhistory.Add(DataHistoryWF2);
-                        workflowhistory.Add(DataHistoryWF);
+                        DataHistoryWF2.Status = 12;
+                        DataHistoryWF2.Actor= getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF2.Workflowid = Entity.workflowid;
+                        DataHistoryWF2.Dated = DateTime.Now;
+                       _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
 
                     }
                     if (Entity.status == 10)//REVISI
                     {
                         var DataAwal = masterflow.Where(es => es.fiturid == Entity.fiturid && es.orders==0).FirstOrDefault();
-                        DataWorkflow.status = 10;
-                        DataWorkflow.modifydated = DateTime.Now;
-                        DataWorkflow.actor = Entity.idrequestor;
-                        DataWorkflow.reason = Entity.reason;
-                        DataWorkflow.orders = DataAwal.orders;
-                        DataWorkflow.flowid = DataAwal.id;
+                        DataWorkflow.Status = 10;
+                        DataWorkflow.Modifydated = DateTime.Now;
+                        DataWorkflow.Actor = Entity.idrequestor;
+                        DataWorkflow.Reason = Entity.reason;
+                        DataWorkflow.Orders = DataAwal.orders;
+                        DataWorkflow.Flowid = DataAwal.id;
 
-                        DataHistoryWF.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF.dated = DateTime.Now;
-                        DataHistoryWF.reason = Entity.reason;
-                        DataHistoryWF.workflowid = Entity.workflowid;
-                        DataHistoryWF.status = 10;
+                        DataHistoryWF.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF.Dated = DateTime.Now;
+                        DataHistoryWF.Reason = Entity.reason;
+                        DataHistoryWF.Workflowid = Entity.workflowid;
+                        DataHistoryWF.Status= 10;
 
-                        workflowhistory.Add(DataHistoryWF);
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
 
                     }
                    
@@ -139,47 +139,47 @@ namespace sky.recovery.Services
                 {
                     if (Entity.status == 4 || Entity.status == 5)//APPROVE
                     {
-                        DataWorkflow.status = 12;
+                        DataWorkflow.Status= 12;
 
 
-                        DataHistoryWF.status = Entity.status;
-                        DataHistoryWF2.status = 12;
-                        DataHistoryWF2.actor = DataWorkflow.actor;
+                        DataHistoryWF.Status = Entity.status;
+                        DataHistoryWF2.Status = 12;
+                        DataHistoryWF2.Actor = DataWorkflow.Actor;
 
-                        DataHistoryWF2.workflowid = Entity.workflowid;
+                        DataHistoryWF2.Workflowid = Entity.workflowid;
 
-                        DataHistoryWF2.dated = DateTime.Now;
-                        workflowhistory.Add(DataHistoryWF2);
+                        DataHistoryWF2.Dated= DateTime.Now;
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
                     }
                     if (Entity.status == 13)//CANCEL
                     {
-                        DataWorkflow.status = 13;
-                        DataHistoryWF.status = 13;
-                        DataHistoryWF2.status = 12;
-                        DataHistoryWF2.actor = DataWorkflow.actor;
+                        DataWorkflow.Status = 13;
+                        DataHistoryWF.Status = 13;
+                        DataHistoryWF2.Status = 12;
+                        DataHistoryWF2.Actor = DataWorkflow.Actor;
 
-                        DataHistoryWF2.workflowid = Entity.workflowid;
+                        DataHistoryWF2.Workflowid= Entity.workflowid;
 
-                        DataHistoryWF2.dated = DateTime.Now;
-                        workflowhistory.Add(DataHistoryWF2);
+                        DataHistoryWF2.Dated = DateTime.Now;
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
 
                     }
                     if (Entity.status == 10)//REVISI
                     {
                         //var DataAwal = masterflow.Where(es => es.fiturid == Entity.fiturid).FirstOrDefault();
-                        DataWorkflow.status = 10;
-                        DataWorkflow.modifydated = DateTime.Now;
-                        DataWorkflow.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataWorkflow.reason = Entity.reason;
-                        DataWorkflow.orders = 0;
+                        DataWorkflow.Status = 10;
+                        DataWorkflow.Modifydated = DateTime.Now;
+                        DataWorkflow.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataWorkflow.Reason = Entity.reason;
+                        DataWorkflow.Orders = 0;
 
-                        DataHistoryWF.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                        DataHistoryWF.dated = DateTime.Now;
-                        DataHistoryWF.reason = Entity.reason;
-                        DataHistoryWF.workflowid = Entity.workflowid;
-                        DataHistoryWF.status = 10;
+                        DataHistoryWF.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                        DataHistoryWF.Dated = DateTime.Now;
+                        DataHistoryWF.Reason = Entity.reason;
+                        DataHistoryWF.Workflowid = Entity.workflowid;
+                        DataHistoryWF.Status = 10;
 
-                        workflowhistory.Add(DataHistoryWF);
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
 
                     }
                    
@@ -191,17 +191,17 @@ namespace sky.recovery.Services
                     var Data = await _RecoveryContext.Restrukture.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
                     Data.Statusid = Entity.status;
                     Data.Lastupdatedate = DateTime.Now;
-                    
-                    Entry(Data).State = EntityState.Modified;
 
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
+                    
                 }
                 if (Entity.fiturid == 10)//AYDA
                 {
                     var Data = await ayda.Where(es => es.id== Entity.idrequest).FirstOrDefaultAsync();
                     Data.statusid = Entity.status;
                     Data.lastupdatedate = DateTime.Now;
-                    
-                    Entry(Data).State = EntityState.Modified;
+
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
 
                 }
                 if (Entity.fiturid == 15)//auction
@@ -210,7 +210,7 @@ namespace sky.recovery.Services
                     Data.Statusid = Entity.status;
                     Data.Lastupdatedate = DateTime.Now;
 
-                    Entry(Data).State = EntityState.Modified;
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
 
                 }
                 if (Entity.fiturid == 16)//INSURANCE
@@ -219,14 +219,14 @@ namespace sky.recovery.Services
                     Data.Statusid = Entity.status;
                     Data.Lastupdateddated = DateTime.Now;
 
-                    Entry(Data).State = EntityState.Modified;
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
 
                 }
 
-
-                Entry(DataWorkflow).State = EntityState.Modified;
+                _RecoveryContext.Entry(DataWorkflow).State = EntityState.Modified;
                 // await workflow.AddAsync(DataWorkflow);
-                await SaveChangesAsync();
+
+                await _RecoveryContext.SaveChangesAsync();
                 wrap.Status = true;
                 wrap.Message = "ok";
 

@@ -36,10 +36,10 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public virtual DbSet<Masterworkflowrule> Masterworkflowrules { get; set; }
         public virtual DbSet<Permasalahanrestrukture> Permasalahanrestruktures { get; set; }
         public virtual DbSet<Restructurecashflow> Restructurecashflows { get; set; }
-        public virtual DbSet<Restrukture> Restruktures { get; set; }
+        public virtual DbSet<Restrukture> Restrukture { get; set; }
         public virtual DbSet<Restrukturedokuman> Restrukturedokumen { get; set; }
         public virtual DbSet<Templatedetail> Templatedetails { get; set; }
-        public virtual DbSet<Workflow> Workflows { get; set; }
+        public virtual DbSet<Workflow> Workflow { get; set; }
         public virtual DbSet<Workflowhistory> Workflowhistories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
