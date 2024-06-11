@@ -20,7 +20,7 @@ namespace sky.recovery.Services
     public class WorkflowServices:SkyCoreConfig, IWorkflowServices
     {
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
-        skycollContext _RecoveryContext = new skycollContext();
+        SkyCollRecoveryDBContext _RecoveryContext = new SkyCollRecoveryDBContext();
         private IUserService _User { get; set; }
 
         public WorkflowServices(IOptions<DbContextSettings> appsetting, IUserService user) : base(appsetting)
@@ -169,7 +169,7 @@ namespace sky.recovery.Services
                         //var DataAwal = masterflow.Where(es => es.fiturid == Entity.fiturid).FirstOrDefault();
                         DataWorkflow.status = 10;
                         DataWorkflow.modifydated = DateTime.Now;
-                        DataWorkflow.actor = Entity.idrequestor;
+                        DataWorkflow.actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
                         DataWorkflow.reason = Entity.reason;
                         DataWorkflow.orders = 0;
 
@@ -188,7 +188,7 @@ namespace sky.recovery.Services
                 //UPDATE MASTER REQUEST
                 if(Entity.fiturid==9)//restrukture
                 {
-                    var Data = await _RecoveryContext.Restruktures.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    var Data = await _RecoveryContext.Restrukture.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
                     Data.Statusid = Entity.status;
                     Data.Lastupdatedate = DateTime.Now;
                     
@@ -206,7 +206,7 @@ namespace sky.recovery.Services
                 }
                 if (Entity.fiturid == 15)//auction
                 {
-                    var Data = await _RecoveryContext.Auctions.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    var Data = await _RecoveryContext.Auction.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
                     Data.Statusid = Entity.status;
                     Data.Lastupdatedate = DateTime.Now;
 
@@ -215,7 +215,7 @@ namespace sky.recovery.Services
                 }
                 if (Entity.fiturid == 16)//INSURANCE
                 {
-                    var Data = await _RecoveryContext.Insurances.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    var Data = await _RecoveryContext.Insurance.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
                     Data.Statusid = Entity.status;
                     Data.Lastupdateddated = DateTime.Now;
 
@@ -394,7 +394,7 @@ namespace sky.recovery.Services
       
             try
             {
-                var CheckingWF = await _RecoveryContext.Workflows.Where(es => es.Requestid == Entity.RequestId && es.Fiturid == Entity.FiturId).ToListAsync();
+                var CheckingWF = await _RecoveryContext.Workflow.Where(es => es.Requestid == Entity.RequestId && es.Fiturid == Entity.FiturId).ToListAsync();
                 var DataMaxId = CheckingWF.Max(es => es.Id);
 
                 var DataWorkflow = CheckingWF.Where(es=>es.Id==DataMaxId).Select(es=>new WorkflowDetailDTO
@@ -412,7 +412,7 @@ namespace sky.recovery.Services
               
                 foreach (var x in CheckingWF)
                 {
-                    var DataWorkflowHistory = await _RecoveryContext.Workflowhistories.Where(es => es.Workflowid == x.Id).ToListAsync();
+                    var DataWorkflowHistory = await _RecoveryContext.Workflowhistory.Where(es => es.Workflowid == x.Id).ToListAsync();
                     DataWorkflowHistorys = DataWorkflowHistory.Select(es => new WorkflowHistoryDTO
                     {
                         statusid = es.Status,
