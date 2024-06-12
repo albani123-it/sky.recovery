@@ -1074,7 +1074,7 @@ namespace sky.recovery.Services.DBConfig
         }
 
 
-        public async Task<List<dynamic>> GetPermasalahanRestrukture(string spname, int? loanid)
+        public async Task<List<dynamic>> GetPermasalahanRestrukture(string spname, int? loanid, int idrestrukture)
         {
 
             var SkyCollConsString = GetSkyCollConsString();
@@ -1086,7 +1086,8 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idloan", loanid);
-                  
+                    command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
+
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);
@@ -1154,7 +1155,7 @@ namespace sky.recovery.Services.DBConfig
             }
 
         }
-        public async Task<List<dynamic>> GetDetailDrafting(string consstring, string spname, int? LoanId)
+        public async Task<List<dynamic>> GetDetailDrafting(string consstring, string spname, int? LoanId, int idrestrukture)
         {
           
             using (NpgsqlConnection connection = new NpgsqlConnection(consstring))
@@ -1164,6 +1165,7 @@ namespace sky.recovery.Services.DBConfig
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.AddWithValue("@idloan", LoanId);
+                    command.Parameters.AddWithValue("@idrestrukture", idrestrukture);
 
                     // Jika stored procedure memiliki parameter, tambahkan mereka di sini
                     // command.Parameters.AddWithValue("@ParameterName", value);

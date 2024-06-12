@@ -95,12 +95,11 @@ namespace sky.recovery.Services
       
         public async Task<(bool Status,string Message, List<dynamic>Data)> GetFiturId()
         {
-            var ListData = new List<dynamic>();
             try
             {
-                var Data = await _recoveryContext.Generalparamdetail.Where(ES=>ES.Descriptions=="Fitur").ToListAsync();
-                ListData.Add(Data);
-                return (true, "OK", ListData);
+                var Data = await _recoveryContext.Generalparamdetail
+                    .Where(ES=>ES.Descriptions=="Fitur").ToListAsync<dynamic>();
+                return (true, "OK", Data);
             }
             catch(Exception ex)
             {
@@ -1072,7 +1071,7 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //GET DETAIL DRAFTING RESTRUKTUR V2
-        public async Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid)
+        public async Task<(bool? Status, GeneralResponsesDetailRestrukturV2 Returns)> GetDetailDraftingRestruktur(int? loanid, int idrestrukture)
         {
             var wrap = _DataResponses.GeneralResponseDetailRestruktur();
             var SkyCollConsString = GetSkyCollConsString();
@@ -1087,12 +1086,12 @@ namespace sky.recovery.Services
                     wrap.Message = "Anda Harus Memilih Pinjaman yang akan direstrukturisasi";
                     return ( wrap.Status , wrap);
                 }
-                var ReturnDetail = await _postgreRepository.GetDetailDrafting(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailfordraftingrestruktur.ToString() + "", loanid);
+                var ReturnDetail = await _postgreRepository.GetDetailDrafting(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailfordraftingrestruktur.ToString() + "", loanid,idrestrukture);
                 
                 
                 var ReturnFasilitas = await _postgreRepository.GetListFasilitas(SkyCollConsString.Data.ConnectionSetting, "\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getlistfasilitas.ToString() + "", loanid);
 
-                var GetPermasalahan = await _postgreRepository.GetPermasalahanRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getpermasalahanrestrukture.ToString() + "", loanid);
+                var GetPermasalahan = await _postgreRepository.GetPermasalahanRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getpermasalahanrestrukture.ToString() + "", loanid,idrestrukture);
                 var GetCollateral = await _postgreRepository.GetMasterColateral("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getmastercollateral.ToString() + "", loanid);
 
                 wrap.Status  = true;

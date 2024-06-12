@@ -29,10 +29,12 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public virtual DbSet<Masterdocrule> Masterdocrule { get; set; }
         public virtual DbSet<Masterdocumenttype> Masterdocumenttype { get; set; }
         public virtual DbSet<Masterflow> Masterflow { get; set; }
+        public virtual DbSet<Masterflowengine> Masterflowengine { get; set; }
         public virtual DbSet<Masterlayoutposition> Masterlayoutposition { get; set; }
         public virtual DbSet<Masterrepository> Masterrepository { get; set; }
         public virtual DbSet<Mastertemplate> Mastertemplate { get; set; }
         public virtual DbSet<Masterworkflow> Masterworkflow { get; set; }
+        public virtual DbSet<Masterworkflowengine> Masterworkflowengine { get; set; }
         public virtual DbSet<Masterworkflowrule> Masterworkflowrule { get; set; }
         public virtual DbSet<Permasalahanrestrukture> Permasalahanrestrukture { get; set; }
         public virtual DbSet<Restructurecashflow> Restructurecashflow { get; set; }
@@ -445,6 +447,23 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Roleid).HasColumnName("roleid");
             });
 
+            modelBuilder.Entity<Masterflowengine>(entity =>
+            {
+                entity.ToTable("masterflowengine", "RecoveryBusinessV2");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Fiturid).HasColumnName("fiturid");
+
+                entity.Property(e => e.Flowid).HasColumnName("flowid");
+
+                entity.Property(e => e.Nodesid).HasColumnName("nodesid");
+
+                entity.Property(e => e.Orders).HasColumnName("orders");
+
+                entity.Property(e => e.Title).HasColumnName("title");
+            });
+
             modelBuilder.Entity<Masterlayoutposition>(entity =>
             {
                 entity.ToTable("masterlayoutposition", "RecoveryBusinessV2");
@@ -513,6 +532,23 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Description).HasColumnName("description");
 
                 entity.Property(e => e.Fiturid).HasColumnName("fiturid");
+            });
+
+            modelBuilder.Entity<Masterworkflowengine>(entity =>
+            {
+                entity.ToTable("masterworkflowengine", "RecoveryBusinessV2");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Fiturid).HasColumnName("fiturid");
+
+                entity.Property(e => e.Flowid).HasColumnName("flowid");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.Wfcode).HasColumnName("wfcode");
+
+                entity.Property(e => e.Wfname).HasColumnName("wfname");
             });
 
             modelBuilder.Entity<Masterworkflowrule>(entity =>

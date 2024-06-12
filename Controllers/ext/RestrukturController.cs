@@ -125,15 +125,15 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
-        [HttpGet("V2/GetDetailRestruktur/{loanid}")]
-        public async Task<ActionResult<GeneralResponses>> GetDetailRestruktur(int loanid)
+        [HttpGet("V2/GetDetailRestruktur/{loanid}/{idrestrukture}")]
+        public async Task<ActionResult<GeneralResponses>> GetDetailRestruktur(int loanid,int idrestrukture)
 
         {
             var wrap = _DataResponses.Return();
 
             try
             {
-                var GetData = await _recoveryService.GetDetailDraftingRestruktur(loanid);
+                var GetData = await _recoveryService.GetDetailDraftingRestruktur(loanid, idrestrukture);
                 if (GetData.Status == true)
                 {
                     return Ok(GetData.Returns);
