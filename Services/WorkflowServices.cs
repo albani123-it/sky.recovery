@@ -14,13 +14,19 @@ using Org.BouncyCastle.Asn1.Ocsp;
 using System.Numerics;
 using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using sky.recovery.Insfrastructures.Scafolding.SkyEn.Workflow;
+
 using OfficeOpenXml.Drawing.Controls;
+using sky.recovery.DTOs.RequestDTO.Workflow;
 namespace sky.recovery.Services
 {
     public class WorkflowServices:SkyCoreConfig, IWorkflowServices
     {
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _RecoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
+        SkyEnWorkflowDBContext _WorkflowEngineContext = new SkyEnWorkflowDBContext();
+        
+        
         private IUserService _User { get; set; }
 
         public WorkflowServices(IOptions<DbContextSettings> appsetting, IUserService user) : base(appsetting)
@@ -28,7 +34,61 @@ namespace sky.recovery.Services
             _User = user;
         }
 
+        public async Task<(bool Status, string message)> CreateWorkflowEngine(AddWorkflowEngineDTO Entity)
+        {
+            try
+            {
+                var CheckFiturId =await  _RecoveryContext.Masterflowengine.Where(es => es.Fiturid == Entity.FiturId).AnyAsync();
+                if(CheckFiturId==true)
+                {
+                    return (false, "Fitur Tersebut Sudah Memiliki Workflow Model");
+                }
+                else
+                {
 
+                
+                var Data = new Masterworkflowengine()
+                {
+                    Fiturid = Entity.FiturId,
+                    Flowid = Entity.flowid,
+                    Isactive = true,
+                    Wfcode = Entity.flhcode,
+                    Wfname = Entity.wfname
+                };
+                    await _RecoveryContext.Masterworkflowengine.AddAsync(Data);
+                    await _RecoveryContext.SaveChangesAsync();
+                    return (true, "OK");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        public async Task<(bool Status, string message, List<dynamic?> Data)>GetListWorkflow()
+        {
+            try
+            {
+                var Data = await _WorkflowEngineContext.FlowsVersionLog.Where(es => es.FlnIsdelete == false
+                && es.FlhType == "workflow").Select(es=>new
+                {
+                    Id=es.FvlId,
+                    FlowId = es.FlhId,
+                    Name = es.FlhName,
+                    Description = es.FlhDesc,
+                    Type = es.FlhType,
+                    Code = es.FlhCode
+
+                }).ToListAsync<dynamic>();
+                return (true, "OK", Data);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message,null);
+            }
+        }
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> CallbackApproval_Dummy_Engine(string userid, CallbackApprovalDTO Entity)
         {
@@ -111,7 +171,7 @@ namespace sky.recovery.Services
                     }
                     if (Entity.status == 10)//REVISI
                     {
-                        var DataAwal = _RecoveryContext.Masterflowengine.Where(es => es.Fiturid== Entity.fiturid && es.Orders== 0).FirstOrDefault();
+                        var DataAwal = _RecoveryContext.Masterflowengine.Where(es => es.Fiturid== Entity.fiturid && es.Orders== 1).FirstOrDefault();
                         DataWorkflow.Status = 10;
                         DataWorkflow.Modifydated = DateTime.Now;
                         DataWorkflow.Actor = Entity.idrequestor;
@@ -194,9 +254,9 @@ namespace sky.recovery.Services
                 }
                 if (Entity.fiturid == 10)//AYDA
                 {
-                    var Data = await ayda.Where(es => es.id == Entity.idrequest).FirstOrDefaultAsync();
-                    Data.statusid = Entity.status;
-                    Data.lastupdatedate = DateTime.Now;
+                    var Data = await _RecoveryContext.Ayda.Where(es => es.Id == Entity.idrequest).FirstOrDefaultAsync();
+                    Data.Statusid = Entity.status;
+                    Data.Lastupdatedate = DateTime.Now;
 
                     _RecoveryContext.Entry(Data).State = EntityState.Modified;
 
@@ -658,47 +718,49 @@ namespace sky.recovery.Services
             try
             {
                 //penentuan master workflow
-                var GetData =  masterflow.Where(es => es.orders==1 && es.fiturid == Entity.idfitur).FirstOrDefault();
+                var GetData = _RecoveryContext.Masterflowengine.Where(es => es.Orders==2 && es.Fiturid== Entity.idfitur).FirstOrDefault();
+                var GetWorkflowId = await _RecoveryContext.Masterworkflowengine.
+                    Where(es => es.Fiturid == Entity.idfitur).Select(es => es.Id).FirstOrDefaultAsync();
                 //get user yang role 45
 
-                var DataWorkflow = new workflow()
+                var DataWorkflow = new Workflow()
                 {
-                    submitdated=DateTime.Now,
-                    orders=GetData.orders,
-                    status=11,
-                    fiturid=Entity.idfitur,
-                    actor=getSPV.Returns.Data.FirstOrDefault().iduser,
-                    flowid=GetData.id,
-                    requestid=Entity.idrequest,
-                    masterworkflowid=GetData.masterworkflowid
+                    Submitdated=DateTime.Now,
+                    Orders=GetData.Orders,
+                    Status=11,
+                    Fiturid=Entity.idfitur,
+                    Actor=getSPV.Returns.Data.FirstOrDefault().iduser,
+                    Flowid=(int)GetData.Flowid,
+                    Requestid=Entity.idrequest,
+                    Masterworkflowid=(int)GetWorkflowId
                 };
 
 
                     
-                    await workflow.AddAsync(DataWorkflow);
-                    await SaveChangesAsync();
+                    await _RecoveryContext.Workflow.AddAsync(DataWorkflow);
+                    await _RecoveryContext.SaveChangesAsync();
                 
 
-                var DataWFHistory_Req = new workflowhistory()
+                var DataWFHistory_Req = new Workflowhistory()
             {
-                workflowid=DataWorkflow.Id,
-             actor=getCallBy.Returns.Data.FirstOrDefault().iduser,
-             status=8,
-             dated=DateTime.Now
+                Workflowid=DataWorkflow.Id,
+             Actor=getCallBy.Returns.Data.FirstOrDefault().iduser,
+             Status=8,
+             Dated=DateTime.Now
             };
 
-                await workflowhistory.AddAsync(DataWFHistory_Req);
-                await SaveChangesAsync();
+                await _RecoveryContext.Workflowhistory.AddAsync(DataWFHistory_Req);
+                await _RecoveryContext.SaveChangesAsync();
 
-                var DataWFHistory_Usr = new workflowhistory()
+                var DataWFHistory_Usr = new Workflowhistory()
                 {
-                    workflowid = DataWorkflow.Id,
-                    actor = getSPV.Returns.Data.FirstOrDefault().iduser,
-                    status = 11,
-                    dated = DateTime.Now
+                    Workflowid = DataWorkflow.Id,
+                    Actor = getSPV.Returns.Data.FirstOrDefault().iduser,
+                    Status = 11,
+                    Dated = DateTime.Now
                 };
-                await workflowhistory.AddAsync(DataWFHistory_Usr);
-                await SaveChangesAsync();
+                await _RecoveryContext.Workflowhistory.AddAsync(DataWFHistory_Usr);
+                await _RecoveryContext.SaveChangesAsync();
 
                 //update status request
               //await  UpdateStatusRequest(Entity.idfitur, Entity.idrequest, 8);

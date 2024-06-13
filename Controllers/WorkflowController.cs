@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
+using sky.recovery.DTOs.RequestDTO.Workflow;
 
 namespace sky.recovery.Controllers
 {
@@ -150,6 +151,7 @@ namespace sky.recovery.Controllers
                 return StatusCode(500,wrap);
             }
         }
+       
         //V2
         [HttpPost("V2/CallbackApproval")]
         public async Task<ActionResult<GeneralResponses>> CallbackApproval([FromBody] CallbackApprovalDTO Entity)
@@ -190,6 +192,128 @@ namespace sky.recovery.Controllers
         }
 
 
-     
+        //V2
+        [HttpPost("V2/CallbackApprovalEngine")]
+        public async Task<ActionResult<GeneralResponses>> CallbackApprovalEngine([FromBody] CallbackApprovalDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.CallbackApproval_Dummy_Engine(GetUserAgent.UserAgent, Entity);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
+        //V2
+        [HttpPost("V2/CreateWorkflowEngine")]
+        public async Task<ActionResult<GeneralResponses>> CreateWorkflowEngine([FromBody] AddWorkflowEngineDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.CreateWorkflowEngine(Entity);
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.Status;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        [HttpGet("V2/GetListWorkflowEngine")]
+        public async Task<ActionResult<GeneralResponses>> GetListWorkflowEngine()
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.GetListWorkflow();
+                    wrap.Data = GetData.Data;
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.Status;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
     }
 }

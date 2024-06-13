@@ -39,6 +39,7 @@
     <Folder Include="Insfrastructures\Scafolding\SkyColl\Rule\" />
     <Folder Include="Insfrastructures\Scafolding\SkyColl\Public\" />
     <Folder Include="Insfrastructures\Scafolding\SkyCore\Public\" />
+    <Folder Include="Insfrastructures\Scafolding\SkyEn\Workflow\" />
     <Folder Include="wwwroot\Documents\" />
     <Folder Include="wwwroot\File\Ayda\" />
     <Folder Include="wwwroot\File\Insurance\" />

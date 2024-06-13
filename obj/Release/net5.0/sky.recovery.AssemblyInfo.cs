@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("sky.recovery")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9e2ef42f6f45f9bdf642657f2e94faf0e193ba54")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4892a5bccee4ce5ff76f7616b8518bd8be513ebe")]
 [assembly: System.Reflection.AssemblyProductAttribute("sky.recovery")]
 [assembly: System.Reflection.AssemblyTitleAttribute("sky.recovery")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
