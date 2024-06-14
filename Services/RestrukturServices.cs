@@ -402,36 +402,36 @@ namespace sky.recovery.Services
 
         //SERVICE YANG DIPAKAI
         //Get Pola Metode RESTRUKTUR V2
-        public async Task<(bool? Status, Dictionary<string, List<dynamic>> DataNasabah)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
+        public async Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetPolaMetodeRestrukture(int? idrestrukture, int? idloan)
         {
             var wrap = _DataResponses.ReturnDictionary();
             var SkyCollConsString = GetSkyCollConsString();
 
             try
             {
-                var GetMetodeRestruktur = await _GeneralParam.GetParamDetail(4);
-                var GetJenisPengurangan = await _GeneralParam.GetParamDetail(5);
-                var GetBranchList = await _postgreRepository.GetBranchList("\"" + CoreSchema.param.ToString() + "\"." + CoreFunctionName.getallbranchactived.ToString()+"");
+                var GetMetodeRestruktur = await _recoveryContext.Generalparamdetail.Where(es => es.Paramheaderid == 4).ToListAsync<dynamic>();
+                var GetJenisPengurangan = await _recoveryContext.Generalparamdetail.Where(es => es.Paramheaderid == 5).ToListAsync<dynamic>();
+               // var GetBranchList = await _postgreRepository.GetBranchList("\"" + CoreSchema.param.ToString() + "\"." + CoreFunctionName.getallbranchactived.ToString()+"");
                 var GetDetailPolaRestrukture = await _postgreRepository.GetDetailPolaRestruktur("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailpolarestrukture.ToString() + "",idrestrukture,idloan,"test");
 
                 wrap.Status = true;
                 wrap.Message = "OK";
                 var Collection = new Dictionary<string, List<dynamic>>();
-                Collection["MetodeRestruktur"] = GetMetodeRestruktur.DataDetail.ToList<dynamic>();
-                Collection["JenisPengurangan"] = GetJenisPengurangan.DataDetail.ToList<dynamic>();
+                Collection["MetodeRestruktur"] = GetMetodeRestruktur;
+                Collection["JenisPengurangan"] = GetJenisPengurangan;
                 Collection["DataRestrukture"] = GetDetailPolaRestrukture;
-                Collection["BranchList"] = GetBranchList;
+              //  Collection["BranchList"] = GetBranchList;
 
               
 
-                return (wrap.Status, Collection);
+                return (wrap.Status, wrap.Message, Collection);
             }
             catch (Exception ex)
             {
                 wrap.Status = false;
                 wrap.Message = ex.Message;
 
-                return (wrap.Status, null);
+                return (wrap.Status,wrap.Message, null);
             }
         }
 
