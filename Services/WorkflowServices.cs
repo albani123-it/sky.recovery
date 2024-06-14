@@ -67,8 +67,10 @@ namespace sky.recovery.Services
             }
         }
 
+
         public async Task<(bool status, string message, List<dynamic> Data)> CreateNodesEngine(long flowid)
         {
+           // var Param = new list["start","QUE"];
             try
             {
                 var Datas = await _WorkflowEngineContext.FlowsNodes.Where(es => es.FlnFlhId == flowid).Select(es => new
@@ -76,9 +78,10 @@ namespace sky.recovery.Services
                     fln_id = es.FlnId,
                     fln_flh_id = es.FlnFlhId,
                     fln_nodes_id = es.FlnNodesId,
-                    fln_nodes_text = es.FlnNodesText
+                    fln_nodes_text = es.FlnNodesText,
+                    Index=Index.Start
 
-                }).Where(es => es.fln_nodes_id != "start" && es.fln_nodes_id.Contains("QUE"))
+                }).Where(es => es.fln_nodes_id.Contains("Start"))
                 .OrderBy(es => es.fln_id).ToListAsync<dynamic>();
 
                

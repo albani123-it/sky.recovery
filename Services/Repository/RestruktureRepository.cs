@@ -509,8 +509,9 @@ namespace sky.recovery.Services.DBConfig
                             {
                                 string columnName = reader.GetName(i);
                                 object value = reader.GetValue(i);
-                                dict[columnName] = value;
+                                dict["RestruktureId"] = value;
                             }
+                            dict["LoanId"] = Entity.LoanId;
                             data.Add(result);
                         }
                     }
