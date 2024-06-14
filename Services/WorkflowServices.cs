@@ -102,16 +102,17 @@ namespace sky.recovery.Services
                 };
                 if (CheckingFitur == true)
                 {
-                    var Datax = await _RecoveryContext.Masterflowengine.Where(es => es.Flowid == flowid).ToListAsync<dynamic>();
+                    var Datax = await _RecoveryContext.Masterflowengine.Where(es => es.Flowid == flowid).ToListAsync();
 
                     foreach(var x in ListData)
                     {
                         foreach(var p in Datax)
                         {
-                            p.nodesid = x.fln_nodes_id;
-                            p.title = x.fln_nodes_text;
-                            p.orders = x.Index;
-                            _RecoveryContext.Entry(Datax).State = EntityState.Modified;
+                            p.Nodesid = x.fln_nodes_id;
+                            p.Title = x.fln_nodes_text;
+                            p.Orders = x.Index;
+                           
+                            _RecoveryContext.Entry(p).State = EntityState.Modified;
 
                         };
                     };
@@ -820,7 +821,7 @@ namespace sky.recovery.Services
             try
             {
                 //penentuan master workflow
-                var GetData = _RecoveryContext.Masterflowengine.Where(es => es.Orders==2 && es.Fiturid== Entity.idfitur).FirstOrDefault();
+                var GetData = _RecoveryContext.Masterflowengine.Where(es => es.Orders==1 && es.Fiturid== Entity.idfitur).FirstOrDefault();
                 var GetWorkflowId = await _RecoveryContext.Masterworkflowengine.
                     Where(es => es.Fiturid == Entity.idfitur).Select(es => es.Id).FirstOrDefaultAsync();
                 //get user yang role 45
@@ -832,7 +833,7 @@ namespace sky.recovery.Services
                     Status=11,
                     Fiturid=Entity.idfitur,
                     Actor=getSPV.Returns.Data.FirstOrDefault().iduser,
-                    Flowid=(int)GetData.Flowid,
+                    Flowid=(int)GetData.Id,
                     Requestid=Entity.idrequest,
                     Masterworkflowid=(int)GetWorkflowId
                 };

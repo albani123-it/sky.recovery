@@ -118,6 +118,7 @@ namespace sky.recovery.Services
                     userid=userid
                 };
                 var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+
                 return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
             }
             catch(Exception ex)
@@ -162,8 +163,8 @@ namespace sky.recovery.Services
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Isactive= 1;
-                    Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                   _skyRecovery.Entry(GetData).State = EntityState.Modified;
+                    await _skyRecovery.SaveChangesAsync();
                    
                      
                     var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
@@ -192,7 +193,7 @@ namespace sky.recovery.Services
                         
                     };
                     await _skyRecovery.Ayda.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
 
                     var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,(int?) GetIdAyda, userid);

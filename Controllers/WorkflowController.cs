@@ -359,8 +359,8 @@ namespace sky.recovery.Controllers
         }
 
         //V2
-        [HttpGet("V2/CreateNodesEngine/{id:int}")]
-        public async Task<ActionResult<GeneralResponses>> CreateNodesEngine(long id)
+        [HttpGet("V2/CreateNodesEngine/{id:int}/{fiturid:int}")]
+        public async Task<ActionResult<GeneralResponses>> CreateNodesEngine(long id, int fiturid)
 
         {
             var wrap = _DataResponses.Return();
@@ -370,7 +370,7 @@ namespace sky.recovery.Controllers
             {
                 if (GetUserAgent.code == 200)
                 {
-                    var GetData = await _workflowService.CreateNodesEngine(id,9);
+                    var GetData = await _workflowService.CreateNodesEngine(id,fiturid);
                     wrap.Data = GetData.Data;
                     wrap.Message = GetData.message;
                     wrap.Status = GetData.status;
