@@ -68,24 +68,80 @@ namespace sky.recovery.Services
         }
 
 
-        public async Task<(bool status, string message, List<dynamic> Data)> CreateNodesEngine(long flowid)
+        public async Task<(bool status, string message, List<dynamic> Data)> CreateNodesEngine(long flowid, int FiturId)
         {
-           // var Param = new list["start","QUE"];
+            // var Param = new list["start","QUE"];
+            var CheckingFitur = await _RecoveryContext.Masterflowengine.Where(es => es.Fiturid == FiturId).AnyAsync();
+           
             try
             {
-                var Datas = await _WorkflowEngineContext.FlowsNodes.Where(es => es.FlnFlhId == flowid).Select(es => new
+                var Datas = await _WorkflowEngineContext.FlowsNodes.Where(es =>
+                !es.FlnNodesId.Contains("start") && !es.FlnNodesId.Contains("QUE") &&
+                es.FlnFlhId == flowid).Select(es => new
                 {
                     fln_id = es.FlnId,
                     fln_flh_id = es.FlnFlhId,
                     fln_nodes_id = es.FlnNodesId,
-                    fln_nodes_text = es.FlnNodesText,
-                    Index=Index.Start
+                    fln_nodes_text = es.FlnNodesText
 
-                }).Where(es => es.fln_nodes_id.Contains("Start"))
+
+                })
                 .OrderBy(es => es.fln_id).ToListAsync<dynamic>();
+                var ListData = new List<dynamic>();
+                for (var x = 0; x < Datas.Count; x++)
+                {
+                    var Data = new
+                    {
+                        fln_id = Datas[x].fln_id,
+                        fln_flh_id = Datas[x].fln_flh_id,
+                        fln_nodes_id = Datas[x].fln_nodes_id,
+                        fln_nodes_text = Datas[x].fln_nodes_text,
+                        Index = x
+                    };
+                    ListData.Add(Data);
+                };
+                if (CheckingFitur == true)
+                {
+                    var Datax = await _RecoveryContext.Masterflowengine.Where(es => es.Flowid == flowid).ToListAsync<dynamic>();
 
+                    foreach(var x in ListData)
+                    {
+                        foreach(var p in Datax)
+                        {
+                            p.nodesid = x.fln_nodes_id;
+                            p.title = x.fln_nodes_text;
+                            p.orders = x.Index;
+                            _RecoveryContext.Entry(Datax).State = EntityState.Modified;
+
+                        };
+                    };
+                    await _RecoveryContext.SaveChangesAsync();
+
+                }
+                else
+                {
+                    foreach (var x in ListData)
+                    {
+
+                        var DataFlow = new Masterflowengine()
+                        {
+                            Fiturid = FiturId,
+                            Flowid = flowid,
+                            Nodesid = x.fln_nodes_id,
+                            Orders = x.Index,
+                            Title = x.fln_nodes_text
+                        };
+                      await  _RecoveryContext.Masterflowengine.AddAsync(DataFlow);
+                        await _RecoveryContext.SaveChangesAsync();
+                          
+
+                    };
+                }
+                
+
+          
                
-                return (true, "OK", Datas);
+                return (true, "OK", ListData);
 
             }
             catch (Exception ex)
