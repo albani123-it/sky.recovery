@@ -411,7 +411,8 @@ namespace sky.recovery.Services
             {
                 var GetMetodeRestruktur = await _recoveryContext.Generalparamdetail.Where(es => es.Paramheaderid == 4).ToListAsync<dynamic>();
                 var GetJenisPengurangan = await _recoveryContext.Generalparamdetail.Where(es => es.Paramheaderid == 5).ToListAsync<dynamic>();
-               // var GetBranchList = await _postgreRepository.GetBranchList("\"" + CoreSchema.param.ToString() + "\"." + CoreFunctionName.getallbranchactived.ToString()+"");
+                //  var GetBranchList = await _postgreRepository.GetBranchList("\"" + CoreSchema.param.ToString() + "\"." + CoreFunctionName.getallbranchactived.ToString()+"");
+                var GetBranchList = await _collContext.Branches.Where(es=>es.LbrcIsDelete==false).ToListAsync<dynamic>();
                 var GetDetailPolaRestrukture = await _postgreRepository.GetDetailPolaRestruktur("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.getdetailpolarestrukture.ToString() + "",idrestrukture,idloan,"test");
 
                 wrap.Status = true;
@@ -420,7 +421,7 @@ namespace sky.recovery.Services
                 Collection["MetodeRestruktur"] = GetMetodeRestruktur;
                 Collection["JenisPengurangan"] = GetJenisPengurangan;
                 Collection["DataRestrukture"] = GetDetailPolaRestrukture;
-              //  Collection["BranchList"] = GetBranchList;
+               Collection["BranchList"] = GetBranchList;
 
               
 
