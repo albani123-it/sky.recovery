@@ -8,6 +8,10 @@ namespace sky.recovery.Interfaces
 {
     public interface IWorkflowServices
     {
+        public  Task<(bool status, string message, List<dynamic> Data)> CreateNodesEngine(long flowid);
+
+        public Task<(bool status, string message, List<dynamic> Data)> GetNodesWorkflowEngine(long flowid);
+
         public Task<(bool Status, string message)> CreateWorkflowEngine(AddWorkflowEngineDTO Entity);
 
         public Task<(bool Status, string message, List<dynamic?> Data)> GetListWorkflow();

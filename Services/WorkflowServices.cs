@@ -67,14 +67,57 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool status, string message, List<dynamic> Data)> CreateNodesEngine(long flowid)
+        {
+            try
+            {
+                var Datas = await _WorkflowEngineContext.FlowsNodes.Where(es => es.FlnFlhId == flowid).Select(es => new
+                {
+                    fln_id = es.FlnId,
+                    fln_flh_id = es.FlnFlhId,
+                    fln_nodes_id = es.FlnNodesId,
+                    fln_nodes_text = es.FlnNodesText
+
+                }).Where(es => es.fln_nodes_id != "start" && es.fln_nodes_id.Contains("QUE"))
+                .OrderBy(es => es.fln_id).ToListAsync<dynamic>();
+
+               
+                return (true, "OK", Datas);
+
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
+
+        public  async Task<(bool status,string message,List<dynamic>Data)> GetNodesWorkflowEngine(long flowid)
+        {
+            try
+            {
+                var Data = await _WorkflowEngineContext.FlowsNodes.Where(es => es.FlnFlhId == flowid).Select(es => new
+                {
+                    fln_id=es.FlnId,
+                    fln_flh_id=es.FlnFlhId,
+                    fln_nodes_id=es.FlnNodesId,
+                    fln_nodes_text = es.FlnNodesText
+
+                }).OrderBy(es=>es.fln_id).ToListAsync<dynamic>();
+                return (true, "OK", Data);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message,null);
+            }
+        }
         public async Task<(bool Status, string message, List<dynamic?> Data)>GetListWorkflow()
         {
             try
             {
-                var Data = await _WorkflowEngineContext.FlowsVersionLog.Where(es => es.FlnIsdelete == false
-                && es.FlhType == "workflow").Select(es=>new
+                var Data = await _WorkflowEngineContext.Flows.Where(es => es.FlnIsdelete == false
+                && es.FlhType == "workflow" && es.FlhApproverStatus== "synced").Select(es=>new
                 {
-                    Id=es.FvlId,
+                  
                     FlowId = es.FlhId,
                     Name = es.FlhName,
                     Description = es.FlhDesc,

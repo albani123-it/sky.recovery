@@ -315,5 +315,91 @@ namespace sky.recovery.Controllers
             }
         }
 
+
+        //V2
+        [HttpGet("V2/GetListNodeEngine/{id:int}")]
+        public async Task<ActionResult<GeneralResponses>> GetListNodeEngine(long id)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.GetNodesWorkflowEngine(id);
+                    wrap.Data = GetData.Data;
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.status;
+                    if (GetData.status== true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+        //V2
+        [HttpGet("V2/CreateNodesEngine/{id:int}")]
+        public async Task<ActionResult<GeneralResponses>> CreateNodesEngine(long id)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _workflowService.CreateNodesEngine(id);
+                    wrap.Data = GetData.Data;
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.status;
+                    if (GetData.status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
     }
 }

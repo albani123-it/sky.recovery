@@ -226,13 +226,16 @@ namespace sky.recovery.Controllers.ext
                 {
 
                     var GetData = await _recoveryService.CreateDraftRestrukture(GetUserAgent.UserAgent, Entity);
+                    wrap.Status = GetData.Returns.Status;
+                    wrap.Message = GetData.Returns.Message;
+                    wrap.Data = GetData.Returns.Data;
                 if (GetData.Status == true)
                 {
-                    return Ok(GetData.Returns);
+                    return Ok(wrap);
                 }
                 else
                 {
-                    return BadRequest(GetData.Returns);
+                    return BadRequest(wrap);
                 }
                 }
                 else

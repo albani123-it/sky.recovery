@@ -1152,6 +1152,7 @@ namespace sky.recovery.Services
                 //    wrap.Message = "Not Authorize";
                 //}
                 var ReturnData = await _postgreRepository.CreateDraftRestrukture("\"" + RecoverySchema.RecoveryBusinessV2.ToString() + "\"." + RecoveryFunctionName.createdraftrestrukture.ToString() + "",getCallBy.Returns.Data.FirstOrDefault().iduser,getCallBy.Returns.Data.FirstOrDefault().RoleId,Entity);
+                wrap.Data = ReturnData;
                 wrap.Status = true;
                 wrap.Message = "OK";
 
