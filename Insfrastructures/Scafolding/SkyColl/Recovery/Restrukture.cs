@@ -45,5 +45,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public int? Approverrole { get; set; }
         public int? Requesterrole { get; set; }
         public DateTime? Statusmodifydated { get; set; }
+        public int? Isactive { get; set; }
+        public int? Iscancel { get; set; }
     }
 }

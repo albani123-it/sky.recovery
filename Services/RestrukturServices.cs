@@ -30,6 +30,7 @@ using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using static Dapper.SqlMapper;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
+using sky.recovery.DTOs.RequestDTO.CommonDTO;
 
 namespace sky.recovery.Services
 {
@@ -296,6 +297,73 @@ namespace sky.recovery.Services
             catch(Exception ex)
             { 
                 return (false, ex.Message,null);
+            }
+        }
+
+        //mengcancel yang statusnya draft
+        public async Task<(bool status, string message)> CancelPengajuanRestrukture(string userid, long id, long loanid)
+        {
+            try
+            {
+                var getCallBy = await _User.GetDataUser(userid);
+
+                var GetData = await _recoveryContext.Restrukture.Where(es => es.Id == id && es.Loanid == loanid).FirstOrDefaultAsync();
+                GetData.Isactive = 0;
+                GetData.Iscancel = 1;
+                GetData.Lastupdatedate = DateTime.Now;
+                GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                _recoveryContext.Entry(GetData).State = EntityState.Modified;
+                await _recoveryContext.SaveChangesAsync();
+
+                return (true, "OK");
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        //mengcancel yang statusnya bukan draft
+        public async Task<(bool status, string message)> NonActiveRestrukture(string userid, long id, long loanid)
+        {
+            try
+            {
+                var getCallBy = await _User.GetDataUser(userid);
+
+                var GetData = await _recoveryContext.Restrukture.Where(es => es.Id == id && es.Loanid == loanid).FirstOrDefaultAsync();
+                GetData.Isactive = 0;
+                GetData.Iscancel = 0;
+                GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                _recoveryContext.Entry(GetData).State = EntityState.Modified;
+                await _recoveryContext.SaveChangesAsync();
+
+                return (true, "OK");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        //mengnoncancel yang statusnya bukan draft
+        public async Task<(bool status, string message)> ActiveRestrukture(string userid, long id, long loanid)
+        {
+            try
+            {
+                var getCallBy = await _User.GetDataUser(userid);
+
+                var GetData = await _recoveryContext.Restrukture.Where(es => es.Id == id && es.Loanid == loanid).FirstOrDefaultAsync();
+                GetData.Isactive = 1;
+                GetData.Iscancel = 0;
+                GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                _recoveryContext.Entry(GetData).State = EntityState.Modified;
+                await _recoveryContext.SaveChangesAsync();
+
+                return (true, "OK");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
             }
         }
 

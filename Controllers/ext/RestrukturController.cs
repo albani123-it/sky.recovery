@@ -15,6 +15,8 @@ using System.IO;
 using System.Net.Mime;
 using sky.recovery.DTOs.RepositoryDTO;
 using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using static Dapper.SqlMapper;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -527,6 +529,26 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+        [HttpPost("V2/DummyBodyRequest")]
+        public async Task<ActionResult<GeneralResponses>> DummyBodyRequest([FromBody] dynamic objects)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            try
+            {
+                wrap.Message = "OK";
+                wrap.Status = true;
+                ListData.Add(objects[0]);
+                wrap.Data = ListData;
+                return Ok(wrap);
+            }
+            catch(Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
 
 
         //V2
@@ -578,6 +600,70 @@ namespace sky.recovery.Controllers.ext
                 wrap.Message = ex.Message;
                 wrap.Status = false;
                 return StatusCode(500,wrap);
+            }
+        }
+
+
+        //V2
+        //GetMetodeRestrukture
+        [HttpGet("V2/SetActivation/{activation:int}/{id:int}/{loanid:int}")]
+        public async Task<ActionResult<GeneralResponses>> SetActivation(int activation,int id, int loanid)
+
+        {
+
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    if (activation == 0)
+                    {
+                        var GetData = await _recoveryService.NonActiveRestrukture(GetUserAgent.UserAgent, id,loanid);
+                        wrap.Message = GetData.message;
+                        wrap.Status = GetData.status;
+                        if (GetData.status== true)
+                        {
+                            return Ok(wrap);
+                        }
+                        else
+                        {
+                            return BadRequest(wrap);
+                        }
+                    }
+                    else
+                    {
+                        var GetData = await _recoveryService.ActiveRestrukture(GetUserAgent.UserAgent, id, loanid);
+                        wrap.Message = GetData.message;
+                        wrap.Status = GetData.status;
+                        if (GetData.status == true)
+                        {
+                            return Ok(wrap);
+                        }
+                        else
+                        {
+                            return BadRequest(wrap);
+                        }
+                    }
+                   
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
             }
         }
 

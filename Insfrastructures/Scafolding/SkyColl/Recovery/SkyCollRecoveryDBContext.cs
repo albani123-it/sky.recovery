@@ -656,6 +656,10 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 
                 entity.Property(e => e.Graceperiode).HasColumnName("graceperiode");
 
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.Iscancel).HasColumnName("iscancel");
+
                 entity.Property(e => e.Jenispenguranganid).HasColumnName("jenispenguranganid");
 
                 entity.Property(e => e.Keterangan)
