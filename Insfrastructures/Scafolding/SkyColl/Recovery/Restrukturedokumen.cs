@@ -19,5 +19,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public int? Loanid { get; set; }
         public long? Restruktureid { get; set; }
         public int? Isdeleted { get; set; }
+        public int? Status { get; set; }
+        public string Keterangan { get; set; }
     }
 }

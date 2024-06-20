@@ -26,12 +26,13 @@ namespace sky.recovery.Services
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _RecoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
         SkyEnWorkflowDBContext _WorkflowEngineContext = new SkyEnWorkflowDBContext();
         
-        
+        private IRepositoryServices _Repo { get; set; }
         private IUserService _User { get; set; }
 
-        public WorkflowServices(IOptions<DbContextSettings> appsetting, IUserService user) : base(appsetting)
+        public WorkflowServices(IOptions<DbContextSettings> appsetting, IRepositoryServices Repo, IUserService user) : base(appsetting)
         {
             _User = user;
+            _Repo = Repo;
         }
 
         public async Task<(bool Status, string message)> CreateWorkflowEngine(AddWorkflowEngineDTO Entity)
@@ -387,6 +388,10 @@ namespace sky.recovery.Services
                 // await workflow.AddAsync(DataWorkflow);
 
                 await _RecoveryContext.SaveChangesAsync();
+
+                //update REPOSITORY NOTES
+                await _Repo.DocumentNotes(Entity.DocNotes);
+
                 wrap.Status = true;
                 wrap.Message = "ok";
 

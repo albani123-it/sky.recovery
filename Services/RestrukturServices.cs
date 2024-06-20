@@ -1191,6 +1191,19 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool status,string message,List<dynamic>Data)>GetStatusDocument()
+        {
+            try
+            {
+                var Datas = await _recoveryContext.Generalparamdetail.Where(es => es.Paramheaderid == 8).
+                    ToListAsync<dynamic>();
+                return (true, "OK", Datas);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
 
         //SERVICE YANG DIPAKAI
         //CREATE DRAFT FOR RESTRUKTUR V2

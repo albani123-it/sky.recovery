@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System;
 using System.Linq;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
+using System.Collections.Generic;
+using sky.recovery.DTOs.RepositoryDTO;
 
 namespace sky.recovery.Services
 {
@@ -41,6 +43,45 @@ namespace sky.recovery.Services
                 return (false, ex.Message);
             }
         }
+
+        public async Task<(bool status, string message)>DocumentNotes(List<DocNotesDTO> Entity)
+        {
+            try
+            {
+                var FiturId = Entity.FirstOrDefault().FiturId;
+                if (FiturId == _RecoveryContext.Generalparamdetail.Where(es => es.Title == "Restrukture").FirstOrDefault().Id)
+                {
+                    foreach (var x in Entity)
+                    {
+                        var Data = await _RecoveryContext.Restrukturedokumen.Where(es => es.Id == x.Id).FirstOrDefaultAsync();
+                        Data.Keterangan = x.Notes;
+                        Data.Status = x.Status;
+                        _RecoveryContext.Entry(Data).State = EntityState.Modified;
+                        await _RecoveryContext.SaveChangesAsync();
+
+                    }
+                    return (true, "OK");
+                }
+                else
+                {
+                    foreach (var x in Entity)
+                    {
+                        var Data = await _RecoveryContext.Masterrepository.Where(es => es.Id == x.Id).FirstOrDefaultAsync();
+                        Data.Keterangan = x.Notes;
+                        Data.Status = x.Status;
+                        _RecoveryContext.Entry(Data).State = EntityState.Modified;
+                        await _RecoveryContext.SaveChangesAsync();
+
+                    }
+                    return (true, "OK");
+                }
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
         public async Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity)
         {
             try

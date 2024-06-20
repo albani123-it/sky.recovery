@@ -37,6 +37,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public virtual DbSet<Masterworkflowengine> Masterworkflowengine { get; set; }
         public virtual DbSet<Masterworkflowrule> Masterworkflowrule { get; set; }
         public virtual DbSet<Permasalahanrestrukture> Permasalahanrestrukture { get; set; }
+        public virtual DbSet<Recoveryreverselog> Recoveryreverselog { get; set; }
         public virtual DbSet<Restructurecashflow> Restructurecashflow { get; set; }
         public virtual DbSet<Restrukture> Restrukture { get; set; }
         public virtual DbSet<Restrukturedokumen> Restrukturedokumen { get; set; }
@@ -489,9 +490,13 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 
                 entity.Property(e => e.Isactive).HasColumnName("isactive");
 
+                entity.Property(e => e.Keterangan).HasColumnName("keterangan");
+
                 entity.Property(e => e.Modifydated).HasColumnName("modifydated");
 
                 entity.Property(e => e.Requestid).HasColumnName("requestid");
+
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Uploaddated).HasColumnName("uploaddated");
 
@@ -579,6 +584,24 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Descriptions).HasColumnName("descriptions");
 
                 entity.Property(e => e.Restruktureid).HasColumnName("restruktureid");
+            });
+
+            modelBuilder.Entity<Recoveryreverselog>(entity =>
+            {
+                entity.HasKey(e => e.RrlId)
+                    .HasName("recoveryreverselog_pkey");
+
+                entity.ToTable("recoveryreverselog", "RecoveryBusinessV2");
+
+                entity.Property(e => e.RrlId).HasColumnName("rrl_id");
+
+                entity.Property(e => e.RrlCreatedby).HasColumnName("rrl_createdby");
+
+                entity.Property(e => e.RrlData).HasColumnName("rrl_data");
+
+                entity.Property(e => e.RrlDated).HasColumnName("rrl_dated");
+
+                entity.Property(e => e.Versions).HasColumnName("versions");
             });
 
             modelBuilder.Entity<Restructurecashflow>(entity =>
@@ -739,6 +762,8 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 
                 entity.Property(e => e.Isdeleted).HasColumnName("isdeleted");
 
+                entity.Property(e => e.Keterangan).HasColumnName("keterangan");
+
                 entity.Property(e => e.Loanid).HasColumnName("loanid");
 
                 entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
@@ -746,6 +771,8 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Modifydated).HasColumnName("modifydated");
 
                 entity.Property(e => e.Restruktureid).HasColumnName("restruktureid");
+
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Typedocid).HasColumnName("typedocid");
 

@@ -1,4 +1,7 @@
-﻿namespace sky.recovery.DTOs.WorkflowDTO
+﻿using sky.recovery.DTOs.RepositoryDTO;
+using System.Collections.Generic;
+
+namespace sky.recovery.DTOs.WorkflowDTO
 {
     public class CallbackApprovalDTO
     {
@@ -9,5 +12,7 @@
         public int? workflowid { get; set; }
         public string reason { get; set; }
         public int? idrequestor { get; set; }
+
+        public List<DocNotesDTO> DocNotes { get; set; }
     }
 }

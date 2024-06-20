@@ -17,5 +17,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public int? Fiturid { get; set; }
         public long? Requestid { get; set; }
         public int? Doctype { get; set; }
+        public int? Status { get; set; }
+        public string Keterangan { get; set; }
     }
 }
