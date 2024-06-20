@@ -29,14 +29,16 @@ namespace sky.recovery.Controllers
         private IAydaServices _aydaservices { get; set; }
         private IAuctionService _auctionservice{ get; set; }
 
+        private IUserService _User { get; set; }
         private IRestrukturServices _recoveryService { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         private readonly IConfiguration _configuration;
 
-        public RecoveryController(IRestrukturServices recoveryService, IConfiguration configuration)
+        public RecoveryController(IUserService User, IRestrukturServices recoveryService, IConfiguration configuration)
         {
             //_aydaservices = aydaservice;
             //_auctionservice = auctionservice;
+            _User = User;
             _recoveryService = recoveryService;
             _configuration = configuration;
         }
@@ -176,41 +178,63 @@ namespace sky.recovery.Controllers
             {
                 if (Request.Headers.ContainsKey("Authorization"))
                 {
-                    var authToken= Request.Headers["Authorization"].ToString();
+                    var authToken = Request.Headers["Authorization"].ToString();
                     if (authToken.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                     {
                         var token = authToken.Substring("Bearer ".Length).Trim();
                         HttpContext.Request.Headers.TryGetValue("UserAgent", out StringValues authHeader);
+                        HttpContext.Request.Headers.TryGetValue("UrlAPI", out StringValues UrlAPI);
+
                         var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                         var jwtToken = (JwtSecurityToken)validatedToken;
                         var userIdClaim = jwtToken.Claims.First(x => x.Type == "sub");
 
 
+                        string UserAPI = UrlAPI.FirstOrDefault();
                         string UserAgentToken = authHeader.FirstOrDefault();
-                        if(userIdClaim.Value==UserAgentToken)
-                        {
-                            return (true, 200,"Authorized", UserAgentToken);
 
+                        var CheckingAuthorize = await _User.GetValidationPermission(UserAgentToken, UserAPI);
+
+                        if (CheckingAuthorize.status == true)
+                        {
+                            if (CheckingAuthorize.Result)
+                            {
+
+
+                                if (userIdClaim.Value == UserAgentToken)
+                                {
+                                    return (true, 200, "Authorized", UserAgentToken);
+
+                                }
+                                else
+                                {
+                                    return (true, 401, "Invalid User", null);
+
+                                }
+                            }
+                            else
+                            {
+                                return (false, 401, "Not Authorize", null);
+
+                            }
                         }
                         else
                         {
-                            return (true, 401, "Invalid User", null);
-
+                            // return Unauthorized();
+                            return (false, 401, "Not Authorize", null);
                         }
-
                     }
                     else
                     {
-                       // return Unauthorized();
-                        return (false,401, "Not Authorize",null);
+                        return (false, 401, "Invalid Token", null);
                     }
                 }
                 else
                 {
-                    return (false, 401, "Invalid Token",null);
+                    return (false, 401, "Invalid Role Permisson", null);
+
                 }
-                      
-              
+
             }
             catch (Exception ex)
             {

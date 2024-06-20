@@ -8,6 +8,7 @@ namespace sky.recovery.Interfaces
     {
         public Task<(bool? Status, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid);
         public Task<(bool? Status, GenericResponses<RoleDTO> Returns)> GetRoles(int userlevel);
+        public Task<(bool status, string message, bool Result)> GetValidationPermission(string userid, string url);
 
     }
 }

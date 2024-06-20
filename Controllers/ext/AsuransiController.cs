@@ -23,12 +23,13 @@ namespace sky.recovery.Controllers.ext
     private IRestrukturServices _recoveryService { get; set; }
 
     private IDocServices _documentservices { get; set; }
-
+        private IUserService _User { get; set; }
     ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         private readonly IConfiguration _configuration;
 
-        public AsuransiController(IConfiguration configuration, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IAsuransiServices asuransiservices, IDocServices documentservices, IWorkflowServices workflowService) : base( recoveryService,configuration)
+        public AsuransiController(IUserService User, IConfiguration configuration, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IAsuransiServices asuransiservices, IDocServices documentservices, IWorkflowServices workflowService) : base(User, recoveryService,configuration)
     {
+            _User = User;
             _configuration = configuration;
             _asuransiservices = asuransiservices;
             _auctionservice = auctionservice;

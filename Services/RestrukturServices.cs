@@ -225,7 +225,9 @@ namespace sky.recovery.Services
                        JenisDokumen = es.Doctypedesc,
                        Url = es.Filepath,
                        FileName = es.Fileurl,
-                       UploadDated = es.Uploaddated
+                       UploadDated = es.Uploaddated,
+                       Keterangan =es.Keterangan,
+                       Status = _recoveryContext.Generalparamdetail.Where(x=>x.Id==es.Status).Select(es=>es.Title).FirstOrDefault()
                    }
                    
                    )

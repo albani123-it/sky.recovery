@@ -30,13 +30,14 @@ namespace sky.recovery.Controllers.ext
 
         private IWorkflowServices _workflowService { get; set; }
         private IAuctionService _auctionservice { get; set; }
-
+        private IUserService _User { get; set; }
         private IDocServices _documentservices{ get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         private readonly IConfiguration _configuration;
 
-        public RestrukturController(IConfiguration configuration, IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(recoveryService, configuration)
+        public RestrukturController(IUserService User, IConfiguration configuration, IExtRestruktureServices ExtrecoveryService, IRestrukturServices recoveryService,IAuctionService auctionservice, IAydaServices aydaservices, IDocServices documentservices, IWorkflowServices workflowService) : base(User,recoveryService, configuration)
         {
+            _User = User;
             _configuration = configuration;
             _auctionservice = auctionservice;
             _recoveryService = recoveryService;
@@ -57,8 +58,8 @@ namespace sky.recovery.Controllers.ext
 
         {
             var wrap = _DataResponses.Return();
-            var GetUserAgent = await Task.Run(()=> GetUserAgents());
 
+            var GetUserAgent = await Task.Run(()=> GetUserAgents());
             try
             {
                 if (GetUserAgent.code == 200)

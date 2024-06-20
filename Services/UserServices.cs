@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Org.BouncyCastle.Asn1.Ocsp;
 using sky.recovery.DTOs.ResponsesDTO;
 using sky.recovery.Helper.Config;
 using sky.recovery.Insfrastructures;
@@ -17,11 +19,56 @@ namespace sky.recovery.Services
     public class UserServices : SkyCollConfig, IUserService
     {
         skycoreContext _skyCoreContext = new skycoreContext();
+        SkyCorePublicDBContext _SkyCoreDBContext = new SkyCorePublicDBContext();
         public UserServices(IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
 
 
         }
+
+        public async Task<(bool status, string message, bool Result)> GetValidationPermission(string userid,string url)
+        {
+
+            var GetRole = await _SkyCoreDBContext.Users.Where(es => es.UsrUserid == userid).
+                Select(es=>es.UsrAccessLevel).FirstOrDefaultAsync();
+            var GetIdRole = Convert.ToInt32(GetRole);
+            var GetAkses = await _SkyCoreDBContext.Roleapipermission.Where(es => es.RlId == GetIdRole &&
+            es.Urlapi==url && es.Isaccessed==true
+            
+            ).AnyAsync();
+
+            if(GetAkses==false)
+            {
+                return (true, "OK", true);
+            }
+            else
+            {
+                return (false, "Not Authorized", false);
+            }
+        }
+
+
+        public async Task<(bool status, string message, bool Result)> GetValidationPermission_2(string userid, string url)
+        {
+
+            var GetRole = await _SkyCoreDBContext.Users.Where(es => es.UsrUserid == userid).
+                Select(es => es.UsrAccessLevel).FirstOrDefaultAsync();
+            var GetIdRole = Convert.ToInt32(GetRole);
+            var GetAkses = await _SkyCoreDBContext.Roleapipermission.Where(es => es.RlId == GetIdRole &&
+            es.Urlapi == url && es.Isaccessed == true
+
+            ).AnyAsync();
+
+            if (GetAkses == true)
+            {
+                return (true, "OK", true);
+            }
+            else
+            {
+                return (false, "Not Authorized", false);
+            }
+        }
+
         public async Task<(bool? Status, GenericResponses<UserDetailDTO> Returns)> GetDataUser(string userid)
         {
             var wrap = new GenericResponses<UserDetailDTO>
