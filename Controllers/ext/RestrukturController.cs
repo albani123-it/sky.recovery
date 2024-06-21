@@ -845,7 +845,7 @@ namespace sky.recovery.Controllers.ext
         }
 
         //V2
-        [HttpGet("V2/GetDetaiAnalisa/{id:int}")]
+        [HttpGet("V2/GetDetailAnalisa/{id:int}")]
         public async Task<ActionResult<GeneralResponses>> GetDetaiAnalisa(int id)
 
         {
