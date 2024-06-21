@@ -22,6 +22,7 @@ using System.Reflection.Metadata;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using static Dapper.SqlMapper;
+using Microsoft.Extensions.Configuration;
 
 namespace sky.recovery.Services
 {
@@ -37,11 +38,16 @@ namespace sky.recovery.Services
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
         private IWorkflowServices _workflowServices { get; set; }
+
+        private readonly IConfiguration _config;
+
+
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AydaServices(IDocServices DocService, IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AydaServices(IConfiguration config,IDocServices DocService, IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _config = config;
             _DocService = DocService;
             _workflowServices = workflowServices;
             _environment = environment;
@@ -383,8 +389,9 @@ namespace sky.recovery.Services
 
                 var DataAyda = from ad in _skyRecovery.Ayda
                                join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
-                               where wf.Fiturid == 10 && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                               && wf.Status == 11
+                               where wf.Fiturid == Convert.ToInt32(_config["Fitur:Recovery:Ayda"].ToString())
+                               && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                               && wf.Status == Convert.ToInt32(_config["WorklowStatus:Requested"].ToString())
                                select new
                                {
                                    Id = ad.Id,
@@ -419,7 +426,7 @@ namespace sky.recovery.Services
                                    status = st.StsName,
                                    createddated = ad.createddated,
                                    createdby = ad.createdby,
-                                   FiturId = 10
+                                   FiturId = Convert.ToInt32(_config["Fitur:Recovery:Ayda"].ToString())
 
                                };
 
@@ -458,28 +465,42 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 var id = getCallBy.Returns.Data.FirstOrDefault().iduser;
-              
-                var ReturnData =await ayda.Include(i => i.master_loan).Where(es => es.createdby ==id )
-                    .Select(
-                    es => new 
-                    { 
-                        LoanId = es.loanid,
-                        customerid = es.master_loan.customer_id,
-                        cabang =es.master_loan.master_customer.branch.lbrc_name,
-                        noloan=es.master_loan.acc_no,
-                        namanasabah=es.master_loan.master_customer.cu_name,
-                        totaltunggakan=es.master_loan.tunggakan_total,
-                        jenisjaminan=es.master_loan.master_collateral.col_type,
-                        alamatjaminan=es.master_loan.master_collateral.col_address,
-                        status = es.status.sts_name,
-                        createddated = es.createddated,
-                        createdby = es.createdby
 
-                    }
-                    ).ToListAsync<dynamic>();
+                var DataAyda =  await _skyRecovery.Ayda.Where(es => es.Createdby == id).ToListAsync();
+
+
+                var JoinData = from ad in DataAyda.AsEnumerable()
+                               join ml in _sky.MasterLoan on ad.Loanid equals ml.Id
+                               join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
+                               join mt in _sky.MasterCollateral on ml.Id equals mt.LoanId
+                               join br in _sky.Branch on mc.BranchId equals br.LbrcId
+                               join st in _sky.Status on ad.Statusid equals st.StsId
+
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   LoanId = ad.Loanid,
+                                   customerid = mc.Id,
+                                   cabang = br.LbrcName,
+                                   noloan = ml.AccNo,
+                                   namanasabah = mc.CuName,
+                                   totaltunggakan = ml.TunggakanTotal,
+                                   jenisjaminan = mt.ColType,
+                                   alamatjaminan = mt.ColAddress,
+                                   status = st.StsName,
+                                   createddated = ad.Createddated,
+                                   createdby = ad.Createdby,
+                                   FiturId = Convert.ToInt32(_config["Fitur:Recovery:Ayda"].ToString())
+
+                               };
+
+
+                var Datas = JoinData.ToList<dynamic>();
+
+              
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                wrap.Data = Datas;
                 return (wrap.Status, wrap);
 
             }

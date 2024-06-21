@@ -858,3 +858,8 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Debug\net5.0\refi
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Debug\net5.0\sky.recovery.pdb
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Debug\net5.0\sky.recovery.genruntimeconfig.cache
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Debug\net5.0\ref\sky.recovery.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\bin\Debug\net5.0\Microsoft.OpenApi.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\bin\Debug\net5.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\bin\Debug\net5.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Debug\net5.0\sky.recovery.MvcApplicationPartsAssemblyInfo.cs

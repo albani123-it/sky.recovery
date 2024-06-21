@@ -18,6 +18,8 @@ using sky.recovery.DTOs.RequestDTO.Auction;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using Microsoft.Extensions.Configuration;
+using System.Net.Http.Headers;
 
 namespace sky.recovery.Services
 {
@@ -34,11 +36,14 @@ namespace sky.recovery.Services
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
 
+        private readonly IConfiguration _config;
+
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
-        public AuctionServices(IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AuctionServices(IConfiguration config, IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _config = config;
             _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
@@ -58,14 +63,16 @@ namespace sky.recovery.Services
 
             try
             {
-                
+              //  var x = Convert.ToInt32(_config["WorklowStatus:Requested"].ToString());
+                //var y = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString());
 
                 var getCallBy = await _User.GetDataUser(UserId);
 
                 var MonitoringData = from ad in _recoveryContext.Auction
                                join wf in _recoveryContext.Workflow on ad.Id equals wf.Requestid
-                               where wf.Fiturid == 15 && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                               && wf.Status == 11
+                               where wf.Fiturid == Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString()) 
+                               && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                               && wf.Status == Convert.ToInt32(_config["WorklowStatus:Requested"].ToString())
                                select new
                                {
                                    Id = ad.Id,
@@ -98,7 +105,7 @@ namespace sky.recovery.Services
                                    status = st.StsName,
                                    createddated = ad.createddated,
                                    createdby = ad.createdby,
-                                   FiturId = 15
+                                   FiturId = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString())
 
                                };
 
@@ -128,23 +135,40 @@ namespace sky.recovery.Services
                 
 
                 var getCallBy = await _User.GetDataUser(UserId);
-               
-                var ReturnData = await auction.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
-                    es => new 
-                    {
-                         branch = es.master_loan.master_customer.branch.lbrc_name,
-                        noaccount = es.master_loan.acc_no,
-                        cif=es.master_loan.cu_cif,
-                        nama = es.master_loan.master_customer.cu_name,
-                        loanid = es.master_loan.id,                    
-                        status = es.status.sts_name,
-                          createddated = es.createddated,
-                        createdby = es.createdby
-                    }
-                    ).ToListAsync<dynamic>();
+
+                var ReturnData = await auction.Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser)
+                    .ToListAsync();
+
+
+
+                var JoinData = from ad in ReturnData.AsEnumerable()
+                               join ml in _collContext.MasterLoan on ad.loanid equals ml.Id
+                               join mc in _collContext.MasterCustomer on ml.CustomerId equals mc.Id
+                               join mt in _collContext.MasterCollateral on ml.Id equals mt.LoanId
+                               join br in _collContext.Branch on mc.BranchId equals br.LbrcId
+                               join st in _collContext.Status on ad.statusid equals st.StsId
+
+                               select new
+                               {
+                                   Id = ad.id,
+                                   noaccount = ml.AccNo,
+                                   LoanId = ad.loanid,
+                                   customerid = mc.Id,
+                                   cabang = br.LbrcName,
+                                   cif = ml.CuCif,
+                                   namanasabah = mc.CuName,
+                                   status = st.StsName,
+                                   createddated = ad.createddated,
+                                   createdby = ad.createdby,
+                                   FiturId = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString())
+
+                               };
+
+                var Datas = JoinData.ToList<dynamic>();
+
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                wrap.Data = Datas;
                 return (wrap.Status, wrap);
 
             }

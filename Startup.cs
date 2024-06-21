@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using sky.recovery.Helper.Config;
 using sky.recovery.Helper.Query;
 using sky.recovery.Insfrastructures;
@@ -26,8 +28,16 @@ using sky.recovery.Services.Repository;
 
 namespace sky.recovery
 {
+    
     public partial class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public SymmetricSecurityKey signingKey;
         public Startup(IWebHostEnvironment env)
         {
@@ -40,7 +50,6 @@ namespace sky.recovery
             Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -76,7 +85,10 @@ namespace sky.recovery
             });
 
             //services.AddHttpContextAccessor();
-
+            services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(type => type.ToString());
+            });
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
                 builder.AllowAnyOrigin()
@@ -103,6 +115,55 @@ namespace sky.recovery
                 // If you want to allow a certain amount of clock drift, set that here:
                 ClockSkew = TimeSpan.Zero
             };
+
+            services.AddSwaggerGen(c =>
+            {
+
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "HEIs V1 API",
+                    Version = "v1",
+                    Description = "HEIs API",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Muhamad Tossa Syahlevi",
+                        Email = "tossasyahlevi01@gmail.com"
+                    }
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+      {
+        {
+          new OpenApiSecurityScheme
+          {
+            Reference = new OpenApiReference
+              {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+              },
+              Scheme = "oauth2",
+              Name = "Bearer",
+              In = ParameterLocation.Header,
+
+            },
+            new List<string>()
+          }
+        });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                //c.IncludeXmlComments(xmlPath);
+
+            });
 
             services.AddAuthentication(o =>
             {
@@ -136,10 +197,18 @@ namespace sky.recovery
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseCors("MyPolicy");
+            app.UseRouting();
+
             ConfigureAuth(app);
-            app.UseMvc();
+            //app.UseMvc();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+
         }
     }
 }
