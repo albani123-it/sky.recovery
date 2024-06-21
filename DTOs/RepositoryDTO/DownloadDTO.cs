@@ -2,8 +2,8 @@
 {
     public class DownloadDTO
     {
-        public string url { get; set; }
         public int repoid { get; set; }
-        public string filename { get; set; }
+        public int fiturid { get; set; }
+
     }
 }

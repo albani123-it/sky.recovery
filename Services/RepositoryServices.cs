@@ -27,6 +27,28 @@ namespace sky.recovery.Services
 
         }
 
+        public async Task<(bool status,string message, string path,string name)>RetrieveFilePath(int id, int fiturid)
+        {
+            try
+            {
+                var CheckFiturId = await _RecoveryContext.Generalparamdetail.Where(es => es.Id == fiturid).FirstOrDefaultAsync();
+                if(CheckFiturId.Title=="Restrukture")
+                {
+                    var GetData = await _RecoveryContext.Restrukturedokumen.Where(es => es.Id == id).Select(es =>new { filepath = es.Filepath, filename = es.Fileurl }).FirstOrDefaultAsync();
+                    return (true, "OK", GetData.filepath,GetData.filename);
+                }
+                else
+                {
+                    var GetData = await _RecoveryContext.Masterrepository.Where(es => es.Id == id).Select(es=>new { filepath = es.Fileurl, filename = es.Filename }).FirstOrDefaultAsync();
+                    return (true, "OK", GetData.filepath,GetData.filename);
+                }
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null,null);
+            }
+        }
+
         public async Task<(bool Status, string Message)> RemoveDoc(int id)
         {
             try

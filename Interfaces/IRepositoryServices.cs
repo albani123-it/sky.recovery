@@ -8,6 +8,7 @@ namespace sky.recovery.Interfaces
     public interface IRepositoryServices
     {
         public Task<(bool status, string message)> DocumentNotes(List<DocNotesDTO> Entity);
+        public Task<(bool status, string message, string path, string name)> RetrieveFilePath(int id, int fiturid);
 
         public Task<(bool Status, string Message)> RemoveDoc(int id);
         public Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity);

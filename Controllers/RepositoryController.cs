@@ -107,13 +107,14 @@ namespace sky.recovery.Controllers
 
 
         [HttpPost("download")]
-        public IActionResult DownloadFile([FromBody] DownloadDTO Entity)
+        public async Task<IActionResult> DownloadFile([FromBody] DownloadDTO Entity)
         {
             var wrap = _DataResponses.Return();
             try
             {
                 //var filePath = Path.Combine(_filePath, fileName);
-                var filePath = Entity.url;
+                var GetFilePath = await _RepositoryServices.RetrieveFilePath(Entity.repoid, Entity.fiturid);
+                var filePath = GetFilePath.path;
 
                 if (!System.IO.File.Exists(filePath))
                 {
@@ -128,7 +129,7 @@ namespace sky.recovery.Controllers
                     stream.CopyTo(memory);
                 }
                 memory.Position = 0;
-                return File(memory, MediaTypeNames.Application.Octet, Entity.filename);
+                return File(memory, MediaTypeNames.Application.Octet, GetFilePath.name);
             }
             catch (Exception ex)
             {
