@@ -19,6 +19,7 @@ using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Entities;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
+using Microsoft.IdentityModel.Tokens;
 
 namespace sky.recovery.Services
 {
@@ -379,35 +380,51 @@ namespace sky.recovery.Services
                
 
                 var getCallBy = await _User.GetDataUser(UserId);
-                
 
-                var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid == 16 &&
- es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
- && es.Status == 11).Select(es => es.Requestid).ToListAsync();
+                var MonitoringData = from ad in _skyRecovery.Auction
+                                     join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
+                                     where wf.Fiturid == 16 && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                                     && wf.Status == 11
+                                     select new
+                                     {
+                                         Id = ad.Id,
+                                         WorkflowId = wf.Id,
+                                         StatusId = ad.Statusid,
+                                         LoanId = ad.Loanid,
+                                         createddated = ad.Createddated,
+                                         createdby = ad.Createdby,
+                                         FiturId = wf.Fiturid
+                                     };
 
-               
 
-                     ReturnData = await insurance.Include(i => i.master_loan).
-                    Where(es => MonitoringData.Contains(es.Id)).Select(
-                    es => new
-                    {
-                        asuransiid = es.Id,
-                        customerid = es.master_loan.customer_id,
-                        branch = es.master_loan.master_customer.branch.lbrc_name,
-                        noaccount = es.master_loan.acc_no,
-                        cif = es.master_loan.cu_cif,
-                        nama = es.master_loan.master_customer.cu_name,
-                        loanid = es.master_loan.id,
-                        status = es.status.sts_name,
-                        createddated = es.createddated,
-                        createdby = es.createdby,
-                        FiturId=16
-                    }
-                    ).ToListAsync<dynamic>();
-                
+                var JoinData = from ad in MonitoringData.AsEnumerable()
+                               join ml in _sky.MasterLoan on ad.LoanId equals ml.Id
+                               join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
+                               join mt in _sky.MasterCollateral on ml.Id equals mt.LoanId
+                               join br in _sky.Branch on mc.BranchId equals br.LbrcId
+                               join st in _sky.Status on ad.StatusId equals st.StsId
+
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   WorkflowId = ad.WorkflowId,
+                                   noaccount = ml.AccNo,
+                                   LoanId = ad.LoanId,
+                                   customerid = mc.Id,
+                                   cabang = br.LbrcName,
+                                   cif = ml.CuCif,
+                                   namanasabah = mc.CuName,
+                                   status = st.StsName,
+                                   createddated = ad.createddated,
+                                   createdby = ad.createdby,
+                                   FiturId = 16
+
+                               };
+
+                var Datas = JoinData.ToList<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                wrap.Data = Datas;
                 return (wrap.Status, wrap);
 
             }

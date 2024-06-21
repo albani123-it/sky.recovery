@@ -61,32 +61,51 @@ namespace sky.recovery.Services
                 
 
                 var getCallBy = await _User.GetDataUser(UserId);
-                var MonitoringData = await _recoveryContext.Workflow.Where(es => es.Fiturid == 15 &&
- es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
- && es.Status == 11).Select(es => es.Requestid).ToListAsync();
 
-               
+                var MonitoringData = from ad in _recoveryContext.Auction
+                               join wf in _recoveryContext.Workflow on ad.Id equals wf.Requestid
+                               where wf.Fiturid == 15 && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
+                               && wf.Status == 11
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   WorkflowId = wf.Id,
+                                   StatusId = ad.Statusid,
+                                   LoanId = ad.Loanid,
+                                   createddated = ad.Createddated,
+                                   createdby = ad.Createdby,
+                                   FiturId = wf.Fiturid
+                               };
 
-                    ReturnData = await auction.Include(i => i.master_loan).Where(es =>
 
-                MonitoringData.Contains(es.id)).Select(
-                    es => new
-                    {
-                        branch = es.master_loan.master_customer.branch.lbrc_name,
-                        noaccount = es.master_loan.acc_no,
-                        cif = es.master_loan.cu_cif,
-                        nama = es.master_loan.master_customer.cu_name,
-                        loanid = es.master_loan.id,
-                        status = es.status.sts_name,
-                          createddated = es.createddated,
-                        createdby = es.createdby,
-                        FiturId=15
-                    }
-                    ).ToListAsync<dynamic>();
-                
+                var JoinData = from ad in MonitoringData.AsEnumerable()
+                               join ml in _collContext.MasterLoan on ad.LoanId equals ml.Id
+                               join mc in _collContext.MasterCustomer on ml.CustomerId equals mc.Id
+                               join mt in _collContext.MasterCollateral on ml.Id equals mt.LoanId
+                               join br in _collContext.Branch on mc.BranchId equals br.LbrcId
+                               join st in _collContext.Status on ad.StatusId equals st.StsId
+
+                               select new
+                               {
+                                   Id = ad.Id,
+                                   WorkflowId = ad.WorkflowId,
+                                   noaccount = ml.AccNo,
+                                   LoanId = ad.LoanId,
+                                   customerid = mc.Id,
+                                   cabang = br.LbrcName,
+                                  cif = ml.CuCif,
+                                   namanasabah = mc.CuName,
+                                   status = st.StsName,
+                                   createddated = ad.createddated,
+                                   createdby = ad.createdby,
+                                   FiturId = 15
+
+                               };
+
+                var Datas = JoinData.ToList<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ReturnData;
+                wrap.Data = Datas;
                 return (wrap.Status, wrap);
 
             }
