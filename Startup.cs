@@ -203,11 +203,8 @@ namespace sky.recovery
             app.UseRouting();
 
             ConfigureAuth(app);
-            //app.UseMvc();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseMvc();
+          
 
         }
     }

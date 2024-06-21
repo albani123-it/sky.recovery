@@ -95,6 +95,7 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\Pu
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Microsoft.IdentityModel.Tokens.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Microsoft.IO.RecyclableMemoryStream.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Microsoft.OpenApi.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\MimeKit.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Newtonsoft.Json.Bson.dll
@@ -105,6 +106,9 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\Pu
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\PdfSharp.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\BouncyCastle.Crypto.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\protobuf-net.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\Swashbuckle.AspNetCore.SwaggerUI.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\System.Data.SqlClient.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\System.Diagnostics.DiagnosticSource.dll
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\System.IdentityModel.Tokens.Jwt.dll
