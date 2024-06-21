@@ -763,17 +763,16 @@ namespace sky.recovery.Services
         }
 
         public async Task<(bool Status, string message,  
-            List<WorkflowDetailDTO> WorkflowDetail,
-            List<WorkflowHistoryDTO> WorkflowHistory)> 
+            List<dynamic> WorkflowDetail,
+            List<dynamic> WorkflowHistory)> 
             GetDetailWorkflow(GetDetailWFDTO Entity)
         {
-            var DataWorkflowHistorys = new List<WorkflowHistoryDTO>();
       
             try
             {
                 var CheckingWF = await _RecoveryContext.Workflow.Where(es => es.Requestid == Entity.RequestId && es.Fiturid == Entity.FiturId).ToListAsync();
                 var DataMaxId = CheckingWF.Max(es => es.Id);
-
+                var listid = CheckingWF.Select(es => es.Id).ToList();
                 var DataWorkflow = CheckingWF.Where(es=>es.Id==DataMaxId).Select(es=>new WorkflowDetailDTO
                 {
                     statusid=es.Status,
@@ -785,27 +784,26 @@ namespace sky.recovery.Services
                     flowid=es.Flowid,
                     Id=es.Id,
                     requestid=es.Requestid
-                }).ToList();
-              
-                foreach (var x in CheckingWF)
+                }).ToList<dynamic>();
+
+               
+                    var DataWorkflowHistory = await _RecoveryContext.Workflowhistory.Where(es => listid.Contains((long)es.Workflowid)).ToListAsync();
+   
+                var DataWorkflowHistorys = DataWorkflowHistory.Select(es => new
                 {
-                    var DataWorkflowHistory = await _RecoveryContext.Workflowhistory.Where(es => es.Workflowid == x.Id).ToListAsync();
-                    DataWorkflowHistorys = DataWorkflowHistory.Select(es => new WorkflowHistoryDTO
-                    {
-                        statusid = es.Status,
-                        status = status.Where(x => x.sts_id == es.Status).Select(es => es.sts_name).FirstOrDefault(),
-                        actor = es.Actor,
-                        dated = es.Dated,
+                    statusid = es.Status,
+                    status = status.Where(x => x.sts_id == es.Status).Select(es => es.sts_name).FirstOrDefault(),
+                    actor = es.Actor,
+                    dated = es.Dated,
 
-                        ActoredBy = null,
-                        reason = es.Reason,
-                        workflowid = es.Workflowid,
-                        id = es.Id
+                    ActoredBy = "",
+                    reason = es.Reason,
+                    workflowid = es.Workflowid,
+                    id = es.Id
 
-                    }).ToList();
+                }).ToList<dynamic>();
 
-                };
-                return (true, "OK", DataWorkflow,DataWorkflowHistorys);
+                return (true, "OK", DataWorkflow, DataWorkflowHistorys);
             }
             catch(Exception ex)
             {
