@@ -55,8 +55,8 @@ namespace sky.recovery.Responses
     }
     public class ListWorkflow
     {
-        public List<WorkflowDetailDTO> WorkflowDetail { get; set; }
-        public List<WorkflowHistoryDTO> WorkflowHistory { get; set; }
+        public List<dynamic> WorkflowDetail { get; set; }
+        public List<dynamic> WorkflowHistory { get; set; }
     }
      
     public class GeneralResponsesPDFV2
