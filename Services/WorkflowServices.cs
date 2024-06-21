@@ -304,13 +304,17 @@ namespace sky.recovery.Services
 
 
                         DataHistoryWF.Status = Entity.status;
+                        DataHistoryWF.Reason = Entity.reason;
+                        DataHistoryWF.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
                         DataHistoryWF2.Status = 12;
-                        DataHistoryWF2.Actor = DataWorkflow.Actor;
+                        DataHistoryWF2.Actor = getCallBy.Returns.Data.FirstOrDefault().iduser;
 
                         DataHistoryWF2.Workflowid = Entity.workflowid;
 
                         DataHistoryWF2.Dated = DateTime.Now;
+                        _RecoveryContext.Workflowhistory.Add(DataHistoryWF);
                         _RecoveryContext.Workflowhistory.Add(DataHistoryWF2);
+
                     }
                     if (Entity.status == 13)//CANCEL
                     {
