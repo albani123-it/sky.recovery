@@ -379,22 +379,7 @@ namespace sky.recovery.Services
                 }
 
                 var getCallBy = await _User.GetDataUser(UserId);
-                // pindah ke dinamis
-                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
-                //{
-                //     wrap.Status  = false;
-                //    wrap.Message = "Not Authorize";
-                //    return ( wrap.Status , wrap);
-                //}
-
-
-
-
-                //var MonitoringData = await _skyRecovery.Workflow.Where(es => es.Fiturid==10 &&
-                //es.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                //&& es.Status == 11).Select(es => es.Requestid).ToListAsync();
-
-
+                
 
                 var DataAyda = from ad in _skyRecovery.Ayda
                                join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
@@ -473,13 +458,7 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
                 var id = getCallBy.Returns.Data.FirstOrDefault().iduser;
-                // pindah ke dinamis
-                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
-                //{
-                //     wrap.Status  = false;
-                //    wrap.Message = "Not Authorize";
-                //    return ( wrap.Status , wrap);
-                //}
+              
                 var ReturnData =await ayda.Include(i => i.master_loan).Where(es => es.createdby ==id )
                     .Select(
                     es => new 

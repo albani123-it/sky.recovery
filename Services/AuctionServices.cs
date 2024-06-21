@@ -109,13 +109,7 @@ namespace sky.recovery.Services
                 
 
                 var getCallBy = await _User.GetDataUser(UserId);
-                // pindah ke dinamis
-                //if (getCallBy.Returns.Data.FirstOrDefault().role != RestrukturRole.Operator.ToString())
-                //{
-                //     wrap.Status  = false;
-                //    wrap.Message = "Not Authorize";
-                //    return ( wrap.Status , wrap);
-                //}
+               
                 var ReturnData = await auction.Include(i => i.master_loan).Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).Select(
                     es => new 
                     {

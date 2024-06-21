@@ -17,6 +17,8 @@ using sky.recovery.DTOs.RepositoryDTO;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using static Dapper.SqlMapper;
+using System.Security.Permissions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace sky.recovery.Controllers.ext
 {
@@ -47,13 +49,15 @@ namespace sky.recovery.Controllers.ext
             _ExtrecoveryService = ExtrecoveryService;
         }
 
-       
 
-      
 
+
+         
 
         //V2
         [HttpGet("V2/Monitoring/list")]
+        //[Authorize(Policy = "lvl_rcv_rst_mtr_list")]
+
         public async Task<ActionResult<GeneralResponses>> MonitoringRestrukturV2()
 
         {
