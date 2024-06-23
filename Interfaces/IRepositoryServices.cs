@@ -1,6 +1,7 @@
 ﻿using sky.recovery.DTOs.RepositoryDTO;
 using sky.recovery.DTOs.RequestDTO.CommonDTO;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace sky.recovery.Interfaces
@@ -12,6 +13,7 @@ namespace sky.recovery.Interfaces
 
         public Task<(bool Status, string Message)> RemoveDoc(int id);
         public Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity);
+        public Task<(bool status, string message, MemoryStream x)> DownloadFromFTP(string url);
 
     }
 }

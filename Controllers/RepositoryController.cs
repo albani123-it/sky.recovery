@@ -126,10 +126,33 @@ namespace sky.recovery.Controllers
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 {
-                    stream.CopyTo(memory);
+                    await stream.CopyToAsync(memory);
                 }
                 memory.Position = 0;
                 return File(memory, MediaTypeNames.Application.Octet, GetFilePath.name);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
+
+        [HttpPost("DownloadFromFTP")]
+        public async Task<IActionResult> DownloadFromFTP([FromBody] DownloadDTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            try
+            {
+                //var filePath = Path.Combine(_filePath, fileName);
+                var GetFilePath = await _RepositoryServices.RetrieveFilePath(Entity.repoid, Entity.fiturid);
+                var filePath = GetFilePath.path;
+
+                var Data = await _RepositoryServices.DownloadFromFTP(filePath);
+               
+                Data.x.Position = 0;
+                return File(Data.x, MediaTypeNames.Application.Octet, GetFilePath.name);
             }
             catch (Exception ex)
             {

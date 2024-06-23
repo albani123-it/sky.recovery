@@ -56,6 +56,32 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool status,string message, MemoryStream x)> DownloadFromFTP(string url)
+        {
+            try
+            {
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(new Uri(url));
+                //ftpRequest.Credentials = new NetworkCredential(userName, password);
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                ftpRequest.UseBinary = true;
+                ftpRequest.EnableSsl = false;
+
+                // Get the response stream
+                var memory = new MemoryStream();
+                using (FtpWebResponse ftpResponse = (FtpWebResponse)await ftpRequest.GetResponseAsync())
+                using (Stream responseStream = ftpResponse.GetResponseStream())
+
+                using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
+                {
+                    await responseStream.CopyToAsync(memory);
+                    return (true,"OK",memory);
+                }
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message,null);
+            }
+        }
         public async Task<(bool Status, string Message)> RemoveDoc(int id)
         {
             try
