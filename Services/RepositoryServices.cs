@@ -11,6 +11,11 @@ using System.Linq;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using System.Collections.Generic;
 using sky.recovery.DTOs.RepositoryDTO;
+using Microsoft.Extensions.Configuration;
+using System.Net;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.AspNetCore.Http;
+using static Dapper.SqlMapper;
 
 namespace sky.recovery.Services
 {
@@ -18,12 +23,14 @@ namespace sky.recovery.Services
     {
         sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext _RecoveryContext = new Insfrastructures.Scafolding.SkyColl.Recovery.SkyCollRecoveryDBContext();
         private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _config;
 
         private IUserService _User { get; set; }
-        public RepositoryServices(IWebHostEnvironment environment, IUserService User, IOptions<DbContextSettings> appsetting)
+        public RepositoryServices(IConfiguration configuration,IWebHostEnvironment environment, IUserService User, IOptions<DbContextSettings> appsetting)
         {
             _environment = environment;
             _User = User;
+            _config = configuration;
 
         }
 
@@ -104,6 +111,105 @@ namespace sky.recovery.Services
             }
         }
 
+
+
+        static bool CheckFtpDirectoryExists(string ftpUrl, string username, string password)
+        {
+            try
+            {
+                // Create the FTP request
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(ftpUrl);
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+
+                // Provide the credentials
+               // request.Credentials = new NetworkCredential(username, password);
+
+                // Get the response
+                using (FtpWebResponse response = (FtpWebResponse)request.GetResponse())
+                {
+                    // If we get here, the directory exists
+                    return true;
+                }
+            }
+            catch (WebException ex)
+            {
+                if (ex.Response is FtpWebResponse response)
+                {
+                    // If the status code is 550, the directory does not exist
+                    if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                else
+                {
+                    throw;
+                }
+            }
+        }
+
+        public async Task<(bool status, string message)> UploadToLocal(string paths,string fileurl, IFormFile files)
+        {
+            try
+            {
+                if (!Directory.Exists(paths))
+                {
+                    Directory.CreateDirectory(paths);
+                }
+                string ext = Path.GetExtension(fileurl);
+
+                var nm = Path.Combine(paths, fileurl);
+
+                using (FileStream filestream = System.IO.File.Create(nm))
+                {
+                    await files.CopyToAsync(filestream);
+                    await filestream.FlushAsync();
+                    //  return "\\Upload\\" + objFile.files.FileName;
+                }
+                return (true, "OK");
+            }
+            catch (Exception ex)
+            {
+                return (false,"Upload To Local Path Failed :" + ex.Message);
+            }
+        }
+
+        public async Task<(bool status,string message)> UploadToFTP(string paths,string fileurl)
+        {
+            try
+            {
+               
+                byte[] fileContents;
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(paths);
+                request.Method = WebRequestMethods.Ftp.UploadFile;
+                request.UseBinary = true;
+                using (FileStream sourceStream = new FileStream(fileurl, FileMode.Open, FileAccess.Read))
+                {
+                    fileContents = new byte[sourceStream.Length];
+                    await sourceStream.ReadAsync(fileContents, 0, (int)sourceStream.Length);
+                }
+                request.ContentLength = fileContents.Length;
+
+                using (Stream requestStream = await request.GetRequestStreamAsync())
+                {
+                    await requestStream.WriteAsync(fileContents, 0, fileContents.Length);
+                }
+
+                FtpWebResponse responsexs =  (FtpWebResponse) await request.GetResponseAsync();
+                File.Delete(fileurl);
+
+                return (true, responsexs.StatusCode.ToString());
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
         public async Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity)
         {
             try
@@ -121,26 +227,35 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(userid);
                 var GetNamingFolder = await _RecoveryContext.Generalparamdetail.Where(es => es.Id == Entity.FiturId).Select(es => es.Title).FirstOrDefaultAsync();
-                var path = Path.Combine(_environment.WebRootPath, "File/"+GetNamingFolder.Trim());
-                if (!Directory.Exists(path))
+                var pathToLocal = Path.Combine(_environment.WebRootPath, "File/"+GetNamingFolder.Trim());
+                var path = Path.Combine(_config["Repository:Recovery"].ToString(),GetNamingFolder.Trim());
+                var nm = Path.Combine(path, Entity.File.FileName);
+                var nmToLocal = Path.Combine(pathToLocal, Entity.File.FileName);
+
+                var Datax = await UploadToLocal(pathToLocal, Entity.File.FileName, Entity.File);
+                if(Datax.status==false)
                 {
-                    Directory.CreateDirectory(path);
+                    return (Datax.status, Datax.message);
                 }
-                string ext = Path.GetExtension(Entity.File.FileName);
-
-                var nm = Path.Combine(path, Entity.File.FileName + ext);
-
-                using (FileStream filestream = System.IO.File.Create(nm))
+                if (!CheckFtpDirectoryExists(path, null, null))
                 {
-                    Entity.File.CopyTo(filestream);
-                    filestream.Flush();
-                    //  return "\\Upload\\" + objFile.files.FileName;
-                }
 
+                   FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path);
+                    request.Method = WebRequestMethods.Ftp.MakeDirectory;
+                    FtpWebResponse responsexs = (FtpWebResponse)await request.GetResponseAsync();
+
+
+                }
+                var d = UploadToFTP(nm, nmToLocal);
+                if(d.Result.status==false)
+                {
+                    return (false,"Upload To FTP Failed :"+ d.Result.message);
+                }
+               
 
                 var CheckExisting = await _RecoveryContext.Masterrepository.Where(es => es.Fiturid == Entity.FiturId
                 && es.Doctype == Entity.DocType && es.Requestid == Entity.RequestId).ToListAsync();
-                if (CheckExisting.Count < 0)
+                if (CheckExisting.Count ==0)
                 {
                     var Data = new Masterrepository()
                     {
