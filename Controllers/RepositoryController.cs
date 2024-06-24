@@ -116,12 +116,12 @@ namespace sky.recovery.Controllers
                 var GetFilePath = await _RepositoryServices.RetrieveFilePath(Entity.repoid, Entity.fiturid);
                 var filePath = GetFilePath.path;
 
-                if (!System.IO.File.Exists(filePath))
-                {
-                    wrap.Message = "File Not Exist";
-                    wrap.Status = false;
-                    return StatusCode(404, "File Not Found");
-                }
+                //if (!System.IO.File.Exists(filePath))
+                //{
+                //    wrap.Message = "File Not Exist";
+                //    wrap.Status = false;
+                //    return StatusCode(404, "File Not Found");
+                //}
 
                 var memory = new MemoryStream();
                 using (var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
@@ -174,7 +174,7 @@ namespace sky.recovery.Controllers
                 {
                 if (GetUserAgent.code == 200)
                 {
-                    var GetData = await _RepositoryServices.UploadServices(GetUserAgent.UserAgent, Entity);
+                    var GetData = await _RepositoryServices.UploadToLocalServices(GetUserAgent.UserAgent, Entity);
                 wrap.Message = GetData.Message;
                 wrap.Status = GetData.Status;
                 if (GetData.Status == true)
@@ -199,6 +199,49 @@ namespace sky.recovery.Controllers
                 wrap.Message = ex.Message;
                 wrap.Status = false;
                 return StatusCode(500,wrap);
+            }
+        }
+
+
+        //V2
+        //tidak baca sheet
+        [HttpPost("V2/UploadToFTP")]
+        public async Task<ActionResult<GeneralResponses>> UploadToFTP([FromForm] RepoReqDTO Entity)
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _RepositoryServices.UploadToFTPServices(GetUserAgent.UserAgent, Entity);
+                    wrap.Message = GetData.Message;
+                    wrap.Status = GetData.Status;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
             }
         }
 

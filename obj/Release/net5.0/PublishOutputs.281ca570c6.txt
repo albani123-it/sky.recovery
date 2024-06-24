@@ -10,6 +10,7 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\Pu
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Ayda\To Vendor_SPK 1_Penyediaan Barang Jasa TI_CMS RMS Project V2.doc.doc
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\CATATAN KERJAAN SISI.txt.txt
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\DOCTemplateDUmmy.xlsx.xlsx
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Insurance\clickup_issue.jpg
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Lettersx.pdf.pdf
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\logoalamat.png
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\masterloan.xlsx

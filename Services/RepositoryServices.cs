@@ -236,7 +236,7 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity)
+        public async Task<(bool Status, string Message)> UploadToFTPServices(string userid, RepoReqDTO Entity)
         {
             try
             {
@@ -253,35 +253,35 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(userid);
                 var GetNamingFolder = await _RecoveryContext.Generalparamdetail.Where(es => es.Id == Entity.FiturId).Select(es => es.Title).FirstOrDefaultAsync();
-                var pathToLocal = Path.Combine(_environment.WebRootPath, "File/"+GetNamingFolder.Trim());
-                var path = Path.Combine(_config["Repository:Recovery"].ToString(),GetNamingFolder.Trim());
+                var pathToLocal = Path.Combine(_environment.WebRootPath, "File/FTP/" + GetNamingFolder.Trim());
+                var path = Path.Combine(_config["Repository:Recovery"].ToString(), GetNamingFolder.Trim());
                 var nm = Path.Combine(path, Entity.File.FileName);
                 var nmToLocal = Path.Combine(pathToLocal, Entity.File.FileName);
 
                 var Datax = await UploadToLocal(pathToLocal, Entity.File.FileName, Entity.File);
-                if(Datax.status==false)
+                if (Datax.status == false)
                 {
                     return (Datax.status, Datax.message);
                 }
                 if (!CheckFtpDirectoryExists(path, null, null))
                 {
 
-                   FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path);
+                    FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path);
                     request.Method = WebRequestMethods.Ftp.MakeDirectory;
                     FtpWebResponse responsexs = (FtpWebResponse)await request.GetResponseAsync();
 
 
                 }
-                var d = UploadToFTP(nm, nmToLocal);
-                if(d.Result.status==false)
+                var d = await UploadToFTP(nm, nmToLocal);
+                if (d.status == false)
                 {
-                    return (false,"Upload To FTP Failed :"+ d.Result.message);
+                    return (false, "Upload To FTP Failed :" + d.message);
                 }
-               
+
 
                 var CheckExisting = await _RecoveryContext.Masterrepository.Where(es => es.Fiturid == Entity.FiturId
                 && es.Doctype == Entity.DocType && es.Requestid == Entity.RequestId).ToListAsync();
-                if (CheckExisting.Count ==0)
+                if (CheckExisting.Count == 0)
                 {
                     var Data = new Masterrepository()
                     {
@@ -303,6 +303,69 @@ namespace sky.recovery.Services
                     Data.Fiturid = Entity.FiturId;
                     Data.Requestid = Entity.RequestId;
                     Data.Fileurl = nm;
+                    Data.Filename = Entity.File.FileName;
+                    _RecoveryContext.Entry(Data).State = EntityState.Modified;
+                    await _RecoveryContext.SaveChangesAsync();
+                }
+
+                return (true, "OK");
+            }
+            catch (Exception ex)
+            {
+                return (false, ex.Message);
+            }
+        }
+
+        public async Task<(bool Status, string Message)> UploadToLocalServices(string userid, RepoReqDTO Entity)
+        {
+            try
+            {
+                if (Entity == null)
+                {
+                    return (false, "Request Not Valid");
+                }
+
+                if (Entity.File.Length < 0)
+                {
+                    return (false, "File Must Uploaded");
+                }
+
+
+                var getCallBy = await _User.GetDataUser(userid);
+                var GetNamingFolder = await _RecoveryContext.Generalparamdetail.Where(es => es.Id == Entity.FiturId).Select(es => es.Title).FirstOrDefaultAsync();
+                var pathToLocal = Path.Combine(_environment.WebRootPath, "File/Local/"+GetNamingFolder.Trim());
+                var nmToLocal = Path.Combine(pathToLocal, Entity.File.FileName);
+
+                var Datax = await UploadToLocal(pathToLocal, Entity.File.FileName, Entity.File);
+                if(Datax.status==false)
+                {
+                    return (Datax.status, Datax.message);
+                }
+               
+                var CheckExisting = await _RecoveryContext.Masterrepository.Where(es => es.Fiturid == Entity.FiturId
+                && es.Doctype == Entity.DocType && es.Requestid == Entity.RequestId).ToListAsync();
+                if (CheckExisting.Count ==0)
+                {
+                    var Data = new Masterrepository()
+                    {
+                        Fiturid = Entity.FiturId,
+                        Userid = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Uploaddated = DateTime.Now,
+                        Filename = Entity.File.FileName,
+                        Fileurl = nmToLocal,
+                        Requestid = Entity.RequestId,
+                        Isactive = 1,
+                        Doctype = Entity.DocType
+                    };
+                    await _RecoveryContext.Masterrepository.AddAsync(Data);
+                    await _RecoveryContext.SaveChangesAsync();
+                }
+                else
+                {
+                    var Data = CheckExisting.FirstOrDefault();
+                    Data.Fiturid = Entity.FiturId;
+                    Data.Requestid = Entity.RequestId;
+                    Data.Fileurl = nmToLocal;
                     Data.Filename = Entity.File.FileName;
                     _RecoveryContext.Entry(Data).State = EntityState.Modified;
                     await _RecoveryContext.SaveChangesAsync();
