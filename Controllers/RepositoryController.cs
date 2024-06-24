@@ -149,7 +149,7 @@ namespace sky.recovery.Controllers
                 var GetFilePath = await _RepositoryServices.RetrieveFilePath(Entity.repoid, Entity.fiturid);
                 var filePath = GetFilePath.path;
 
-                var Data = await _RepositoryServices.DownloadFromFTP(filePath);
+                var Data = await _RepositoryServices.DownloadFromFTP(filePath,GetFilePath.name);
                
                 Data.x.Position = 0;
                 return File(Data.x, MediaTypeNames.Application.Octet, GetFilePath.name);

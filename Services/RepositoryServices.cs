@@ -56,7 +56,7 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool status,string message, MemoryStream x)> DownloadFromFTP(string url)
+        public async Task<(bool status,string message, MemoryStream x)> DownloadFromFTP(string url, string dest)
         {
             try
             {
@@ -68,8 +68,17 @@ namespace sky.recovery.Services
 
                 // Get the response stream
                 var memory = new MemoryStream();
+                var pathToLocal = Path.Combine(_environment.WebRootPath, "File/FTPDownload/");
+
+                //if (!Directory.Exists(pathToLocal))
+                //{
+                //    Directory.CreateDirectory(pathToLocal);
+                //}
+
+                //var nm = Path.Combine(pathToLocal, dest);
                 using (FtpWebResponse ftpResponse = (FtpWebResponse)await ftpRequest.GetResponseAsync())
                 using (Stream responseStream = ftpResponse.GetResponseStream())
+             
 
                 using (var stream = new FileStream(url, FileMode.Open, FileAccess.Read))
                 {

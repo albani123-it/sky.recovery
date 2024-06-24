@@ -16,7 +16,7 @@ namespace sky.recovery.Interfaces
 
         public Task<(bool Status, string Message)> RemoveDoc(int id);
         //public Task<(bool Status, string Message)> UploadServices(string userid, RepoReqDTO Entity);
-        public Task<(bool status, string message, MemoryStream x)> DownloadFromFTP(string url);
+        public Task<(bool status, string message, MemoryStream x)> DownloadFromFTP(string url, string dest);
 
     }
 }

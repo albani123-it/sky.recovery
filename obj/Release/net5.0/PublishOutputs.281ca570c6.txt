@@ -12,6 +12,7 @@ D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\Pu
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\DOCTemplateDUmmy.xlsx.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Insurance\clickup_issue.jpg
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Lettersx.pdf.pdf
+D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\Local\Insurance\logoalamat.png
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\logoalamat.png
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\masterloan.xlsx
 D:\SKY.RECOVERY\NEW.Sky.Recovery\sky.recovery\sky.recovery\obj\Release\net5.0\PubTmp\Out\wwwroot\File\NOTE PROJECT SKY.txt.txt

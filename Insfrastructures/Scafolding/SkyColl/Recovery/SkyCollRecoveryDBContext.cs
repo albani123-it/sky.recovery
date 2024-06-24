@@ -44,6 +44,7 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public virtual DbSet<Templatedetail> Templatedetail { get; set; }
         public virtual DbSet<Workflow> Workflow { get; set; }
         public virtual DbSet<Workflowhistory> Workflowhistory { get; set; }
+        public virtual DbSet<Writeoff> Writeoff { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -842,6 +843,35 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Workflowid).HasColumnName("workflowid");
+            });
+
+            modelBuilder.Entity<Writeoff>(entity =>
+            {
+                entity.ToTable("writeoff", "RecoveryBusinessV2");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Chargesrate).HasColumnName("chargesrate");
+
+                entity.Property(e => e.Createdby).HasColumnName("createdby");
+
+                entity.Property(e => e.Createddated).HasColumnName("createddated");
+
+                entity.Property(e => e.Currentoverdue).HasColumnName("currentoverdue");
+
+                entity.Property(e => e.Interestrate).HasColumnName("interestrate");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
+                entity.Property(e => e.Loanid).HasColumnName("loanid");
+
+                entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
+
+                entity.Property(e => e.Modifieddated).HasColumnName("modifieddated");
+
+                entity.Property(e => e.Principal).HasColumnName("principal");
+
+                entity.Property(e => e.Statusid).HasColumnName("statusid");
             });
 
             OnModelCreatingPartial(modelBuilder);
