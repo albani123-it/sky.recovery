@@ -311,9 +311,8 @@ namespace sky.recovery.Services
                 Collection["nasabah"] = DataNasabah;
                 Collection["DataFasilitas"] = await DatasFasilitas.ToListAsync<dynamic>();
                 Collection["Dokumen"] = Dokumen;
-      
                 Collection["DataAyda"] = DataAyda;
-
+               
                 return (true, "OK", Collection);
 
             }

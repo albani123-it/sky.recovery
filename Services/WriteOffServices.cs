@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using sky.recovery.DTOs.RequestDTO.Ayda;
 using sky.recovery.DTOs.RequestDTO.WO;
+using sky.recovery.DTOs.WorkflowDTO;
 using sky.recovery.Helper.Config;
 using sky.recovery.Insfrastructures;
 using sky.recovery.Insfrastructures.Scafolding.SkyColl.Public;
@@ -30,12 +31,14 @@ namespace sky.recovery.Services
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
+        private IWorkflowServices _workflowServices { get; set; }
 
         SkyCollRecoveryDBContext _RecoveryContext = new SkyCollRecoveryDBContext();
         SkyCollPublicDBContext _sky = new SkyCollPublicDBContext();
-        public WriteOffServices(IConfiguration config,IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public WriteOffServices(IWorkflowServices workflowServices,IConfiguration config,IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _workflowServices = workflowServices;
             _config = config;
             _environment = environment;
             _GeneralParam = GeneralParam;
@@ -44,6 +47,176 @@ namespace sky.recovery.Services
             _helperRepository = helperRepository;
 
         }
+
+        public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
+        {
+            try
+            {
+                var Data = new SubmitWorkflowDTO()
+                {
+                    idfitur = idfitur,
+                    idrequest = idrequest,
+                    userid = userid
+                };
+                var SubmitWorkflow = await _workflowServices.SubmitWorkflowStep(Data);
+
+                return (SubmitWorkflow.Returns.Message, SubmitWorkflow.Status);
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message, false);
+            }
+        }
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> WOSubmit(string userid, CreateWODTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            var getCallBy = await _User.GetDataUser(userid);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+
+                //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
+                if (Entity.Data.woid != null)// update draft
+                {
+                    var GetData = await _RecoveryContext.Writeoff.Where(es => es.Id == Entity.Data.woid && es.Loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsRequested(GetData.Statusid) == true)
+                    {
+                        wrap.Status = false;
+                        wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
+                    }
+
+                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
+                    GetData.Principal = Entity.Data.Principal;
+                    GetData.Currentoverdue = Entity.Data.CurrentOverdue;
+                    GetData.Chargesrate = Entity.Data.ChargesRate;
+                    GetData.Interestrate = Entity.Data.InterestRate;
+
+                    GetData.Statusid = Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString());
+                    ;
+                    GetData.Modifiedby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Modifieddated = DateTime.Now;
+                    GetData.Isactive = true;
+                    _RecoveryContext.Entry(GetData).State = EntityState.Modified;
+                    await SaveChangesAsync();
+
+
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:WriteOff"].ToString());
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.woid, (int?)GetIdAyda, userid);
+
+                }
+                else
+                {
+                    var Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Writeoff()
+                    {
+                        Loanid = Entity.DataNasabahLoan.loanid,
+                        Principal = Entity.Data.Principal,
+                        Chargesrate = Entity.Data.ChargesRate,
+                        Currentoverdue = Entity.Data.CurrentOverdue,
+                        Interestrate = Entity.Data.InterestRate,
+
+
+                        Statusid= Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString()),
+                    Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated = DateTime.Now,
+                        Isactive = true
+                    };
+                    await _RecoveryContext.Writeoff.AddAsync(Data);
+                    await SaveChangesAsync();
+
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:WriteOff"].ToString());
+                    var SubmitWorkflow = await WorkflowSubmit(Entity.Data.woid, (int?)GetIdAyda, userid);
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> WODraft(string userid, CreateWODTO Entity)
+        {
+            var wrap = _DataResponses.Return();
+            var ListData = new List<dynamic>();
+            var getCallBy = await _User.GetDataUser(userid);
+
+            // var SkyCollConsString = GetSkyCollConsString();
+
+            try
+            {
+
+                //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
+                if (Entity.Data.woid!= null)// update draft
+                {
+                    var GetData = await _RecoveryContext.Writeoff.Where(es => es.Id == Entity.Data.woid && es.Loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
+                    if (_aydahelper.IsRequested(GetData.Statusid) == true)
+                    {
+                        wrap.Status = false;
+                        wrap.Message = "Data tidak bisa diupdate, karena sudah masuk proses approval";
+                    }
+                    GetData.Loanid = Entity.DataNasabahLoan.loanid;
+                    GetData.Principal = Entity.Data.Principal;
+                    GetData.Currentoverdue = Entity.Data.CurrentOverdue;
+                    GetData.Chargesrate = Entity.Data.ChargesRate;
+                    GetData.Interestrate = Entity.Data.InterestRate;
+                    
+                    GetData.Statusid = Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString());
+                    GetData.Modifiedby = getCallBy.Returns.Data.FirstOrDefault().iduser;
+                    GetData.Modifieddated = DateTime.Now;
+                    GetData.Isactive = true;
+                    _RecoveryContext.Entry(GetData).State = EntityState.Modified;
+                    await SaveChangesAsync();
+
+
+                }
+                else
+                {
+                    var Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Writeoff()
+                    {
+                        Loanid = Entity.DataNasabahLoan.loanid,
+                        Principal = Entity.Data.Principal,
+                        Chargesrate = Entity.Data.ChargesRate,
+                        Currentoverdue=Entity.Data.CurrentOverdue,
+                        Interestrate=Entity.Data.InterestRate,
+
+                    
+                        Statusid = Convert.ToInt32(_config["WorklowStatus:Draft"].ToString()),
+                        Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
+                        Createddated = DateTime.Now,
+                        Isactive = true
+                    };
+                    await _RecoveryContext.Writeoff.AddAsync(Data);
+                    await SaveChangesAsync();
+
+
+                }
+
+                wrap.Status = true;
+                wrap.Message = "OK";
+
+                return (wrap.Status, wrap);
+            }
+            catch (Exception ex)
+            {
+                wrap.Status = false;
+                wrap.Message = ex.Message;
+
+                return (wrap.Status, wrap);
+            }
+        }
+
 
         public async Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailWO(GetDetailWO Entity)
         {

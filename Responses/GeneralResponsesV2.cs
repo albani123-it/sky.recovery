@@ -27,6 +27,14 @@ namespace sky.recovery.Responses
         public Dictionary<string,List<dynamic>> Data { get; set; }
 
     }
+    public class GeneralResponsesDictionaryListV2
+    {
+        public bool? Status { get; set; }
+        public string Message { get; set; }
+
+        public List<Dictionary<string, List<dynamic>>> Data { get; set; }
+
+    }
     public class GeneralResponsesDetailRestrukturesV3
     {
         public bool? Status { get; set; }
@@ -185,6 +193,18 @@ namespace sky.recovery.Responses
                     DataFasilitas=null,
                     Dokumen=null
                 }
+            };
+            return Data;
+        }
+
+
+        public GeneralResponsesDictionaryListV2 ReturnDictionaryList()
+        {
+            var Data = new GeneralResponsesDictionaryListV2()
+            {
+                Status = false,
+                Message = "",
+                Data = null
             };
             return Data;
         }
