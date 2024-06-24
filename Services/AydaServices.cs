@@ -353,7 +353,7 @@ namespace sky.recovery.Services
                     GetData.Perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
                     GetData.Ppa= Entity.Data.ppa;
                     GetData.Jumlahayda = Entity.Data.jumlahayda;
-                    GetData.Statusid= _sky.Status.Where(es => es.StsName== "DRAFT").Select(es => es.StsId).FirstOrDefault();
+                    GetData.Statusid= Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Isactive= 1;
