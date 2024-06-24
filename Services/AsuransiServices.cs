@@ -211,12 +211,12 @@ namespace sky.recovery.Services
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdateddated = DateTime.Now;
                     GetData.Isactive= 1;
-                    Entry(GetData).State = EntityState.Modified;
+                   _skyRecovery.Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
 
 
 
-                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title== "Insurance").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Insurance"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AsuransiId, (int?)GetIdAyda, userid);
 
                 }
@@ -254,7 +254,7 @@ namespace sky.recovery.Services
 
 
 
-                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title== "Insurance").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Insurance"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AsuransiId, (int?)GetIdAyda, userid);
 
                 }

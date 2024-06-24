@@ -319,7 +319,7 @@ namespace sky.recovery.Services
 
                     Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
-                    var GetIdAyda = await _recoveryContext.Generalparamdetail.Where(es => es.Title== "Auction").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, (int?)GetIdAyda, Entity.User.UserId);
 
                 }
@@ -352,7 +352,7 @@ namespace sky.recovery.Services
                     };
                     await _recoveryContext.Auction.AddAsync(Data);
                     await SaveChangesAsync();
-                    var GetIdAyda = await _recoveryContext.Generalparamdetail.Where(es => es.Title== "Auction").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, (int?)Data.Id, Entity.User.UserId);
 
                 }
@@ -417,7 +417,7 @@ namespace sky.recovery.Services
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
 
-                    Entry(GetData).State = EntityState.Modified;
+                   _recoveryContext.Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
                    
                 }
