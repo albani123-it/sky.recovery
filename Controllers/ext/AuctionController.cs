@@ -122,6 +122,52 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+
+        //V2
+        [HttpPost("V2/GetDetailForApprover")]
+        public async Task<ActionResult<GeneralResponsesDetailRestrukturV2>> GetDetailForApprover([FromBody] GetDetailAuctionDTO Entity)
+
+        {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            var wrap = _DataResponses.ReturnDictionary();
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.GetDetailAuctionForApproval(Entity.AuctionId,Entity.LoanId,Entity.CustomerId);
+                    wrap.Message = GetData.Message;
+                    wrap.Status = GetData.Status;
+                    wrap.Data = GetData.DataNasabah;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
+
         //V2
         [HttpGet("V2/SetActive/{id:int}/{status:int}")]
         public async Task<ActionResult<GeneralResponses>> SetActive(int id, int status)

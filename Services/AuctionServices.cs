@@ -465,6 +465,111 @@ namespace sky.recovery.Services
             }
         }
 
+        public async Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAuctionForApproval(int AuctionId, int loanid, int CustomerId)
+        {
+            try
+            {
+
+
+                var Data = from mc in _collContext.MasterCustomer
+                           join ml in _collContext.MasterLoan on mc.Id equals ml.CustomerId
+                           join pd in _collContext.Rfproduct on ml.Product equals pd.PrdId
+                           join ps in _collContext.RfproductSegment on ml.PrdSegmentId equals ps.PrdSgmId
+                           where ml.Id == loanid
+                           select new
+                           {
+                               Nama = mc.CuName,
+                               NoKTP = mc.CuIdnumber,
+                               alamat = mc.CuAddress,
+                               nohp = mc.CuHmphone,
+                               pekerjaan = mc.Pekerjaan,
+                               tanggallahir = mc.CuBorndate,
+                               TglCore = mc.StgDate,
+                               DataLoan = new
+                               {
+                                   SegmentId = ml.PrdSegmentId,
+                                   Segment = ps.PrdSgmDesc,
+                                   ProductId = ml.Product,
+                                   Product = pd.PrdDesc,
+                                   JumlahAngsuran = ml.Installment,
+                                   TanggalMulai = ml.StartDate,
+                                   TanggalJatuhTempo = ml.MaturityDate,
+                                   Tenor = ml.Tenor,
+                                   Plafond = ml.Plafond,
+                                   OutStanding = ml.Outstanding,
+                                   Kolektabilitas = ml.Kolektibilitas,
+                                   DPD = ml.Dpd,
+                                   TglBayarTerakhir = ml.LastPayDate,
+                                   TunggakanPokok = ml.TunggakanPokok,
+                                   TunggakanBunga = ml.TunggakanBunga,
+                                   TunggakanDenda = ml.TunggakanDenda,
+                                   TotalTunggakan = ml.TunggakanTotal,
+                                   TotalKewajiban = ml.KewajibanTotal
+                               }
+                           };
+                var DataNasabah = await Data.ToListAsync<dynamic>();
+
+                var DatasFasilitas = from mc in _collContext.MasterCustomer
+                                     join ml in _collContext.MasterLoan on mc.Id equals ml.CustomerId
+                                     join pd in _collContext.Rfproduct on ml.Product equals pd.PrdId
+                                     join ps in _collContext.RfproductSegment on ml.PrdSegmentId equals ps.PrdSgmId
+                                     where mc.Id == CustomerId
+                                     select new
+                                     {
+                                         CuCif = ml.CuCif,
+                                         AccNo = ml.AccNo,
+                                         productid = ml.Product,
+                                         Product = pd.PrdDesc,
+                                         segmentid = ml.PrdSegmentId,
+                                         Segment = ps.PrdSgmDesc,
+                                         JumlahAngsuran = ml.Installment,
+                                         TanggalMulai = ml.StartDate,
+                                         TanggalJatuhTempo = ml.MaturityDate,
+                                         Tenor = ml.Tenor,
+                                         JumlahPinjaman = ml.KewajibanTotal,
+                                         Outstanding = ml.Outstanding
+                                     };
+
+
+
+                var Dokumen = await _recoveryContext.Masterrepository.Where(es => es.Requestid == AuctionId)
+                   .Select(es => new
+                   {
+                       JenisDokumen = es.Doctype,
+                       Url = es.Fileurl,
+                       FileName = es.Fileurl,
+                       UploadDated = es.Uploaddated,
+                       Keterangan = es.Keterangan,
+                       Status = _recoveryContext.Generalparamdetail.Where(x => x.Id == es.Status).Select(es => es.Title).FirstOrDefault()
+                   }
+
+                   )
+
+                    .ToListAsync<dynamic>();
+
+                var DataAsuransi = await _recoveryContext.Insurance.Where(es => es.Id == AuctionId).ToListAsync<dynamic>();
+
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+                Collection["nasabah"] = DataNasabah;
+                Collection["DataFasilitas"] = await DatasFasilitas.ToListAsync<dynamic>();
+                Collection["Dokumen"] = Dokumen;
+
+                Collection["DataAsuransi"] = DataAsuransi;
+
+                return (true, "OK", Collection);
+
+            }
+
+
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
+
+
+
         public async Task<(string message, bool? status)> WorkflowSubmit(int? idrequest, int? idfitur, string userid)
         {
             try

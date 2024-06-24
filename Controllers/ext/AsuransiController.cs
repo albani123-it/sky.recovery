@@ -126,6 +126,53 @@ namespace sky.recovery.Controllers.ext
             }
         }
 
+
+
+        //V2
+        [HttpPost("V2/GetDetailForApprover")]
+        public async Task<ActionResult<GeneralResponses>> GetDetailForApprover([FromBody] GetDetailAsuransiDTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+
+
+                    var GetData = await _asuransiservices.GetDetailAsuransiForApproval(Entity.AsuransiId,Entity.LoanId,Entity.CustomerId);
+                    wrap.Data = GetData.DataNasabah;
+                    wrap.Message = GetData.Message;
+                    wrap.Status = GetData.Status;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
         //V2
         [HttpPost("V2/CreateSubmit")]
         public async Task<ActionResult<GeneralResponses>> AsuransiSubmit([FromBody] CreateAsuransiDTO Entity)
