@@ -24,6 +24,7 @@ using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using static Dapper.SqlMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using sky.recovery.Libs;
 
 namespace sky.recovery.Services
 {
@@ -163,7 +164,7 @@ namespace sky.recovery.Services
                     GetData.Perkiraanbiayajual = Entity.Data.perkiraanbiayajual;
                     GetData.Ppa= Entity.Data.ppa;
                     GetData.Jumlahayda = Entity.Data.jumlahayda;
-                    GetData.Statusid=_sky.Status.Where(es => es.StsName == "REVIEW").Select(es => es.StsId).FirstOrDefault();
+                    GetData.Statusid= Convert.ToInt32(_config["WorkflowStatus:Review"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Isactive= 1;
@@ -171,7 +172,7 @@ namespace sky.recovery.Services
                     await _skyRecovery.SaveChangesAsync();
                    
                      
-                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Ayda"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,(int?)GetIdAyda,userid);
 
                 }
@@ -191,7 +192,7 @@ namespace sky.recovery.Services
                         Perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
                         Ppa= Entity.Data.ppa,
                         Jumlahayda = Entity.Data.jumlahayda,
-                        Statusid= _sky.Status.Where(es => es.StsName == "REVIEW").Select(es => es.StsId).FirstOrDefault(),
+                        Statusid= Convert.ToInt32(_config["WorkflowStatus:Review"].ToString()),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated= DateTime.Now,
                         
@@ -199,7 +200,7 @@ namespace sky.recovery.Services
                     await _skyRecovery.Ayda.AddAsync(Data);
                     await _skyRecovery.SaveChangesAsync();
 
-                    var GetIdAyda = await _skyRecovery.Generalparamdetail.Where(es => es.Title == "Ayda").Select(es => es.Id).FirstOrDefaultAsync();
+                    var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Ayda"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.aydaid,(int?) GetIdAyda, userid);
 
                 }
