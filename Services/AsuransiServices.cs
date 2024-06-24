@@ -207,7 +207,7 @@ namespace sky.recovery.Services
                     GetData.Keterangan = Entity.Data.keterangan;
                     GetData.Permasalahan = Entity.Data.permasalahan;
 
-                    GetData.Statusid= status.Where(es => es.sts_name == "REVIEW").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.Statusid= Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdateddated = DateTime.Now;
                     GetData.Isactive= 1;
@@ -243,6 +243,7 @@ namespace sky.recovery.Services
                         Catatanklaim = Entity.Data.catatanklaim,
                         Catatanpolis = Entity.Data.catatanpolis,
                         Keterangan = Entity.Data.keterangan,
+                        Statusid = Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString()),
                         Permasalahan = Entity.Data.permasalahan,
                         Isactive = 1,
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
