@@ -357,7 +357,7 @@ namespace sky.recovery.Services
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Isactive= 1;
-                    Entry(GetData).State = EntityState.Modified;
+                   _skyRecovery.Entry(GetData).State = EntityState.Modified;
                     await SaveChangesAsync();
 
 
