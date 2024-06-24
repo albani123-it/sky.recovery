@@ -63,18 +63,15 @@ namespace sky.recovery.Services
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> GetMasterLoan()
         {
             var wrap = _DataResponses.Return();
-            var ListData = new List<dynamic>();
-            //var getCallBy = await _User.GetDataUser(Entity.User.UserId);
-
-            // var SkyCollConsString = GetSkyCollConsString();
-
+         
             try
             {
-                var getdata = await _sky.MasterLoan.AsNoTracking().Where(es => es.Dpd > 90).ToListAsync();
-                ListData.Add(getdata);
+                var getdata = await _sky.MasterLoan.
+                    AsNoTracking().Where(es => es.Dpd > Convert.ToInt32(_config["Logic:DPD"]
+                    .ToString())).ToListAsync<dynamic>();
                 wrap.Status = true;
                 wrap.Message = "OK";
-                wrap.Data = ListData;
+                wrap.Data = getdata;
                 return (wrap.Status, wrap);
             }
             catch (Exception ex)
