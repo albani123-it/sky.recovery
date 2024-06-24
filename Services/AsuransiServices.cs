@@ -313,7 +313,7 @@ namespace sky.recovery.Services
                     GetData.Keterangan = Entity.Data.keterangan;
                     GetData.Permasalahan = Entity.Data.permasalahan;
 
-                    GetData.Statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault();
+                    GetData.Statusid= Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdateddated = DateTime.Now;
                     GetData.Isactive = 1;
@@ -348,7 +348,7 @@ namespace sky.recovery.Services
                         Isactive=1,
                         Createdby=getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated=DateTime.Now,
-                        Statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault()
+                        Statusid = Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString())
 
                 };
                     await  _skyRecovery.Insurance.AddAsync(Data);
