@@ -131,6 +131,95 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
+        [HttpPost("V2/Submit")]
+        //[Authorize(Policy = "lvl_rcv_rst_mtr_list")]
+
+        public async Task<ActionResult<GeneralResponses>> Submit([FromBody] CreateWODTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _WOServices.WOSubmit(GetUserAgent.UserAgent, Entity);
+
+                    wrap.Status = GetData.Status;
+                    wrap.Message = GetData.Returns.Message;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
+
+
+        //V2
+        [HttpPost("V2/Draft")]
+        //[Authorize(Policy = "lvl_rcv_rst_mtr_list")]
+
+        public async Task<ActionResult<GeneralResponses>> Draft([FromBody] CreateWODTO Entity)
+
+        {
+            var wrap = _DataResponses.ReturnDictionary();
+
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _WOServices.WODraft(GetUserAgent.UserAgent, Entity);
+
+                    wrap.Status = GetData.Status;
+                    wrap.Message = GetData.Returns.Message;
+                    if (GetData.Status == true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return StatusCode(500, wrap);
+            }
+        }
+
+        //V2
         [HttpPost("V2/Detail")]
         //[Authorize(Policy = "lvl_rcv_rst_mtr_list")]
 

@@ -358,7 +358,7 @@ namespace sky.recovery.Services
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Isactive= 1;
                    _skyRecovery.Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
 
 
                 }
@@ -383,7 +383,7 @@ namespace sky.recovery.Services
                         Isactive=1
                     };
                     await _skyRecovery.Ayda.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
 
                     
                 }

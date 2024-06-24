@@ -238,6 +238,89 @@ namespace sky.recovery.Controllers.ext
         }
 
 
-        
+        //V2
+        [HttpPost("V2/CreateDraft")]
+        public async Task<ActionResult<GeneralResponses>> CreateDraft([FromBody] CreateAuctionDTO Entity)
+
+        {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.AuctionDraft(GetUserAgent.UserAgent,Entity);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
+
+        //V2
+        [HttpPost("V2/Submit")]
+        public async Task<ActionResult<GeneralResponses>> Submit([FromBody] CreateAuctionDTO Entity)
+
+        {
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            var wrap = _DataResponses.Return();
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+                    var GetData = await _auctionservice.AuctionSubmit(GetUserAgent.UserAgent, Entity);
+                    if (GetData.Status == true)
+                    {
+                        return Ok(GetData.Returns);
+                    }
+                    else
+                    {
+                        return BadRequest(GetData.Returns);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
     }
 }

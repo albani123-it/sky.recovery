@@ -101,7 +101,7 @@ namespace sky.recovery.Services
                     GetData.Modifieddated = DateTime.Now;
                     GetData.Isactive = true;
                     _RecoveryContext.Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                    await _RecoveryContext.SaveChangesAsync();
 
 
                     var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:WriteOff"].ToString());
@@ -125,7 +125,7 @@ namespace sky.recovery.Services
                         Isactive = true
                     };
                     await _RecoveryContext.Writeoff.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _RecoveryContext.SaveChangesAsync();
 
                     var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:WriteOff"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.woid, (int?)GetIdAyda, userid);
@@ -177,7 +177,7 @@ namespace sky.recovery.Services
                     GetData.Modifieddated = DateTime.Now;
                     GetData.Isactive = true;
                     _RecoveryContext.Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                    await _RecoveryContext.SaveChangesAsync();
 
 
                 }
@@ -198,7 +198,7 @@ namespace sky.recovery.Services
                         Isactive = true
                     };
                     await _RecoveryContext.Writeoff.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _RecoveryContext.SaveChangesAsync();
 
 
                 }

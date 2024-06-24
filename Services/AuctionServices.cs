@@ -136,30 +136,30 @@ namespace sky.recovery.Services
 
                 var getCallBy = await _User.GetDataUser(UserId);
 
-                var ReturnData = await auction.Where(es => es.createdby == getCallBy.Returns.Data.FirstOrDefault().iduser)
+                var ReturnData = await _recoveryContext.Auction.Where(es => es.Createdby== getCallBy.Returns.Data.FirstOrDefault().iduser)
                     .ToListAsync();
 
 
 
                 var JoinData = from ad in ReturnData.AsEnumerable()
-                               join ml in _collContext.MasterLoan on ad.loanid equals ml.Id
+                               join ml in _collContext.MasterLoan on ad.Loanid equals ml.Id
                                join mc in _collContext.MasterCustomer on ml.CustomerId equals mc.Id
                                join mt in _collContext.MasterCollateral on ml.Id equals mt.LoanId
                                join br in _collContext.Branch on mc.BranchId equals br.LbrcId
-                               join st in _collContext.Status on ad.statusid equals st.StsId
+                               join st in _collContext.Status on ad.Statusid equals st.StsId
 
                                select new
                                {
-                                   Id = ad.id,
+                                   Id = ad.Id,
                                    noaccount = ml.AccNo,
-                                   LoanId = ad.loanid,
+                                   LoanId = ad.Loanid,
                                    customerid = mc.Id,
                                    cabang = br.LbrcName,
                                    cif = ml.CuCif,
                                    namanasabah = mc.CuName,
                                    status = st.StsName,
-                                   createddated = ad.createddated,
-                                   createdby = ad.createdby,
+                                   createddated = ad.Createddated,
+                                   createdby = ad.Createdby,
                                    FiturId = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString())
 
                                };
@@ -276,11 +276,11 @@ namespace sky.recovery.Services
             }
         }
 
-        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionSubmit(CreateAuctionDTO Entity)
+        public async Task<(bool? Status, GeneralResponsesV2 Returns)> AuctionSubmit(string userid,CreateAuctionDTO Entity)
         {
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();
-            var getCallBy = await _User.GetDataUser(Entity.User.UserId);
+            var getCallBy = await _User.GetDataUser(userid);
 
             // var SkyCollConsString = GetSkyCollConsString();
 
@@ -288,7 +288,7 @@ namespace sky.recovery.Services
             {
 
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
-                if (Entity.Data != null)// update draft
+                if (Entity.Data.AuctionId != null)// update draft
                 {
                     var GetData = await _recoveryContext.Auction.Where(es => es.Id== Entity.Data.AuctionId && es.Loanid== Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
                     if (_aydahelper.IsRequested(GetData.Statusid) == true)
@@ -313,12 +313,12 @@ namespace sky.recovery.Services
                     GetData.Norekening = Entity.Data.norekening;
                     GetData.Namarekening = Entity.Data.namarekening;
 
-                    GetData.Statusid = Convert.ToInt32(_config["WorklowStatus:Requested"].ToString());
+                    GetData.Statusid = Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
 
-                    Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                   _recoveryContext.Entry(GetData).State = EntityState.Modified;
+                    await _recoveryContext.SaveChangesAsync();
                     var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, (int?)GetIdAyda, Entity.User.UserId);
 
@@ -346,12 +346,12 @@ namespace sky.recovery.Services
                         Namarekening = Entity.Data.namarekening,
 
 
-                        Statusid = Convert.ToInt32(_config["WorklowStatus:Requested"].ToString()),
+                        Statusid = Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString()),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated = DateTime.Now
                     };
                     await _recoveryContext.Auction.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _recoveryContext.SaveChangesAsync();
                     var GetIdAyda = Convert.ToInt32(_config["Fitur:Recovery:Auction"].ToString());
                     var SubmitWorkflow = await WorkflowSubmit(Entity.Data.AuctionId, (int?)Data.Id, Entity.User.UserId);
 
@@ -385,7 +385,7 @@ namespace sky.recovery.Services
             {
 
                 //var GetAydaExisting = await ayda.Where(es => es.id == Entity.Data.aydaid).AnyAsync();
-                if (Entity.Data != null)// update draft
+                if (Entity.Data.AuctionId != null)// update draft
                 {
                     var GetData = await _recoveryContext.Auction.Where(es => es.Id == Entity.Data.AuctionId && es.Loanid == Entity.DataNasabahLoan.loanid).FirstOrDefaultAsync();
                     if (_aydahelper.IsRequested(GetData.Statusid) == true)
@@ -412,13 +412,13 @@ namespace sky.recovery.Services
                     
 
 
-                    GetData.Statusid = Convert.ToInt32(_config["WorklowStatus:Draft"].ToString());
+                    GetData.Statusid = Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString());
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdatedate = DateTime.Now;
                     GetData.Lastupdatedid = getCallBy.Returns.Data.FirstOrDefault().iduser;
 
                    _recoveryContext.Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                    await _recoveryContext.SaveChangesAsync();
                    
                 }
                 else
@@ -442,12 +442,12 @@ namespace sky.recovery.Services
                         Tglpenetapanlelang = Entity.Data.tglpenetapanlelang,
                         Norekening = Entity.Data.norekening,
                         Namarekening = Entity.Data.namarekening,
-                        Statusid = Convert.ToInt32(_config["WorklowStatus:Draft"].ToString()),
+                        Statusid = Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString()),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated = DateTime.Now
                     };
                     await _recoveryContext.Auction.AddAsync(Data);
-                    await SaveChangesAsync();
+                    await _recoveryContext.SaveChangesAsync();
                   
                 }
 

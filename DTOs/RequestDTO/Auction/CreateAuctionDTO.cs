@@ -17,7 +17,7 @@ namespace sky.recovery.DTOs.RequestDTO.Auction
     }
     public class AuctionData
     {
-    public int AuctionId { get; set; }
+    public int? AuctionId { get; set; }
         public int? AlasanLelangId { get; set; }
         public string nopk { get; set; }
         public decimal? nilailimitlelang { get; set; }

@@ -212,7 +212,7 @@ namespace sky.recovery.Services
                     GetData.Lastupdateddated = DateTime.Now;
                     GetData.Isactive= 1;
                    _skyRecovery.Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
 
 
 
@@ -250,7 +250,7 @@ namespace sky.recovery.Services
                     };
                     await _skyRecovery.Insurance.AddAsync(Data);
 
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
 
 
 
@@ -317,14 +317,14 @@ namespace sky.recovery.Services
                     GetData.Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser;
                     GetData.Lastupdateddated = DateTime.Now;
                     GetData.Isactive = 1;
-                    Entry(GetData).State = EntityState.Modified;
-                    await SaveChangesAsync();
+                   _skyRecovery.Entry(GetData).State = EntityState.Modified;
+                    await _skyRecovery.SaveChangesAsync();
 
 
                 }
                 else
                 {
-                     Insfrastructures.Scafolding.SkyColl.Recovery.Insurance Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
+                     var Data = new Insfrastructures.Scafolding.SkyColl.Recovery.Insurance()
                     {
 
                    
@@ -353,7 +353,8 @@ namespace sky.recovery.Services
                 };
                     await  _skyRecovery.Insurance.AddAsync(Data);
 
-                    await SaveChangesAsync();
+                    await _skyRecovery.SaveChangesAsync();
+
 
 
                 }
