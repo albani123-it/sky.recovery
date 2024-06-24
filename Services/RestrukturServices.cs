@@ -112,43 +112,7 @@ namespace sky.recovery.Services
             try
             {
 
-                
-
-                //var DataNasabah = await _collContext.MasterCustomers.Where(es => es.Id == CustomerId)
-                //    .Select(es => new 
-                //    {
-                //        Nama = es.CuName,
-                //        NoKTP = es.CuIdnumber,
-                //        alamat = es.CuAddress,
-                //        nohp = es.CuHmphone,
-                //        pekerjaan = es.Pekerjaan,
-                //        tanggallahir = es.CuBorndate,
-                //        TglCore = es.StgDate
-                //    }).ToListAsync<dynamic>();
-
-                //var DataLoan =  await _collContext.MasterLoans.Where(es => es.Id == loanid)
-                //    .Select(es => new 
-                //{
-                //    SegmentId=es.PrdSegmentId,
-                //    ProductId=es.Product,
-                //    JumlahAngsuran=es.Installment,
-                //    TanggalMulai=es.StartDate,
-                //    TanggalJatuhTempo=es.MaturityDate,
-                //    Tenor=es.Tenor,
-                //    Plafond=es.Plafond,
-                //    OutStanding=es.Outstanding,
-                //    Kolektabilitas=es.Kolektibilitas,
-                //    DPD=es.Dpd,
-                //    TglBayarTerakhir=es.LastPayDate,
-                //    TunggakanPokok=es.TunggakanPokok,
-                //    TunggakanBunga=es.TunggakanBunga,
-                //    TunggakanDenda=es.TunggakanDenda,
-                //    TotalTunggakan=es.TunggakanTotal,
-                //    TotalKewajiban=es.KewajibanTotal
-                //}).ToListAsync<dynamic>();
-
-
-
+  
                 var Data = from mc in _collContext.MasterCustomers
                            join ml in _collContext.MasterLoans on mc.Id equals ml.CustomerId
                            join pd in _collContext.Rfproducts on ml.Product equals pd.PrdId

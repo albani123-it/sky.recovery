@@ -8,6 +8,7 @@ namespace sky.recovery.Interfaces
     public interface IAydaServices
     {
         public Task<(bool? Status, string message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAyda(GetDetailAydaDTO Entity);
+        public Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAydaForApproval(int AydaId, int loanid, int CustomerId);
 
         public Task<(bool? Status, GeneralResponsesV2 Returns)> DummyNasabah(int pagenumber, int pagesieze);
         public Task<(bool? Status, GeneralResponsesV2 Returns)> InsertBulk(int banyak);

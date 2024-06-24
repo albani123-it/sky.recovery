@@ -23,6 +23,7 @@ using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using static Dapper.SqlMapper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace sky.recovery.Services
 {
@@ -220,7 +221,109 @@ namespace sky.recovery.Services
             }
         }
 
-       
+
+        public async Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAydaForApproval(int AydaId, int loanid, int CustomerId)
+        {
+            try
+            {
+
+
+                var Data = from mc in _sky.MasterCustomer
+                           join ml in _sky.MasterLoan on mc.Id equals ml.CustomerId
+                           join pd in _sky.Rfproduct on ml.Product equals pd.PrdId
+                           join ps in _sky.RfproductSegment on ml.PrdSegmentId equals ps.PrdSgmId
+                           where ml.Id == loanid
+                           select new
+                           {
+                               Nama = mc.CuName,
+                               NoKTP = mc.CuIdnumber,
+                               alamat = mc.CuAddress,
+                               nohp = mc.CuHmphone,
+                               pekerjaan = mc.Pekerjaan,
+                               tanggallahir = mc.CuBorndate,
+                               TglCore = mc.StgDate,
+                               DataLoan = new
+                               {
+                                   SegmentId = ml.PrdSegmentId,
+                                   Segment = ps.PrdSgmDesc,
+                                   ProductId = ml.Product,
+                                   Product = pd.PrdDesc,
+                                   JumlahAngsuran = ml.Installment,
+                                   TanggalMulai = ml.StartDate,
+                                   TanggalJatuhTempo = ml.MaturityDate,
+                                   Tenor = ml.Tenor,
+                                   Plafond = ml.Plafond,
+                                   OutStanding = ml.Outstanding,
+                                   Kolektabilitas = ml.Kolektibilitas,
+                                   DPD = ml.Dpd,
+                                   TglBayarTerakhir = ml.LastPayDate,
+                                   TunggakanPokok = ml.TunggakanPokok,
+                                   TunggakanBunga = ml.TunggakanBunga,
+                                   TunggakanDenda = ml.TunggakanDenda,
+                                   TotalTunggakan = ml.TunggakanTotal,
+                                   TotalKewajiban = ml.KewajibanTotal
+                               }
+                           };
+                var DataNasabah = await Data.ToListAsync<dynamic>();
+
+                var DatasFasilitas = from mc in _sky.MasterCustomer
+                                     join ml in _sky.MasterLoan on mc.Id equals ml.CustomerId
+                                     join pd in _sky.Rfproduct on ml.Product equals pd.PrdId
+                                     join ps in _sky.RfproductSegment on ml.PrdSegmentId equals ps.PrdSgmId
+                                     where mc.Id == CustomerId
+                                     select new
+                                     {
+                                         CuCif = ml.CuCif,
+                                         AccNo = ml.AccNo,
+                                         productid = ml.Product,
+                                         Product = pd.PrdDesc,
+                                         segmentid = ml.PrdSegmentId,
+                                         Segment = ps.PrdSgmDesc,
+                                         JumlahAngsuran = ml.Installment,
+                                         TanggalMulai = ml.StartDate,
+                                         TanggalJatuhTempo = ml.MaturityDate,
+                                         Tenor = ml.Tenor,
+                                         JumlahPinjaman = ml.KewajibanTotal,
+                                         Outstanding = ml.Outstanding
+                                     };
+
+
+
+                var Dokumen = await _skyRecovery.Masterrepository.Where(es => es.Requestid == AydaId)
+                   .Select(es => new
+                   {
+                       JenisDokumen = es.Doctype,
+                       Url = es.Fileurl,
+                       FileName = es.Fileurl,
+                       UploadDated = es.Uploaddated,
+                       Keterangan = es.Keterangan,
+                       Status = _skyRecovery.Generalparamdetail.Where(x => x.Id == es.Status).Select(es => es.Title).FirstOrDefault()
+                   }
+
+                   )
+
+                    .ToListAsync<dynamic>();
+
+                var DataAyda = await _skyRecovery.Ayda.Where(es => es.Id == AydaId).ToListAsync<dynamic>();
+
+                var Collection = new Dictionary<string, List<dynamic>>();
+
+                Collection["nasabah"] = DataNasabah;
+                Collection["DataFasilitas"] = await DatasFasilitas.ToListAsync<dynamic>();
+                Collection["Dokumen"] = Dokumen;
+      
+                Collection["DataAyda"] = DataAyda;
+
+                return (true, "OK", Collection);
+
+            }
+
+
+            catch (Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
+        }
 
         public async Task<(bool? Status, GeneralResponsesV2 Returns)> AydaDraft(string userid,CreateAydaDTO Entity)
         {
@@ -277,7 +380,7 @@ namespace sky.recovery.Services
                         Perkiraanbiayajual = Entity.Data.perkiraanbiayajual,
                         Ppa= Entity.Data.ppa,
                         Jumlahayda= Entity.Data.jumlahayda,
-                        Statusid= status.Where(es => es.sts_name == "DRAFT").Select(es => es.sts_id).FirstOrDefault(),
+                        Statusid= Convert.ToInt32( _config["WorklowStatus:Draft"].ToString()),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated= DateTime.Now,
                         Isactive=1
