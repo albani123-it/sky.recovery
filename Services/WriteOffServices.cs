@@ -192,7 +192,7 @@ namespace sky.recovery.Services
                         Interestrate=Entity.Data.InterestRate,
 
                     
-                        Statusid = Convert.ToInt32(_config["WorklowStatus:Draft"].ToString()),
+                        Statusid = Convert.ToInt32(_config["WorkflowStatus:Draft"].ToString()),
                         Createdby = getCallBy.Returns.Data.FirstOrDefault().iduser,
                         Createddated = DateTime.Now,
                         Isactive = true
@@ -297,10 +297,10 @@ namespace sky.recovery.Services
             try
             {
                 var getCallBy = await _User.GetDataUser(userid);
-                var DataWO = await _RecoveryContext.Writeoff.
-                     Where(es => es.Createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).ToListAsync();
+                var DataWO = _RecoveryContext.Writeoff.
+                     Where(es => es.Createdby == getCallBy.Returns.Data.FirstOrDefault().iduser).AsEnumerable();
 
-                var JoinData = from ad in DataWO.AsEnumerable()
+                var JoinData = from ad in DataWO
                                join ml in _sky.MasterLoan on ad.Loanid equals ml.Id
                                join mc in _sky.MasterCustomer on ml.CustomerId equals mc.Id
                                join st in _sky.Status on ad.Statusid equals st.StsId
@@ -348,7 +348,7 @@ namespace sky.recovery.Services
                                join wf in _RecoveryContext.Workflow on ad.Id equals wf.Requestid
                                where wf.Fiturid == Convert.ToInt32(_config["Fitur:Recovery:WriteOff"].ToString())
                                && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                               && wf.Status == Convert.ToInt32(_config["WorklowStatus:Requested"].ToString())
+                               && wf.Status == Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString())
                                select new
                                {
                                    Id = ad.Id,

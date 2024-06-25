@@ -495,7 +495,7 @@ namespace sky.recovery.Services
                                      join wf in _skyRecovery.Workflow on ad.Id equals wf.Requestid
                                      where wf.Fiturid == Convert.ToInt32(_config["Fitur:Recovery:Insurance"].ToString())
                                      && wf.Actor == getCallBy.Returns.Data.FirstOrDefault().iduser
-                                     && wf.Status == Convert.ToInt32(_config["WorklowStatus:Requested"].ToString())
+                                     && wf.Status == Convert.ToInt32(_config["WorkflowStatus:Requested"].ToString())
                                      select new
                                      {
                                          Id = ad.Id,
