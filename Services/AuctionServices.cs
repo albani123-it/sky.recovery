@@ -378,9 +378,10 @@ namespace sky.recovery.Services
             var wrap = _DataResponses.Return();
             var ListData = new List<dynamic>();
             var getCallBy = await _User.GetDataUser(userid);
+            var ReturnData = new DraftResponsesDTO();
 
             // var SkyCollConsString = GetSkyCollConsString();
-
+           
             try
             {
 
@@ -419,7 +420,10 @@ namespace sky.recovery.Services
 
                    _recoveryContext.Entry(GetData).State = EntityState.Modified;
                     await _recoveryContext.SaveChangesAsync();
-                   
+                    ReturnData.RequestId = GetData.Id;
+                    ReturnData.loanid = GetData.Loanid;
+
+
                 }
                 else
                 {
@@ -448,12 +452,13 @@ namespace sky.recovery.Services
                     };
                     await _recoveryContext.Auction.AddAsync(Data);
                     await _recoveryContext.SaveChangesAsync();
-                  
+                    ReturnData.loanid = Entity.DataNasabahLoan.loanid;
+                    ReturnData.RequestId = Data.Id;
                 }
-
+                ListData.Add(ReturnData);
                 wrap.Status = true;
                 wrap.Message = "OK";
-
+                wrap.Data = ListData;
                 return (wrap.Status, wrap);
             }
             catch (Exception ex)
