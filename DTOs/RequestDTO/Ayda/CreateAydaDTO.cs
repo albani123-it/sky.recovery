@@ -19,7 +19,7 @@ namespace sky.recovery.DTOs.RequestDTO.Ayda
     {
         public int? aydaid { get; set; }
         public int? bankid { get; set; }
-        public DateTime tglambilalih { get; set; }
+        public DateTime? tglambilalih { get; set; }
         public string kualitas { get; set; }
         public decimal? nilaipembiayaanpokok { get; set; }
         public decimal? nilaimargin { get; set; }

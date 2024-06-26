@@ -67,6 +67,8 @@ namespace sky.recovery.Services
          
             try
             {
+
+
                 var getdata = await _sky.MasterLoan.
                     AsNoTracking().Where(es => es.Dpd > Convert.ToInt32(_config["Logic:DPD"]
                     .ToString())).ToListAsync<dynamic>();
