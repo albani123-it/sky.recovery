@@ -31,6 +31,8 @@ using sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery;
 using static Dapper.SqlMapper;
 using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using sky.recovery.DTOs.RequestDTO.CommonDTO;
+using Microsoft.Extensions.Configuration;
+using sky.recovery.DTOs.RequestDTO.Restrukture;
 
 namespace sky.recovery.Services
 {
@@ -50,9 +52,11 @@ namespace sky.recovery.Services
 
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
 
-        public RestrukturServices (IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        private IConfiguration _config { get; set; }
+        public RestrukturServices (IConfiguration config, IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
         IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _config = config;
             _workflowServices = workflowServices;
             _environment = environment;
             _GeneralParam = GeneralParam;
@@ -107,6 +111,7 @@ namespace sky.recovery.Services
                 return (false, ex.Message, null);
             }
         }
+
         public async Task<(bool Status,string Message, Dictionary<string, List<dynamic>> DataNasabah)>GetDetailRestruktureForApproval(int restruktureid, int loanid, int CustomerId)
         {
             try

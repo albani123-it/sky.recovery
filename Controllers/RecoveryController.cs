@@ -160,7 +160,7 @@ namespace sky.recovery.Controllers
         }
 
         [HttpGet("GetUserAgent")]
-        public async Task<(bool Status,int code, string Message,string UserAgent)> GetUserAgents()
+        public async Task<(bool Status,int code, string Message,string UserAgent,string servicename)> GetUserAgents()
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var Key = _configuration.GetSection("TokenAuthentication:SecretKey").Value;
@@ -183,17 +183,17 @@ namespace sky.recovery.Controllers
                     {
                         var token = authToken.Substring("Bearer ".Length).Trim();
                         HttpContext.Request.Headers.TryGetValue("UserAgent", out StringValues authHeader);
-                        HttpContext.Request.Headers.TryGetValue("UrlAPI", out StringValues UrlAPI);
+                        HttpContext.Request.Headers.TryGetValue("ServiceName", out StringValues ServiceName);
 
                         var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken validatedToken);
                         var jwtToken = (JwtSecurityToken)validatedToken;
                         var userIdClaim = jwtToken.Claims.First(x => x.Type == "sub");
 
 
-                        string UserAPI = UrlAPI.FirstOrDefault();
+                        string ServiceAPI = ServiceName.FirstOrDefault();
                         string UserAgentToken = authHeader.FirstOrDefault();
 
-                        var CheckingAuthorize = await _User.GetValidationPermission(UserAgentToken, UserAPI);
+                        var CheckingAuthorize = await _User.GetValidationPermission(UserAgentToken, ServiceAPI);
 
                         if (CheckingAuthorize.status == true)
                         {
@@ -203,42 +203,42 @@ namespace sky.recovery.Controllers
 
                                 if (userIdClaim.Value == UserAgentToken)
                                 {
-                                    return (true, 200, "Authorized", UserAgentToken);
+                                    return (true, 200, "Authorized", UserAgentToken,ServiceAPI);
 
                                 }
                                 else
                                 {
-                                    return (true, 401, "Invalid User", null);
+                                    return (true, 401, "Invalid User", null,null);
 
                                 }
                             }
                             else
                             {
-                                return (false, 401, "Not Authorize", null);
+                                return (false, 401, "Not Authorize", null,null);
 
                             }
                         }
                         else
                         {
                             // return Unauthorized();
-                            return (false, 401, "Not Authorize", null);
+                            return (false, 401, "Not Authorize", null,null);
                         }
                     }
                     else
                     {
-                        return (false, 401, "Invalid Token", null);
+                        return (false, 401, "Invalid Token", null,null);
                     }
                 }
                 else
                 {
-                    return (false, 401, "Invalid Role Permisson", null);
+                    return (false, 401, "Invalid Role Permisson", null,null);
 
                 }
 
             }
             catch (Exception ex)
             {
-                return (false, 500,ex.Message,null);
+                return (false, 500,ex.Message,null,null);
             }
         }
 

@@ -563,6 +563,14 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Conditionvalue).HasColumnName("conditionvalue");
+
+                entity.Property(e => e.Conditionvalueint).HasColumnName("conditionvalueint");
+
+                entity.Property(e => e.Fiturid).HasColumnName("fiturid");
+
+                entity.Property(e => e.Isactive).HasColumnName("isactive");
+
                 entity.Property(e => e.Masterworkflowid).HasColumnName("masterworkflowid");
 
                 entity.Property(e => e.Operators).HasColumnName("operators");

@@ -12,5 +12,9 @@ namespace sky.recovery.Insfrastructures.Scafolding.SkyColl.Recovery
         public string Variabel { get; set; }
         public string Operators { get; set; }
         public int? Value { get; set; }
+        public long? Fiturid { get; set; }
+        public bool? Isactive { get; set; }
+        public string Conditionvalue { get; set; }
+        public int? Conditionvalueint { get; set; }
     }
 }

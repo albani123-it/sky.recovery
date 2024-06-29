@@ -21,6 +21,7 @@ using sky.recovery.Insfrastructures.Scafolding.SkyCore.Public;
 using sky.recovery.DTOs.ResponsesDTO.Restrukture;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
+using sky.recovery.Services.Repository;
 
 namespace sky.recovery.Services
 {
@@ -35,14 +36,16 @@ namespace sky.recovery.Services
         private readonly IWebHostEnvironment _environment;
         private IRestruktureRepository _postgreRepository { get; set; }
         private IHelperRepository _helperRepository { get; set; }
+        private IRecoveryRepository _RecoveryRepo { get; set; }
         private IWorkflowServices _workflowServices { get; set; }
         ModellingGeneralResponsesV2 _DataResponses = new ModellingGeneralResponsesV2();
         AydaHelper _aydahelper = new AydaHelper();
         private readonly IConfiguration _config;
 
-        public AsuransiServices(IConfiguration config,IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
+        public AsuransiServices(IRecoveryRepository RecoveryRepo, IConfiguration config,IWorkflowServices workflowServices, IGeneralParam GeneralParam, IWebHostEnvironment environment, IUserService User, IHelperRepository helperRepository, IRestruktureRepository postgreRepository,
       IOptions<DbContextSettings> appsetting) : base(appsetting)
         {
+            _RecoveryRepo = RecoveryRepo;
             _config = config;
             _workflowServices = workflowServices;
             _environment = environment;
@@ -51,6 +54,20 @@ namespace sky.recovery.Services
             _postgreRepository = postgreRepository;
             _helperRepository = helperRepository;
 
+        }
+
+
+        public async Task<(bool status,string message, List<dynamic?> Data)>GetMonitoring(string userid,string services)
+        {
+            try
+            {
+                var Data = await _RecoveryRepo.GetMonitor(userid, services);
+                return (Data.status, Data.message, Data.Data);
+            }
+            catch(Exception ex)
+            {
+                return (false, ex.Message, null);
+            }
         }
 
         //GET DETAIL AYDA

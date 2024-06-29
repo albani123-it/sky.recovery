@@ -72,6 +72,8 @@ namespace sky.recovery
             services.AddScoped<IWriteOffServices, WriteOffServices>();
 
             services.AddSingleton<IGeneralParam, RestruktureRepoConfig>();
+            services.AddSingleton<IRepository, UserRepository>();
+            services.AddSingleton<IRecoveryRepository, InsuranceRepositorycs>();
 
             services.AddSingleton<IRestruktureRepository, RestruktureRepository>();
             services.AddSingleton<IHelperRepository, HelperRepository>();

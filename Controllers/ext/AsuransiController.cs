@@ -127,6 +127,53 @@ namespace sky.recovery.Controllers.ext
         }
 
 
+        //V2
+        [HttpGet("V2/Monitoring")]
+       // [HttpGet("V3/GetMonitoring")]
+        public async Task<ActionResult<GeneralResponses>> GetMonitoring()
+
+        {
+            var wrap = _DataResponses.Return();
+            var GetUserAgent = await Task.Run(() => GetUserAgents());
+
+            try
+            {
+                if (GetUserAgent.code == 200)
+                {
+
+
+                    var GetData = await _asuransiservices.GetMonitoring(GetUserAgent.UserAgent, "GetMonitorAyda");
+                    wrap.Data = GetData.Data;
+                    wrap.Message = GetData.message;
+                    wrap.Status = GetData.status;
+                    if (GetData.status== true)
+                    {
+                        return Ok(wrap);
+                    }
+                    else
+                    {
+                        return BadRequest(wrap);
+                    }
+                }
+                else
+                {
+                    wrap.Message = GetUserAgent.Message;
+                    wrap.Status = false;
+                    return StatusCode(GetUserAgent.code, wrap);
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                wrap.Message = ex.Message;
+                wrap.Status = false;
+                return BadRequest(wrap);
+            }
+        }
+
+
+
 
         //V2
         [HttpPost("V2/GetDetailForApprover")]
@@ -217,7 +264,7 @@ namespace sky.recovery.Controllers.ext
 
 
         //V2
-        [HttpGet("V2/Monitoring")]
+        [HttpGet("V2/Monitorings")]
         public async Task<ActionResult<GeneralResponses>> Monitoring()
 
         {
@@ -228,6 +275,7 @@ namespace sky.recovery.Controllers.ext
             {
                 if (GetUserAgent.code == 200)
                 {
+
                     var GetData = await _asuransiservices.InsuranceMonitoring(GetUserAgent.UserAgent);
                 if (GetData.Status == true)
                 {

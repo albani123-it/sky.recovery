@@ -8,6 +8,7 @@ namespace sky.recovery.Interfaces
 {
     public interface IAsuransiServices
     {
+        public Task<(bool status, string message, List<dynamic?> Data)> GetMonitoring(string userid, string services);
 
         public Task<(bool Status, string Message, Dictionary<string, List<dynamic>> DataNasabah)> GetDetailAsuransiForApproval(int AsuransiId, int loanid, int CustomerId);
 
