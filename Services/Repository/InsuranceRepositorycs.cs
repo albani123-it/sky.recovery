@@ -30,8 +30,8 @@ namespace sky.recovery.Services.Repository
                     var db = new Database(SkyColl);
                     using var connection = db.CreateConnection();
 
-                    var GetQuery = @"select Querys from ""RecoveryBusinessV2"".masterquery where ServicesName=@Service";
-                    var GetQueryExec = await connection.QueryAsync<string>(GetQuery, new { Service = services });
+                    var GetQuery = @"select Querys from ""RecoveryBusinessV2"".masterquery where ServicesName=@Service and createdby=@createdby";
+                    var GetQueryExec = await connection.QueryAsync<string>(GetQuery, new { Service = services,createdby=GetDetailUser.Data.FirstOrDefault().usr_id });
 
                     var GetData = @GetQueryExec.FirstOrDefault();
                     var GetDataExec = await connection.QueryAsync<dynamic>(@GetData);
